@@ -1,0 +1,9 @@
+<h1>[% 'Change user ID' | i18n | html %]</h1>
+
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p><label for="TEXT">[% 'Username:' | i18n | html %]</label>
+		<input type="text" name="user" id="user" /></p>
+	<p class="button" id="buttonSend">
+		<input type="submit" value="[% 'Su!' | i18n | html %]" />
+	</p>
+</form>

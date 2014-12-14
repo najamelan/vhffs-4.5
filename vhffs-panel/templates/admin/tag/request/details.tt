@@ -1,0 +1,46 @@
+[% USE date %]
+<p><label>[% 'Category:' | i18n | html %]</label>[% request.category_label | html %]</p>
+<p><label>[% 'Tag:' | i18n | html %]</label>[% request.tag_label | html %]</p>
+<p><label>[% 'Requester:' | i18n | html %]</label>[% request.get_requester ? request.get_requester.get_username : 'DELETED' %]</p>
+<p><label>[% 'Tagged object:' | i18n | html %]</label>[% request.get_tagged ? request.get_tagged.get_label : 'DELETED' %]</p>
+<p><label>[% 'Date:' | i18n | html %]</label>[% date.format(request.created, '%x') %]</p>
+<p class="info">[% 'You can either accept the request (and possibly change the name of the tag/category) or reattach it to an existing category and/or tag. If you choose to create a category, you\'ve to create the tag too.' | i18n | html %]</p>
+<fieldset>
+<legend>[% 'Manage request' | i18n | html %]</legend>
+<form class="table-like" name="manageTagRequestForm" id="manageTagRequestForm" action="?do=tagrequestdetails;request_id=[% request.request_id %]" method="post">
+<div style="width:50%;float:left">
+<h3>Category</h3>
+<p><select name="category" id="tagRequestCategorySelect">
+<option value="-1">--- [% 'Create category' | i18n | html %]</option>
+[% FOREACH c IN categories %]
+<option value="[% c.category_id %]"[% ' selected="selected"' IF selected_category == c.category_id %]>[% c.label | html %]</option>
+[% END %]
+</select></p>
+<p><input type="text" name="category_label" value="[% category_label | html %]"/></p>
+<p><textarea name="category_description" style="width:90%">[% category_description | html %]</textarea></p>
+</div>
+<div style="width:50%; float:right">
+<h3>Tag</h3>
+<select name="tag">
+<option value="-1">--- [% 'Create tag' | i18n | html %]</option>
+[% FOREACH t IN category_tags %]
+<option value="[% t.tag_id %]">[% t.label | html %]</option>
+[% END %]
+</select>
+<p><input type="text" name="tag_label" value="[% tag_label | html %]"/></p>
+<p><textarea name="tag_description" style="width:90%">[% tag_description | html %]</textarea></p>
+</div>
+<div style="clear:both"></div>
+<p class="button">
+	<input type="submit" name="accept_request_submit" value="[% 'Accept' | i18n | html %]"/>&#160;
+	<input type="submit" name="discard_request_submit" value="[% 'Refuse' | i18n | html %]"/>
+</p>
+<input type="hidden" name="request_id" value="[% request.request_id %]"/>
+</form>
+</fieldset>
+<script type="text/javascript">
+Event.observe($('tagRequestCategorySelect'), 'change', function(e) {
+	$('manageTagRequestForm').submit();
+});
+</script>
+

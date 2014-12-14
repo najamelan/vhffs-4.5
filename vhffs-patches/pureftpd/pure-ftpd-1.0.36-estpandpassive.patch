@@ -1,0 +1,21 @@
+diff -Nru a/src/ftpd.c b/src/ftpd.c
+--- a/src/ftpd.c	2014-07-06 20:20:03.431859686 +0000
++++ b/src/ftpd.c	2014-07-06 20:21:14.939767679 +0000
+@@ -3592,11 +3592,12 @@
+     if (disallow_passive != 0) {
+         feat[sizeof FEAT FEAT_DEBUG FEAT_TLS FEAT_UTF8 FEAT_TVFS FEAT_ESTA] = 0;
+     }
+-# ifndef MINIMAL
+-    else if (STORAGE_FAMILY(force_passive_ip) != 0) {
+-        feat[sizeof FEAT FEAT_DEBUG FEAT_TLS FEAT_UTF8 FEAT_TVFS FEAT_ESTA FEAT_PASV] = 0;
+-    }
+-# endif
++// TF PATCH: disable the disabling of ESTP when a passive ip is forced (ok, I don't know any FTP client that use ESTP, I won't ever test if it works)
++//# ifndef MINIMAL
++//    else if (STORAGE_FAMILY(force_passive_ip) != 0) {
++//        feat[sizeof FEAT FEAT_DEBUG FEAT_TLS FEAT_UTF8 FEAT_TVFS FEAT_ESTA FEAT_PASV] = 0;
++//    }
++//# endif
+     addreply_noformat(0, feat);
+     addreply_noformat(211, "End.");
+ }

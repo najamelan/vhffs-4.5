@@ -1,0 +1,821 @@
+#!%PERL% -w
+
+use strict;
+use Curses;
+use Curses::UI;
+use Curses::UI::Popupmenu;
+
+use lib '%VHFFS_LIB_DIR%';
+
+use Vhffs;
+use Vhffs::Functions;
+use Vhffs::Group;
+use Vhffs::Services::Mail;
+use Vhffs::Services::MailingList;
+use Vhffs::User;
+
+my $ui = new Curses::UI(-clear_on_exit => 1);
+my $vhffs = new Vhffs;
+
+my ($w_start, 
+	$w_new_domain, $w_list_domains,
+	$w_new_box, $w_list_boxes,
+	$w_new_forward, $w_list_forwards,
+	$w_new_ml, $w_manage_ml, $w_manage_ml_members,
+	$w_status);
+
+my @mailing_lists_values; # Array holding all mailing lists addresses
+
+my @menu = (
+	{
+		-label => 'Main',
+		-submenu => [
+			{ -label => 'Quit	^Q', -value => sub { exit(0); } }
+		]
+	},
+	{
+		-label => 'Manage',
+		-submenu => [
+			{
+				-label => 'Domains',
+				-submenu => [
+					{ -label => 'New	^D', -value => \&create_domain },
+					{ -label => 'List	^S', -value => '' }
+				]
+			},
+			{
+				-label => 'Boxes',
+				-submenu => [
+					{ -label => 'New	^B', -value => \&create_box },
+					{ -label => 'List	^V', -value => '' }
+				]
+			},
+			{
+				-label => 'Forwards',
+				-submenu => [
+					{ -label => 'New	^F', -value => \&create_forward },
+					{ -label => 'List	^G', -value => '' }
+				]
+			},
+			{
+				-label => 'Mailing lists',
+				-submenu => [
+					{ -label => 'New 	^M', -value => \&create_ml },
+					{ -label => 'List	^L', -value => \&manage_ml }
+				]
+			}
+		]
+	}
+);
+
+# Creates the main menu
+my $m_main = $ui->add('main_menu', 'Menubar', -menu => \@menu);
+
+$ui->set_binding( sub {$m_main->focus()}, KEY_F(10) );
+$ui->set_binding( sub { exit(0) }, "\cQ" );
+$ui->set_binding( \&create_domain, "\cD" );
+$ui->set_binding( \&create_box, "\cB" );
+$ui->set_binding( \&create_forward, "\cF" );
+$ui->set_binding( \&create_ml, "\cM" );
+
+&create_windows;
+$w_start->focus();
+
+$ui->mainloop();
+
+
+sub index_array($@)
+{
+	my $val = shift;
+	for(my $i = 0 ; $i < scalar(@_) ; ++$i) {
+		return $i if($val eq $_[$i]);
+	}
+	-1;
+}
+
+
+sub create_domain {
+	$w_new_domain->focus();
+}
+
+sub create_box {
+	$w_new_box->focus();
+}
+
+sub create_forward {
+	$w_new_forward->focus();
+}
+
+sub create_ml {
+	$w_new_ml->focus();
+}
+
+sub manage_ml {
+	$w_manage_ml->focus();
+}
+
+sub manage_ml_members {
+	my $list = $w_manage_ml->getobj('manage_ml_list')->get();
+	return unless($list =~ /^.+?@.+$/);
+	my ($local_part, $domain) = split(/@/, $list);
+	my $ml = Vhffs::Services::MailingList::get_by_mladdress( $vhffs, $local_part, $domain );
+	return unless( defined $ml );
+	$w_manage_ml_members->{-userdata} = $ml;
+	my $l = $w_manage_ml_members->getobj( 'manage_ml_members_current_list' );
+	my $members_list = $w_manage_ml_members->getobj( 'manage_ml_current_members_list' );
+	my @members = values %{$ml->get_members};
+	my @members_values;
+	foreach my $m (@members) {
+		push @members_values, $m->{member};
+	}
+	$members_list->{-values} = \@members_values;
+	$members_list->layout();
+
+	$l->{-text} = $list;
+	$w_manage_ml_members->focus();
+}
+
+sub create_windows {
+	my %w_common_attrs = (
+		-padtop => 1, -border => 1, -ipad => 5, -padbottom => 1, -titlefullwidth => 1
+	);
+
+	$w_start = $ui->add( 'start_window', 'Window', -title => 'Welcome', %w_common_attrs );
+	my $txt = 'Select a menu item to start';
+	$w_start->add( undef, 'Label', -text => $txt, -y => $w_start->height() / 2, -x => ( $w_start->width() - length($txt) ) / 2 );
+
+	$w_status = $ui->add( 'status_window', 'Window', -title => '', -border => 0, -y => ( $ui->height() - 1 ) );
+	$w_status->add( undef, 'Label', -text => 'Press F10 to open menu' );
+
+	####################
+	# Domains creation #
+	####################
+
+	my $users = Vhffs::User::getall($vhffs);
+	my $groups = Vhffs::Group::getall($vhffs);
+	my $domains = Vhffs::Services::Mail::getall($vhffs);
+
+	my @domains_values = ( -1 );
+	my %domains_labels = ( -1 => '-- Select one --' );
+	foreach my $d (@$domains) {
+		push @domains_values, $d->get_domain;
+	}
+
+
+	$w_new_domain = $ui->add('new_domain_window', 'Window', -title => 'New mail domain', %w_common_attrs);
+	my $label = $w_new_domain->add( undef, 'Label', -text => 'Domain name: ');
+	my $field = $w_new_domain->add('new_domain_name', 'TextEntry', -x => 20, -y => 0, -sbborder => 1, -width => 30 );
+	
+	my %labels = ( -1 => '-- Select one --' );
+	my @values = ( -1 );
+	foreach my $g (@$groups) {
+		$labels{$g->get_gid} = $g->get_groupname;
+		push @values, $g->get_gid;
+	}
+
+	$label = $w_new_domain->add( undef, 'Label', -text => 'Group: ', -y => 1 );
+	$field = $w_new_domain->add( 'new_domain_group', 'Popupmenu', -y => 1, -x => 20, -labels => {%labels}, -values => [@values], -selected => 0 );
+
+	%labels = ( -1 => '-- Select one --' );
+	@values = ( -1 );
+	foreach my $u (@$users) {
+		$labels{$u->get_uid} = $u->get_username;
+		push @values, $u->get_uid;
+	}
+
+	$label = $w_new_domain->add( undef, 'Label', -text => 'User: ', -y => 2 );
+	$field = $w_new_domain->add( 'new_domain_user', 'Popupmenu', -y => 2, -x => 20, -labels => {%labels}, -values => [@values], -selected => 0 );
+
+	$label = $w_new_domain->add( undef, 'Label', -text => 'Description: ', -y => 5);
+	$field = $w_new_domain->add( 'new_domain_description', 'TextEditor', -y => 3, -x => 20, -width => 30,
+		-height => 5, -border => 1, -wrapping => 1, -sbborder => 1 );
+
+	$w_new_domain->add('new_domain_submit', 'Buttonbox', 
+		-buttons => [
+			{
+				-label => 'OK',
+				-onpress => \&create_domain_save
+			}
+		],
+		-x => 20,
+		-y => 10
+	);
+
+	##################
+	# Boxes creation #
+	##################
+
+	$w_new_box = $ui->add( 'new_box_window', 'Window', -title => 'New mail box', %w_common_attrs);
+	$label = $w_new_box->add( undef, 'Label', -text => 'Address: ', -y => 1);
+	$field = $w_new_box->add( 'new_box_local_part', 'TextEntry', -sbborder => 1, -y => 1, -x => 20, -width => 30 );
+	$label = $w_new_box->add( undef, 'Label', -text => '@', -y => 1, -x => 51 );
+
+	$field = $w_new_box->add( 'new_box_domain', 'Popupmenu', -y => 1, -x => 53, -labels => \%domains_labels, -values => \@domains_values, -selected => 0 );
+
+	$label = $w_new_box->add( undef, 'Label', -text => 'Password: ', -y => 2);
+	$field = $w_new_box->add( 'new_box_password', 'TextEntry', -sbborder => 1, -y => 2, -x => 20, -width => 30, -password => '*' );
+	$label = $w_new_box->add( undef, 'Label', -text => 'Password (confirm): ', -y => 3);
+	$field = $w_new_box->add( 'new_box_password_confirm', 'TextEntry', -sbborder => 1, -y => 3, -x => 20, -width => 30, -password => '*' );
+	$w_new_box->add('new_domain_submit', 'Buttonbox', 
+		-buttons => [
+			{
+				-label => 'OK',
+				-onpress => \&create_box_save
+			}
+		],
+		-x => 20,
+		-y => 5
+	);
+
+	#####################
+	# Forwards creation #
+	#####################
+	
+	$w_new_forward = $ui->add( 'new_forward_window', 'Window', -title => 'New forward', %w_common_attrs);
+	$label = $w_new_forward->add( undef, 'Label', -text => 'Address: ', -y => 1 );
+	$field = $w_new_forward->add( 'new_forward_local_part', 'TextEntry', -sbborder => 1, -y => 1, -x => 20, -width => 30 );
+	$label = $w_new_forward->add( undef, 'Label', -text => '@', -y => 1, -x => 51 );
+
+	$field = $w_new_forward->add( 'new_forward_domain', 'Popupmenu', -y => 1, -x => 53, -labels => \%domains_labels, -values => \@domains_values, -selected => 0 );
+	$label = $w_new_forward->add( undef, 'Label', -y => 2, -text => 'Remote address: ' );
+	$field = $w_new_forward->add( 'new_forward_remote', 'TextEntry', -sbborder => 1, -y => 2, -x => 20, -width => 30 );
+
+
+	$w_new_forward->add('new_forward_submit', 'Buttonbox', 
+		-buttons => [
+			{
+				-label => 'OK',
+				-onpress => \&create_forward_save
+			}
+		],
+		-x => 20,
+		-y => 5
+	);
+
+	##########################
+	# Mailing lists creation #
+	##########################
+	
+	my %ml_subscription_labels = (
+		Vhffs::Constants::ML_SUBSCRIBE_NO_APPROVAL_REQUIRED     => 'Subscriptions open',
+		Vhffs::Constants::ML_SUBSCRIBE_APPROVAL_REQUIRED	=> 'Moderated subscriptions',
+		Vhffs::Constants::ML_SUBSCRIBE_CLOSED		   => 'Subscriptions closed'
+	);
+	my @ml_subscription_values = (
+		Vhffs::Constants::ML_SUBSCRIBE_NO_APPROVAL_REQUIRED,
+		Vhffs::Constants::ML_SUBSCRIBE_APPROVAL_REQUIRED,
+		Vhffs::Constants::ML_SUBSCRIBE_CLOSED
+
+	);
+
+	my %ml_post_labels = (
+		Vhffs::Constants::ML_POSTING_OPEN_ALL                           => 'Open to all',
+		Vhffs::Constants::ML_POSTING_MODERATED_ALL                      => 'All post are moderated',
+		Vhffs::Constants::ML_POSTING_OPEN_MEMBERS_MODERATED_OTHERS      => 'Non-member posts are moderated',
+		Vhffs::Constants::ML_POSTING_MEMBERS_ONLY                       => 'Open to members only',
+		Vhffs::Constants::ML_POSTING_MEMBERS_ONLY_MODERATED             => 'Members only, moderated',
+		Vhffs::Constants::ML_POSTING_ADMINS_ONLY                        => 'Administrators only'
+	);
+
+	my @ml_post_values = (
+		Vhffs::Constants::ML_POSTING_OPEN_ALL,
+		Vhffs::Constants::ML_POSTING_MODERATED_ALL,
+		Vhffs::Constants::ML_POSTING_OPEN_MEMBERS_MODERATED_OTHERS,
+		Vhffs::Constants::ML_POSTING_MEMBERS_ONLY,
+		Vhffs::Constants::ML_POSTING_MEMBERS_ONLY_MODERATED,
+		Vhffs::Constants::ML_POSTING_ADMINS_ONLY
+	
+	);
+
+
+	$w_new_ml = $ui->add( 'new_ml_window', 'Window', -title => 'New mailing list', %w_common_attrs );
+	
+	$label = $w_new_ml->add( undef, 'Label', -text => 'Address: ', -y => 1 );
+	$field = $w_new_ml->add( 'new_ml_local_part', 'TextEntry', -sbborder => 1, -y => 1, -x => 20, -w => 20, -width => 30 );
+	$label = $w_new_ml->add( undef, 'Label', -text => '@', -y => 1, -x => 51 );
+	$field = $w_new_ml->add( 'new_ml_domain', 'Popupmenu', -y => 1, -x => 53, -labels => \%domains_labels, -values => \@domains_values, -selected => 0 );
+	$label = $w_new_ml->add( undef, 'Label', -text => 'Subject prefix: ', -y => 2 );
+	$field = $w_new_ml->add( 'new_ml_prefix', 'TextEntry', -sbborder => 1, -y => 2, -x => 20, -w => 20, -width => 30 );
+	$label = $w_new_ml->add( undef, 'Label', -text => 'Subscription policy:', -y => 3 );
+	$field = $w_new_ml->add( 'new_ml_sub_policy', 'Popupmenu', -y => 3, -x => 20, 
+		-labels => \%ml_subscription_labels,
+		-values => \@ml_subscription_values,
+		-selected => 0
+	);
+	$label = $w_new_ml->add( undef, 'Label', -text => 'Posting policy: ', -y => 4 );
+	$field = $w_new_ml->add( 'new_ml_post_policy', 'Popupmenu', -y => 3, -x => 20, -y => 4,
+		-labels =>  \%ml_post_labels,
+		-values => \@ml_post_values,
+		-selected => 0
+	);
+	$label = $w_new_ml->add( undef, 'Label', -text => 'Add Reply-To: ', -y => 5 );
+	$field = $w_new_ml->add( 'new_ml_reply_to', 'Popupmenu', -y => 5, -x => 20,
+		-values => [ 'yes', 'no' ]
+	);
+	$label = $w_new_ml->add( undef, 'Label', -text => 'Signature', -y => 6 );
+	$field = $w_new_ml->add( 'new_ml_signature', 'TextEditor', -y => 6, -x => 20, -width => 30,
+				-height => 5, -border => 1, -wrapping => 1, -sbborder => 1 );
+	$w_new_ml->add('new_ml_submit', 'Buttonbox', 
+		-buttons => [
+			{
+				-label => 'OK',
+				-onpress => \&create_ml_save
+			}
+		],
+		-x => 20,
+		-y => 13
+	);
+
+	############################
+	# Mailing lists management #
+	############################
+	
+	$w_manage_ml = $ui->add( 'manage_ml_window', 'Window', -title => 'Manage mailing lists', %w_common_attrs );
+	
+	@mailing_lists_values = ( '-- Select One --' );
+	my $lists = Vhffs::Services::MailingList::getall( $vhffs );
+	foreach my $l (@$lists) {
+		my $address = $l->get_localpart().'@'.$l->get_domain;
+		push @mailing_lists_values, $address;
+	}
+
+	$label = $w_manage_ml->add( undef, 'Label', -text => 'Select a list: ' );
+	$field = $w_manage_ml->add( 'manage_ml_list', 'Popupmenu', -x => 20, -values => \@mailing_lists_values,
+		-onchange => \&manage_ml_list_change, -selected => 0 );
+
+	$label = $w_manage_ml->add( undef, 'Label', -text => 'Subject prefix: ', -y => 2 );
+	$field = $w_manage_ml->add( 'manage_ml_prefix', 'TextEntry', -sbborder => 1, -y => 2, -x => 20, -w => 20, -width => 30, -focusable => 0 );
+	$label = $w_manage_ml->add( undef, 'Label', -text => 'Subscription policy:', -y => 3 );
+	$field = $w_manage_ml->add( 'manage_ml_sub_policy', 'Popupmenu', -y => 3, -x => 20,
+		-labels => \%ml_subscription_labels,
+		-values => \@ml_subscription_values,
+		-selected => 0,
+		-focusable => 0
+	);
+	$label = $w_manage_ml->add( undef, 'Label', -text => 'Posting policy: ', -y => 4 );
+	$field = $w_manage_ml->add( 'manage_ml_post_policy', 'Popupmenu', -y => 3, -x => 20, -y => 4,
+		-labels => \%ml_post_labels,
+		-values => \@ml_post_values,
+		-selected => 0,
+		-focusable => 0
+	);
+	$label = $w_manage_ml->add( undef, 'Label', -text => 'Add Reply-To: ', -y => 5 );
+	$field = $w_manage_ml->add( 'manage_ml_reply_to', 'Popupmenu', -y => 5, -x => 20,
+		-values => [ 'yes', 'no' ],
+		-focusable => 0
+	);
+	$label = $w_manage_ml->add( undef, 'Label', -text => 'Signature', -y => 6 );
+	$field = $w_manage_ml->add( 'manage_ml_signature', 'TextEditor', -y => 6, -x => 20, -width => 30,
+				-height => 5, -border => 1, -wrapping => 1, -sbborder => 1, -focusable => 0 );
+
+	$w_manage_ml->add('manage_ml_submit', 'Buttonbox', 
+		-buttons => [
+			{
+				-label => '< Apply >',
+				-onpress => \&manage_ml_save
+			},
+			{
+				-label => '< Manage members >',
+				-onpress => \&manage_ml_members
+			}
+		],
+		-x => 22,
+		-y => 13,
+		-focusable => 0
+	);
+
+	####################################
+	# Mailing lists members management #
+	####################################
+
+	my %ml_access_levels_labels = (
+		Vhffs::Constants::ML_RIGHT_SUB		=> 'Regular user',
+		Vhffs::Constants::ML_RIGHT_ADMIN	=> 'List administrator'
+	);
+
+	my @ml_access_levels_values = (
+		Vhffs::Constants::ML_RIGHT_SUB,
+		Vhffs::Constants::ML_RIGHT_ADMIN
+	);
+
+	$w_manage_ml_members = $ui->add( 'manage_ml_members_window', 'Window', -title => 'Manage mailing lists', %w_common_attrs );
+	$label = $w_manage_ml_members->add( undef, 'Label', -text => 'Current list: ' );
+	$label = $w_manage_ml_members->add( 'manage_ml_members_current_list', 'Label', -x => 20 );
+
+	$label = $w_manage_ml_members->add( undef, 'Label', -y => 3, -x => 5, -text => 'Add member' );
+	$label = $w_manage_ml_members->add( undef, 'Label', -y => 4, -text => 'Address: ' );
+	$field = $w_manage_ml_members->add( 'manage_ml_new_member_address', 'TextEntry', -y => 4, -x => 20, -width => 30, -sbborder => 1 );
+	$label = $w_manage_ml_members->add( undef, 'Label', -y => 5, -text => 'Access level: ' );
+
+	$field = $w_manage_ml_members->add( 'manage_ml_new_member_access_level', 'Popupmenu', -y => 5, -x => 20,
+		-labels => \%ml_access_levels_labels,
+		-values => \@ml_access_levels_values,
+		-selected => 0
+	);
+
+	$w_manage_ml_members->add('manage_ml_new_member_submit', 'Buttonbox',
+                -buttons => [
+                        {
+                                -label => '< OK >',
+                                -onpress => \&ml_add_member_save
+                        }
+                ],
+                -x => 25,
+                -y => 6
+        );
+
+	$label = $w_manage_ml_members->add( undef, 'Label', -y => 8, -text => 'Current Members: ' );
+	$field = $w_manage_ml_members->add( 'manage_ml_current_members_list', 'Listbox', -y => 8, -x => 20, -border => 1, -height => 5,
+		-onchange => \&manage_ml_current_members_list_change);
+	$label = $w_manage_ml_members->add( undef, 'Label', -y => 14, -text => 'Access Level: ' );
+	$field = $w_manage_ml_members->add( 'manage_ml_current_members_access_level', 'Popupmenu', -y => 14, -x => 20,
+		-labels => \%ml_access_levels_labels,
+		-values => \@ml_access_levels_values
+	);
+
+	$w_manage_ml_members->add('manage_ml_manage_members_submit', 'Buttonbox',
+                -buttons => [
+                        {
+                                -label => '< Apply >',
+                                -onpress => \&ml_modify_member_save
+                        },
+			{
+				-label => '< Delete Member >',
+				-onpress => \&ml_delete_member_save
+			}
+                ],
+                -x => 25,
+                -y => 15
+        );
+
+
+}
+
+=head2 ml_add_member_save
+
+Callback for the OK button on the ml member creation form
+
+=cut
+
+sub ml_add_member_save {
+	my $ml = $w_manage_ml_members->{-userdata};
+	unless( defined $ml ) {
+		$ui->error( 'Mailing list not found' );
+		return;
+	}
+
+	my $address = $w_manage_ml_members->getobj( 'manage_ml_new_member_address' )->get();
+	my $rval = $ml->add_sub( $address,
+		$w_manage_ml_members->getobj( 'manage_ml_new_member_access_level' )->get());
+	$ui->error( 'Invalid mail address' ) if($rval == -1 || $rval == -2);
+	$ui->error( 'Invalid access level' ) if($rval == -3);
+	$ui->error( 'Unable to add subscriber' ) if($rval == -4);
+	if( $rval > 0 ) {
+		$ui->dialog(
+			-title => 'Member added',
+			-message => 'Member '.$address.' successfuly added'
+		);
+		my $members_list = $w_manage_ml_members->getobj( 'manage_ml_current_members_list' );
+		$w_manage_ml_members->getobj( 'manage_ml_new_member_address' )->text('');
+		$w_manage_ml_members->getobj( 'manage_ml_new_member_access_level' )->{-selected} = 0;
+		$w_manage_ml_members->getobj( 'manage_ml_new_member_access_level' )->draw();
+		my $member = $ml->get_members()->{$address};
+		push(@{$members_list->{-values}}, $member->{member});
+		$members_list->draw();
+	}
+}
+
+=head2 manage_ml_save
+
+Callback used to save prefs for an existing mailing list.
+
+=cut
+
+sub manage_ml_save {
+	my $address = $w_manage_ml->getobj( 'manage_ml_list' )->get();
+	unless($address =~ /^.+?@.+$/) {
+		$ui->error( 'You have to select a mailing list' );
+		return;
+	}
+	my ($local_part, $domain) = split /@/, $address;
+	my $ml = Vhffs::Services::MailingList::get_by_mladdress( $vhffs, $local_part, $domain );
+	return unless(defined $ml);
+
+	my $prefix = $w_manage_ml->getobj( 'manage_ml_prefix' );
+	$ml->set_prefix( $prefix->get() );
+
+	my $sub_policy = $w_manage_ml->getobj( 'manage_ml_sub_policy' )->get();
+	$ml->set_sub_ctrl( $sub_policy );
+
+	my $post_policy = $w_manage_ml->getobj( 'manage_ml_post_policy' )->get();
+	print $ml->set_post_ctrl( $post_policy )x10;
+
+	my $reply_to = $w_manage_ml->getobj( 'manage_ml_reply_to' );
+	$ml->set_replyto( $reply_to eq 'yes' ? 1 : 0 );
+
+	my $signature = $w_manage_ml->getobj( 'manage_ml_signature');
+	$ml->set_signature( $signature->get() );
+
+	if($ml->commit() > 0) {
+		$ui->dialog(
+			-title => 'Mailing list updated',
+			-message => 'Mailing list '.$address.' successfuly updated'
+		);
+	} else {
+		$ui->error('Unable to update mailing list');
+	}
+}
+
+
+sub create_domain_save {
+	my $domain = $w_new_domain->getobj( 'new_domain_name' )->get();
+	my $user = Vhffs::User::get_by_uid( $vhffs, $w_new_domain->getobj( 'new_domain_user' )->get() );
+	my $group = Vhffs::Group::get_by_gid( $vhffs, $w_new_domain->getobj( 'new_domain_group' )->get() );
+	if( $domain =~ /^\s*$/) {
+		$ui->error( 'You have to enter a domain name' );
+		return;
+	}
+	unless(Vhffs::Functions::check_domain_name($domain)) {
+		$ui->error( 'Invalid domain name' );
+		return;
+	}
+	unless(defined $user && defined $group) {
+		$ui->error( 'Please select a valid user/group' );
+		return;
+	}
+	my $md = Vhffs::Services::Mail::create($vhffs, $domain, $w_new_domain->getobj( 'new_domain_description' )->get(), $user, $group);
+
+	if($md) {
+		$md->set_status( Vhffs::Constants::WAITING_FOR_CREATION );
+		$md->commit;
+
+		$ui->dialog(
+			-title => 'Mail domain created',
+			-message => 'Mail domain '.$domain.' successfully created'
+		);
+		$w_new_domain->getobj( 'new_domain_name' )->text('');
+		$w_new_domain->getobj( 'new_domain_name' )->draw();
+		$w_new_domain->getobj( 'new_domain_description' )->text('');
+		$w_new_domain->getobj( 'new_domain_description' )->draw();
+		$w_new_domain->getobj( 'new_domain_user' )->{-selected} = 0;
+		$w_new_domain->getobj( 'new_domain_user' )->draw();
+		$w_new_domain->getobj( 'new_domain_group' )->{-selected} = 0;
+		$w_new_domain->getobj( 'new_domain_group' )->draw();
+
+	} else {
+		$ui->error( 'An error occured while creating the mail domain' );
+	}
+	$w_new_domain->draw();
+}
+
+sub create_box_save {
+	my $domain = Vhffs::Services::Mail::get_by_mxdomain( $vhffs, $w_new_box->getobj( 'new_box_domain' )->get() );
+	my $local_part = $w_new_box->getobj( 'new_box_local_part' )->get();
+	my $password = $w_new_box->getobj( 'new_box_password' )->get();
+	my $password_confirm = $w_new_box->getobj( 'new_box_password_confirm' )->get();
+	unless(defined $domain) {
+		$ui->error( 'You have to select a domain' );
+		return;
+	}
+
+	if($password ne $password_confirm) {
+		$ui->error( 'Password mismatch' );
+		return;
+	}
+
+	my $rval = $domain->add_box($local_part, $password);
+	$ui->error( 'Invalid address' ) 	if( $rval == -1 );
+	$ui->error( 'Address already exists' ) 	if( $rval == -2 );
+	$ui->error( 'Error while adding box' )	if( $rval == -3 );
+	
+	if( $rval > 0) {
+		$ui->dialog(
+			-title => 'Mailbox created',
+			-message => 'Address '.$local_part.'@'.$domain->get_domain().' successfuly created.'
+		);
+		$w_new_box->getobj( 'new_box_local_part' )->text('');
+		$w_new_box->getobj( 'new_box_password' )->text('');
+		$w_new_box->getobj( 'new_box_password_confirm' )->text('');
+		$w_new_box->getobj( 'new_box_domain' )->{-selected} = 0;
+	}
+}
+
+sub create_forward_save {
+	my $domain = Vhffs::Services::Mail::get_by_mxdomain( $vhffs, $w_new_forward->getobj( 'new_forward_domain' )->get() );
+	my $local_part = $w_new_forward->getobj( 'new_forward_local_part' )->get();
+	my $remote_address = $w_new_forward->getobj( 'new_forward_remote' )->get();
+
+	unless(defined $domain) {
+		$ui->error( 'You have to select a domain' );
+		return;
+	}
+
+	my $rval = $domain->add_redirect( $local_part, $remote_address );
+	$ui->error( 'Invalid local part or remote address' ) if($rval == -1);
+	$ui->error( 'Address already exists' ) if($rval == -2);
+	$ui->error( 'Error while adding box') if($rval == -3);
+
+	if($rval > 0) {
+		$ui->dialog(
+			-title => 'Forward created',
+			-message => 'Forward '.$local_part.'@'.$domain->get_domain.' => '.$remote_address.' successfuly created'
+		);
+		$w_new_forward->getobj( 'new_forward_domain' )->{-selected} = 0;
+		$w_new_forward->getobj( 'new_forward_local_part' )->text('');
+		$w_new_forward->getobj( 'new_forward_remote' )->text('');
+	}
+}
+
+sub create_ml_save {
+	my $domain = Vhffs::Services::Mail::get_by_mxdomain( $vhffs, $w_new_ml->getobj( 'new_ml_domain' )->get());
+	my $local_part = $w_new_ml->getobj( 'new_ml_local_part' )->get();
+	my $prefix = $w_new_ml->getobj( 'new_ml_prefix' )->get();
+	my $sub_policy = $w_new_ml->getobj( 'new_ml_sub_policy' )->get();
+	my $post_policy = $w_new_ml->getobj( 'new_ml_post_policy' )->get();
+	my $reply_to = ($w_new_ml->getobj( 'new_ml_reply_to' )->get() eq 'yes');
+	my $signature = $w_new_ml->getobj( 'new_ml_signature')->get();
+
+	unless(defined $domain) {
+		$ui->error( 'You have to select a domain' );
+		return;
+	}
+
+	my $ml = Vhffs::Services::MailingList::create( $vhffs, $local_part, $domain->get_domain, '', $domain->get_owner, $domain->get_group );
+	unless(defined $ml) {
+		$ui->error('Unable to create mailing list');
+		return;
+	}
+
+	$ml->set_replyto( $reply_to ? 1 : 0 );
+	$ml->set_prefix( $prefix );
+	$ml->set_sub_ctrl( $sub_policy );
+	$ml->set_post_ctrl( $post_policy );
+	$ml->set_signature( $signature );
+	push @mailing_lists_values, $ml->get_localpart.'@'.$ml->get_domain;
+	unless($ml->commit() > 0) {
+		$ui->error('Mailing list created but unable to update info');
+		return;
+	}
+
+	 $ui->dialog(
+		-title => 'Mailing list created',
+		-message => 'Mailing list '.$local_part.'@'.$domain->get_domain.' successfuly created'
+	);
+	$w_new_ml->getobj( 'new_ml_local_part' )->text('');
+	$w_new_ml->getobj( 'new_ml_prefix' )->text('');
+	$w_new_ml->getobj( 'new_ml_sub_policy' )->{-selected} = 0;
+	$w_new_ml->getobj( 'new_ml_sub_policy' )->draw();
+	$w_new_ml->getobj( 'new_ml_post_policy' )->{-selected} = 0;
+	$w_new_ml->getobj( 'new_ml_post_policy' )->draw();
+	$w_new_ml->getobj( 'new_ml_reply_to' )->{-selected} = 0;
+	$w_new_ml->getobj( 'new_ml_reply_to' )->draw();
+	$w_new_ml->getobj( 'new_ml_signature')->text('');
+}
+
+sub manage_ml_current_members_list_change {
+	my $address = $_[0]->get;
+	return unless($address =~ /^.+?@.+$/);
+	my $ml = $w_manage_ml_members->{-userdata};
+	my $member = $ml->get_members->{$address};
+	return unless(defined $member);
+	my $list = $w_manage_ml_members->getobj( 'manage_ml_current_members_access_level' );
+	$list->{-selected} = index_array($member->{perm}, @{$list->{-values}});
+	$list->draw();
+}
+
+sub ml_modify_member_save {
+	my $ml = $w_manage_ml_members->{-userdata};
+	my $list = $w_manage_ml_members->getobj( 'manage_ml_current_members_list' );
+	my $member = $list->get();
+	my $right = $w_manage_ml_members->getobj( 'manage_ml_current_members_access_level' )->get();
+	return unless($member =~ /^.+?@.+$/);
+	if($ml->change_right_for_sub($member, $right) > 0) {
+		$ui->dialog(
+			-title => 'Member updated',
+			-message => 'Access rights for '.$member.' have been updated'
+		);
+	} else {
+		$ui->error('Unable to update access rights');
+	}
+}
+
+sub ml_delete_member_save {
+	my $ml = $w_manage_ml_members->{-userdata};
+	my $list = $w_manage_ml_members->getobj( 'manage_ml_current_members_list' );
+	my $member = $list->get();
+	return unless($member =~ /^.+?@.+$/);
+	if($ml->del_sub($member) > 0) {
+		$ui->dialog(
+			-title => 'Member deleted',
+			-message => 'Member '.$member.' has been deleted from the mailing list'
+		);
+		delete $list->{-values}[$list->{-selected}];
+		$list->draw();
+	} else {
+		$ui->error( 'Unable to delete member' );
+	}
+}
+
+sub manage_ml_list_change {
+	my $address = $_[0]->get;
+	return unless($address =~ /^.+?@.+$/);
+	my ($local_part, $domain) = split /@/, $address;
+	my $ml = Vhffs::Services::MailingList::get_by_mladdress( $vhffs, $local_part, $domain );
+	return unless(defined $ml);
+
+	my $prefix = $w_manage_ml->getobj( 'manage_ml_prefix' );
+	$prefix->text($ml->get_prefix);
+	$prefix->focusable(1);
+
+	my $sub_policy = $w_manage_ml->getobj( 'manage_ml_sub_policy' );
+	$sub_policy->{-selected} = index_array($ml->get_sub_ctrl, @{$sub_policy->{-values}});
+	$sub_policy->focusable(1);
+	$sub_policy->draw();
+
+	my $post_policy = $w_manage_ml->getobj( 'manage_ml_post_policy' );
+	$post_policy->{-selected} = index_array($ml->get_post_ctrl, @{$post_policy->{-values}} );
+	$post_policy->draw();
+	$post_policy->focusable(1);
+
+	my $reply_to = $w_manage_ml->getobj( 'manage_ml_reply_to' );
+	$reply_to->{-selected} = ($ml->get_replyto ? 0 : 1);
+	$reply_to->draw();
+	$reply_to->focusable(1);
+
+	my $signature = $w_manage_ml->getobj( 'manage_ml_signature');
+	$signature->text( $ml->get_signature );
+	$signature->focusable(1);
+
+	$w_manage_ml->getobj('manage_ml_submit')->focusable(1);
+}
+
+
+=pod
+
+It seems that Curses::UI is quite unmaintained. Fortunately
+perl allows us to redefine buggy elements.
+
+=cut
+
+package Curses::UI::Popupmenu;
+
+{
+no warnings 'redefine';
+
+sub draw(;$)
+{
+    my $this = shift;
+    my $no_doupdate = shift || 0;
+
+    # Draw the widget.
+    $this->SUPER::draw(1) or return $this;
+
+    # Get the selected label.
+    my $sellabel;
+    if (defined $this->{-selected})
+    {
+	$sellabel = $this->{-values}->[$this->{-selected}];
+	$sellabel = $this->{-labels}->{$sellabel}
+	    if defined $this->{-labels}->{$sellabel};
+    }
+
+    # Let there be color
+    if ($Curses::UI::color_support) {
+	my $co = $Curses::UI::color_object;
+	my $pair = $co->get_color_pair(
+			     $this->{-fg},
+			     $this->{-bg});
+
+	$this->{-canvasscr}->attron(COLOR_PAIR($pair));
+
+    }
+
+    $this->{-canvasscr}->attron(A_REVERSE) if $this->{-focus};
+    my $width = $this->canvaswidth;
+    if (defined $sellabel)
+    {
+	if (length($sellabel) > $width) {
+		# The bug was here... R.I.P. (http://rt.cpan.org/Public/Bug/Display.html?id=25885)
+		$sellabel = substr($sellabel, 0, $width);
+		$sellabel =~ s/.$/\$/;
+	}
+    }
+    else # No selection yet.
+    {
+	$this->{-canvasscr}->attron(A_DIM);
+	$sellabel = "-"x$width;
+    }
+
+    $this->{-canvasscr}->addstr(0,0, " "x$width);
+    $this->{-canvasscr}->addstr(0,0, $sellabel);
+    $this->{-canvasscr}->move(0,$this->canvaswidth-1);
+    $this->{-canvasscr}->attroff(A_DIM);
+    $this->{-canvasscr}->attroff(A_REVERSE);
+
+    $this->{-canvasscr}->noutrefresh;
+    doupdate() unless $no_doupdate;;
+
+    return $this;
+}
+
+}

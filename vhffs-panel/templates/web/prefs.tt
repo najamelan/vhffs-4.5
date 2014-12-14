@@ -1,0 +1,30 @@
+<h1>[% 'Web area administration' | i18n | html %]</h1>
+	
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p>
+		<label>[% 'Address (Servername):' | i18n | html %]</label>
+		[% web.get_servername | html %]
+		<input type="hidden" name="name" id="name" value="[% web.get_servername | html %]" />
+	</p>
+	<p>
+	    <label>[% 'Description of your web area:' | i18n | html %]
+	</label>
+	 <textarea name="description" id="description" cols="45" rows="7">[% web.get_description | html %]</textarea>
+	</p>
+
+	<p class="button">
+		<input value="[% 'Update' | i18n | html %]" type="submit" name="save_prefs_submit"/>
+	</p>
+</form>
+
+[% INCLUDE 'acl/form.tt'
+    object = web %]
+
+[% INCLUDE 'object/delete.tt'
+    type = 'web'
+    oid = web.get_oid %]
+
+[% IF current_user.is_admin %]
+    [% INCLUDE 'admin/object/edit.tt'
+        object = web %]
+[% END %]

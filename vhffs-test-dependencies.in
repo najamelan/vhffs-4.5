@@ -1,0 +1,276 @@
+#!@PERL@
+# Copyright here
+
+use strict;
+use Getopt::Long;
+my %args;
+my %dep;
+my @components;
+
+$dep{'api'} = [ 
+	('Carp', ''),
+	('CGI', ''),
+	('CGI::Fast', ''),
+	('CGI::Session', ''),
+	('Config::General', ''),
+	('Crypt::GPG', ''),
+	('DateTime', ''),
+	('DateTime::Locale', ''),
+	('DBI', ''),
+	('Digest::MD5', ''),
+	('Email::Valid', ''),
+	('Encode', ''),
+	('File::Basename', ''),
+	('File::Path', ''),
+	('File::Spec', ''),
+	('GD', ''),
+	('locale', ''),
+	('Locale::gettext', ''),
+	('LockFile::Simple', ''),
+	('MIME::Base64', ''),
+	('MIME::Lite', ''),
+	('Template', '')];
+
+$dep{'irc'} = [
+	('Encode', ''),
+	('locale', ''),
+	('Locale::gettext', ''),
+	('Net::DNS',''),
+	('Net::IRC',''),
+	('Text::Wrapper','')];
+
+$dep{'jabber'} = [ 'MIME::Base64' ];
+
+$dep{'listengine'} = [
+	('DateTime', ''),
+	('DateTime::Format::Mail', ''),
+	('locale', ''),
+	('Locale::gettext', ''),
+	('Mail::Internet', ''),
+	('Net::SMTP', ''),
+	('Socket', '')];
+
+$dep{'panel'} = [
+	('CGI', ''),
+	('CGI::Session', ''),
+	('DateTime', ''),
+	('DateTime::Locale', ''),
+	('Encode', ''),
+	('GD', ''),
+	('GD::Text::Wrap', ''),
+	('locale', ''),
+	('Locale::gettext', ''),
+	('Captcha::reCAPTCHA', ''),
+	('Net::LibIDN', '')];
+	
+
+$dep{'robots'} = [
+	('BSD::Resource', ''),
+	('Fcntl', ''),
+	('File::Basename', ''),
+	('File::Path', ''),
+	('Template', ''),
+	('locale', ''),
+	('Locale::gettext', ''),
+	('IO::Handle', ''),
+	('IO::Select', ''),
+	('Quota', '')];
+
+&GetOptions( \%args,
+	'u|usage',
+	'h|help', 
+	'v|verbose',
+	'install',
+	'install-cmd=s',
+	'verify=s'
+);
+
+usage() if ( ($args{'u'}) or ($args{'h'}) );
+$args{'verify'} = 'api' if (!$args{'verify'});
+
+if ( $args{'verify'} eq 'all') {
+	@components = ('api', 'irc', 'jabber', 'listengine', 'panel', 'robots');
+} else {
+	@components = split ( /,/, $args{'verify'});
+}
+
+
+# Test block. This allow to define tested module only once
+{
+	my $module;
+	my $all_ok = 1;
+	
+	sub print_component {
+		$_ = shift;
+		print "\n*** $_\n";
+	}
+	
+	# Call with 3 paramters :
+	# -msg : What we have to say
+	# -bad : 1 if module not present or not usable
+	# -comment : comments
+	sub print_result {
+	my $msg = shift;
+	my $bad = shift;
+	my $comment = shift;
+
+	$all_ok = 0 if ($bad);
+	if ($args{'v'} or $bad) {
+		print "        $msg";
+		print $bad ? " -> BAD MODULE" : " -> OK";
+		print "\n";
+	}
+	print "\t\t$comment\n" if defined $comment;
+}
+	
+	sub finished {
+		print "\n\n----------- Results : -----------\n";
+		if ($all_ok) {
+			print "Congratulations, all required perl modules are found and valid.\n";
+		} else {
+			print "Your system cannot run vhffs in its current state.\n";
+			print "Check previous messages to see what fails.\n";
+			print "note : if you run tests with --install-missings, you should be ok\n"
+		}
+	}
+}
+
+check_perl();
+
+# Now process each dependencies block
+foreach (@components) {
+	print_component ("$_");
+	
+	my @d = @{ $dep{$_} };
+	while (@d) {
+		my $module = shift @d;
+		my $version = shift @d;
+		my $ret = check_module($module, $version);
+
+		if ((!$ret) and ( $args{'install'} ) ) {
+			install_module ($module, $version);
+		}
+	}
+}
+
+finished();
+
+# ----------------------------- functions --------------------------------------
+sub usage {
+	print << '.';
+
+This program helps to detect perl modules and their versions
+to be sure we can run VHFFS on this computer.
+
+Options :
+  --install         Will install missing dependencies (*not recommmended*)
+  --install-cmd     Specify a command for installing perl modules (see below)
+  --verbose         Print all perl modules checked, not only the missings.
+  --verify          A comma separated list of vhffs component to verify deps
+
+  Supported vhffs components are :
+    . api (default)
+    . irc
+    . jabber
+    . listengine
+    . panel
+    . robots
+    . all (all of the above)
+                    
+	
+
+Installing dependencies :
+=========================
+Installing dependencies will be done with CPAN commands, if you are using
+the --install argument.
+
+You can add the --install-cmd="cmd", that let you specify a external program
+for installing missing dependencies, this is recommended since you can use
+your regular package management to take care of dependencies. This program will
+be called with the missing perl module as argument, or ir the string passed
+contain a '%s', will replace the "%s" with the module name ebcore calling it.
+
+Example :
+---------
+
+On Gentoo with g-cpan : 
+ ./vhffs-test-dependencies --verify=irc --install --install-cmd="g-cpan -i %s"
+
+On any Linux, using perl CPAN :
+ ./vhffs-test-dependencies --verify=all --install
+
+
+.
+exit();
+}
+
+# Should we verify a particular version of perl ?
+sub check_perl {
+	print_component ('perl');
+	eval {require 5};
+	print_result( "version : $]", 0);
+}
+
+sub check_module {
+	my $module = shift;
+	my $version = shift;
+
+	eval "use $module $version ()";
+	if ($@) {
+		my $errstr = $@;
+		$errstr =~ s/\n(.*)$//s;
+		print_result("module : $module $version", 1, $errstr);
+		return 0;
+	} else {
+		# TODO : Check version number
+		my $msg = "module : $module";
+		$msg .= " >=$version" if $version;
+		print_result($msg, 0);
+		return 1;
+	}
+}
+
+sub install_module {
+	my $module = shift;
+	my $version = shift;
+	
+	print "About to install $module\n";
+	
+	if ($args{'install-cmd'}) {
+		my $cmd = $args{'install-cmd'};
+		if( $cmd =~ /\%s/) {
+			$cmd =~ s/\%s/$module/g;
+		} else {
+			$cmd .= " $module";	
+		}
+		
+		# We now got the command 
+		print 'Command to execute :<' . $cmd . ">\n";
+		return scalar `$cmd 1>&2`;
+	} else {
+		# Regular CPAN install
+		my $ok = 1;
+		{
+			$ok = eval { require CPAN::MyConfig } || eval { require CPAN::Config };
+		}
+		
+        if (! $ok) {
+			print << 'FIN';
+Error while runnig CPAN access. Please configure your CPAN or setup your $HOME.
+Run `perl -MCPAN -e shell` to configure CPAN
+FIN
+ 			exit(1);
+		}
+		$ok = eval { require CPAN; CPAN::Shell->install($module) };
+		return $ok unless $@;
+
+		print << 'FIN';
+We got problem while installing your $module.
+Error string was :
+$@
+FIN
+		exit (1);
+	}
+}
+
+

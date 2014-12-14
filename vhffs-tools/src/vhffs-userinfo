@@ -1,0 +1,33 @@
+#!%PERL%
+
+use lib '%VHFFS_LIB_DIR%';
+use Vhffs::User;
+use Vhffs;
+use Vhffs::Functions;
+
+my $vhffs = new Vhffs;
+my $arg;
+
+$arg = $ARGV[0];
+
+if( ( $arg eq "--help" ) or ( $arg eq "-h" ) )
+{
+	print "Use vhffs-userinfo username\n";
+	exit( 2 );
+}
+
+my $users = Vhffs::User::getall( $vhffs , undef , $arg );
+my $user;
+
+if( defined $users )
+{
+	foreach $user ( @{$users} )
+	{
+		print $user->get_username . "\t" . $user->get_firstname . "\t". $user->get_lastname . "\t" . $user->get_mail . "\t" . $user->get_shell . "\t". $user->get_home ."\n";
+	}
+}
+else
+{
+	print "No such user with this username";
+	exit( -1 );
+}

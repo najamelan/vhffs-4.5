@@ -1,0 +1,1078 @@
+/*************************************************************/
+/* VHFFS blue theme style sheet, based on the work of        */
+/* G.Wolfgang. Found on Open Source Web Design               */
+/* (http://www.oswd.org)                                     */
+/*************************************************************/
+
+/*************************/
+/* SECTION 1 - MAIN BODY */
+/*************************/
+body {
+	font-size: 9pt;
+	margin: 0px auto;
+	padding: 0px;
+	background: rgb(227, 227, 227);
+	font-family: arial, sans-serif;
+}
+
+div#background-container {
+	background: url(img/background_body.png) top center repeat-y;
+}
+
+.page-container-panel-anonymous,
+.page-container-public,
+.page-container-panel {
+	width: 770px;
+	margin: 0px auto;
+	padding: 0px;
+	background: white;
+	border: solid 1px rgb(100, 100, 100);
+}
+
+.page-container-public {
+	background: url(img/background_layout_1.gif) top left repeat-y;
+}
+
+.content-panel-anonymous,
+.content-panel{
+    width: 750px;
+    margin: 0px auto;
+    padding: 10px;
+}
+
+/*************************************/
+	/* SECTION 2 - HEADER AND NAVIGATION */
+	/*************************************/
+#header {
+	width: 770px;
+	height: 65px;
+	margin: 0px;
+	padding: 0px;
+	background: white;
+}
+
+/*-----------------------------------*/
+	/* 2.1 - Sitename, slogan and banner */
+	/*-----------------------------------*/
+	/*.site-name {width: 300px; height: 50px; top: 12px; position: absolute; z-index: 4; overflow: hidden; margin: 0px; padding-left: 75px; color: rgb(69,140,204);}*/
+.site-name {
+	width: 300px;
+	height: 50px;
+	padding-top: 12px;
+	float: left;
+	overflow: hidden;
+	margin: 0px;
+	padding-left: 75px;
+	color: rgb(69, 140, 204);
+}
+
+/*--------------------------*/ /* 2.2 - Navigation - Flags */
+	/*--------------------------*/
+.navflag {
+	width: 750px;
+	top: 14px;
+	position: absolute;
+	z-index: 2;
+	background-color: transparent;;
+	text-align: right;;
+	padding: 0px 20px 0px 0px;
+}
+
+.navflag a {
+	margin: 0px;
+	padding: 0px 0px 0px 1px;
+}
+
+.navflag a:hover {
+	color: rgb(0, 0, 0);
+	text-decoration: none;
+}
+
+.navflag img {
+	margin: 0px;
+	padding: 0px;;
+	border: none;
+	height: 14px;
+}
+
+/*----------------------------*/
+/* 2.3 - Navigation - Level 1 */
+/*----------------------------*/
+.nav1 {
+	width: 750px;
+	top: 35px;
+	position: absolute;
+	z-index: 3;
+	background: transparent;
+	font-family: verdana, arial, sans serif;
+	font-size: 8pt;
+	text-align: right;
+	padding: 2px 0px 20px 0px;
+	font-weight: bold;
+}
+
+.nav1 a {
+	margin: 0px;
+	padding: 2px 4px 2px 4px;
+	border-right: solid 1px rgb(115, 162, 182);
+	color: rgb(115, 162, 182);
+	text-decoration: none;
+}
+
+.nav1 a:first-child {
+	border-left: solid 1px rgb(115, 162, 182);
+}
+
+.nav1 a:hover,.nav1 a.selected {
+	color: rgb(50, 50, 50);
+	text-decoration: none;
+}
+
+/*----------------------------*/
+/*          Main menu         */
+/*----------------------------*/
+#top-menu {
+	clear: both;
+	margin: 0px;
+	padding: 0px;
+	font-family: verdana, arial, sans serif;
+	margin-bottom: 60px;
+    min-height: 27px;
+	background-color: rgb(127, 162, 202);
+}
+
+#top-menu ul {
+	margin: 0px;
+	padding: 0px;
+	border-top: solid 1px rgb(54, 83, 151);
+	border-bottom: solid 1px rgb(54, 83, 151);
+	font-weight: bold;
+	background-color: rgb(127, 162, 202);
+}
+
+#top-menu li {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+#top-menu a {
+	text-transform: uppercase;
+	text-decoration: none;
+	color: rgb(255, 255, 255);
+    display: inline-block;
+}
+
+#top-menu a:hover,#top-menu a.selected {
+	color: rgb(50, 50, 50);
+	text-decoration: none;
+}
+
+#top-menu>ul {
+	width: 770px;
+}
+
+#top-menu>ul>li {
+    display: inline-block;
+}
+
+#top-menu>ul>li>a {
+	margin: 0px 0px 0px 0px;
+	padding: 5px 10px 5px 10px;
+	border-right: solid 1px rgb(54, 83, 151);
+}
+
+#top-menu>ul>li ul {
+    display: none;
+    position: absolute;
+    width: auto;
+	border: solid 1px rgb(54, 83, 151);
+    padding-left: 5px;
+    padding-right: 5px;
+    width: 120px;
+}
+
+#top-menu>ul>li li {
+    position: relative;
+}
+
+#top-menu>ul>li:hover>ul {
+    display: block;
+}
+
+#top-menu>ul>li>ul>li:hover>ul {
+    display: block;
+    left: 120px;
+    top: 0;
+}
+
+#top-menu>ul ul ul {
+    padding-bottom: 5px;
+}
+
+#top-menu>ul ul a {
+    width: 100%
+}
+
+/*----------------------------*/ /* 2.5 - Navigation - Level 3 */
+	/*----------------------------*/
+div#left-menu {
+	overflow: hidden;
+	width: 160px;
+	margin: 0px 0px 40px 0px;
+	padding: 0px;
+	color: rgb(75, 75, 75);
+	background-color: rgb(255, 255, 255);
+	float: left;
+}
+
+div#right-menu {
+	float: right;;
+	overflow: hidden;
+	left: 50%;
+	width: 160px;
+	margin: 0px 0px 40px 0px;
+	padding: 0px;
+	color: rgb(75, 75, 75);
+	background-color: rgb(255, 255, 255);
+}
+
+div#left-menu h1,div#right-menu h1 {
+	margin: 0px 0px 0px 0px;
+	padding: 3px 5px 2px 7px;
+	background-color: rgb(156, 186, 214);
+	color: rgb(255, 255, 255);
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 110%;
+	border: none;
+}
+
+div#left-menu h2,div#right-menu h2 {
+	background-color: rgb(219, 230, 241);
+	min-height: 1.7em;
+	height: auto !important;
+	height: 1.7em;
+	line-height: 1.7em;
+	margin: 0px;
+	padding: 0px 7px 0px 7px;
+	border-top: solid 1px rgb(200, 200, 200);;
+	color: rgb(75, 75, 75);
+	font-weight: bold;
+	font-size: 110%;
+	cursor: pointer;
+}
+
+div#right-menu p {
+    margin-top: 0px;
+}
+
+div#left-menu h2.empty,div#right-menu h2.empty {
+	font-style: italic;
+}
+
+div#left-menu div.menu,div#right-menu div.menu {
+	background-color: rgb(219, 230, 241);
+}
+
+div#left-menu a {
+	display: block;
+	min-height: 1.7em;
+	height: auto !important;
+	height: 1.7em;
+	line-height: 1.7em;
+	margin: 0px;
+	padding: 0px 7px 0px 7px;
+	border-left: solid 7px rgb(219, 230, 241);
+	color: rgb(75, 75, 75);
+	text-decoration: none;
+}
+
+div#left-menu a:hover {
+	border-left: solid 7px rgb(156, 186, 214);
+	color: rgb(100, 100, 100);
+	text-decoration: none;;
+	padding: 0px 7px 0px 7px;
+}
+
+a.tag1 {
+	text-decoration: none;
+	color: rgb(75, 75, 75)
+}
+
+a.tag1:visited {
+	color: rgb(75, 75, 75)
+}
+
+a.tag1:hover {
+	color: rgb(105, 105, 105)
+}
+
+a.tag2 {
+	text-decoration: none;
+	color: rgb(75, 75, 75);
+	font-size: 11px
+}
+
+a.tag2:visited {
+	color: rgb(75, 75, 75)
+}
+
+a.tag2:hover {
+	color: rgb(105, 105, 105)
+}
+
+a.tag3 {
+	text-decoration: none;
+	color: rgb(75, 75, 75);
+	font-size: 12px
+}
+
+a.tag3:visited {
+	color: rgb(75, 75, 75)
+}
+
+a.tag3:hover {
+	color: rgb(105, 105, 105)
+}
+
+a.tag4 {
+	text-decoration: none;
+	color: rgb(75, 75, 75);
+	font-size: 13px
+}
+
+a.tag4:visited {
+	color: rgb(75, 75, 75)
+}
+
+a.tag4:hover {
+	color: rgb(105, 105, 105)
+}
+
+a.tag5 {
+	text-decoration: none;
+	color: rgb(75, 75, 75);
+	font-size: 14px
+}
+
+a.tag5:visited {
+	color: rgb(75, 75, 75)
+}
+
+a.tag5:hover {
+	color: rgb(105, 105, 105)
+}
+
+a.tag6 {
+	text-decoration: none;
+	color: rgb(75, 75, 75);
+	font-size: 10px;
+	font-weight: bold;
+}
+
+a.tag6:visited {
+	color: rgb(75, 75, 75)
+}
+
+a.tag6:hover {
+	color: rgb(105, 105, 105)
+}
+
+a.tag7 {
+	text-decoration: none;
+	color: rgb(75, 75, 75);
+	font-size: 11px;
+	font-weight: bold;
+}
+
+a.tag7:visited {
+	color: rgb(75, 75, 75)
+}
+
+a.tag7:hover {
+	color: rgb(105, 105, 105)
+}
+
+a.tag8 {
+	text-decoration: none;
+	color: rgb(75, 75, 75);
+	font-size: 12px;
+	font-weight: bold;
+}
+
+a.tag8:visited {
+	color: rgb(75, 75, 75)
+}
+
+a.tag8:hover {
+	color: rgb(105, 105, 105)
+}
+
+a.tag9 {
+	text-decoration: none;
+	color: rgb(75, 75, 75);
+	font-size: 13px;
+	font-weight: bold;
+}
+
+a.tag9:visited {
+	color: rgb(75, 75, 75)
+}
+
+a.tag9:hover {
+	color: rgb(105, 105, 105)
+}
+
+a.tag10 {
+	text-decoration: none;
+	color: rgb(75, 75, 75);
+	font-size: 14px
+}
+
+a.tag10:visited {
+	color: rgb(75, 75, 75)
+}
+
+a.tag11:hover {
+	color: rgb(105, 105, 105)
+}
+
+div.tags-menu p.more-tags,div#public-content p.more-group {
+	text-align: center
+}
+
+ul#searchTagsList span.category {
+	font-weight: bold;
+}
+
+/******************************************************************************/
+/* SECTION 3 - SPECIFIC CLASSES FOR LAYOUT #1 (With navigation, with sidebar )*/
+/******************************************************************************/
+#public-content {
+	width: 410px;
+	min-height: 500px;
+	margin: 0px 0px 0px 0px;
+	padding: 0px 180px 10px 180px;
+	color: rgb(75, 75, 75);
+}
+
+#public-content h2 {
+	margin: 10px 0px;
+}
+
+#public-content h1+h2 {
+	margin: 5px 0px 10px;
+}
+
+img.group-avatar {
+	width: 70px;
+	height: 100px;
+	float: left;
+	margin-bottom: 5px;
+	border: 1px dashed gray;
+}
+
+/* In summary info avatar is on the left... */
+div.group-info img.group-avatar, div.user-info img.user-avatar {
+	margin-right: 5px;
+	float:left;
+}
+
+/* ... but on the right in detailed info. */
+div.group-details img.group-avatar {
+	margin-left: 5px;
+	float:right;
+}
+
+div.group-info div.description {
+	/* Should be rougly img.group-avatar height */
+	min-height: 60px;
+}
+
+div.group-info div.tags {
+	text-align:center;
+}
+
+div.user-info ul {
+	min-height: 100px;
+}
+
+div.group-info a.groupname {
+	font-weight: bold;
+	text-decoration: none;
+}
+
+div.group-info a.groupname:hover {
+	text-decoration: underline;
+}
+
+div.group-info span.owner {
+	font-style: italic;
+}
+
+p.tags a {
+	border-bottom: 1px dotted;
+	text-decoration: none;
+}
+
+div#loading {
+	position: absolute;
+	top: 1em;
+	left: 369px;
+	z-index: 1000;
+}
+
+div.acltable * {
+	margin:0px;
+	padding:0px;
+}
+
+div.acltable {
+	border:1px solid #CCCCCC;
+	background-color:#EEEEEE;
+}
+
+div.acltable form {
+	clear:both;
+}
+
+div.acltable div.tableheader, div.acltable div.tablebody {
+	margin:1px;
+}
+
+div.acltable div.tablebody form span, div.acltable div.tableheader span {
+	display:block;
+	float:left;
+	overflow:auto;
+	width:85px;
+	margin:1px;
+	border:1px solid rgb(115, 162, 182);
+}
+
+div.acltable div.tablebody input[type="submit"] {
+	width:60px;
+	height:1.7em;
+}
+
+div.acltable div.tableheader span{
+	height:5.5em;
+	font-size:small;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	text-align:center;
+	overflow:hidden;
+}
+
+div.acltable div.tablebody form span {
+	height:1.8em;
+	text-align:center;
+	overflow:hidden;
+}
+
+/******************************************************/
+	/* SECTION 4 - SPECIFIC CLASSES FOR LAYOUTS #2 and #3 */
+	/******************************************************/
+
+.content-login {
+	width: 569px;
+	min-height: 300px;
+	margin: 0px auto 10px auto;
+	color: rgb(75, 75, 75);
+}
+
+/*********************************/
+/* SECTION 6 - COMMON PARAMETERS */
+/*********************************/
+
+/*--------------------*/
+/* 6.1 - Content Area */
+/*--------------------*/
+
+/* Titles and textboxes*/
+h1 {
+	overflow: hidden;
+	margin: 0px 0px 10px 0px;
+	padding: 0px 0px 2px 0px;
+	border-bottom: solid 3px rgb(88, 144, 168);
+	color: rgb(88, 144, 168);
+	font-weight: bold;
+	font-size: 120%;
+}
+
+h1 a {
+	color: rgb(75, 75, 75);
+	text-decoration: none;
+}
+
+h2 {
+	margin: 0px;
+    margin-top: 10px;
+	margin-bottom: 10px;
+	padding: 0px;
+	color: rgb(88, 144, 168);
+	font-weight: bold;
+	font-size: 115%;
+}
+
+h3 {
+	margin: 0px;
+	margin-bottom: 5px;
+	padding: 0px;
+	color: rgb(88, 144, 168);
+	font-weight: bold;
+	font-size: 110%;
+}
+
+h4 {
+	margin: 0px;
+	padding: 0px;
+	color: rgb(88, 144, 168);
+	font-weight: bold;
+	font-size: 105%;
+}
+
+p.subtitle {
+	margin: 0px;
+	padding: 0px 10px 3px 10px;
+	background-color: rgb(215, 215, 215);
+	color: rgb(88, 144, 168);
+	font-weight: bold;
+	font-size: 110%;
+}
+
+.content-login h1 {
+	overflow: hidden;;
+	text-align: center;
+	margin: 0px 0px 10px 0px;
+	padding: 0px 0px 2px 0px;
+	font-weight: bold;
+	border: none;
+}
+
+.content-login h1 a:hover {
+	color: rgb(0, 0, 0);
+	text-decoration: none;
+}
+
+.content-login form#loginForm {
+	width: 410px;
+	margin: 0 auto 0 auto;
+}
+
+.content-login p#psubscribe,.content-login p#plostpass,.content-login p#pinfo,.content-login p#ppublic
+	{
+	text-align: center
+}
+
+/*----------------*/ /* - Forms        */ /*----------------*/
+input,textarea,select,button {
+	margin: 0px;
+	background-color: rgb(235, 235, 235);
+	color: rgb(30, 30, 30);
+	border: 1px solid rgb(150, 150, 150);;
+}
+
+input[type=submit],button,input[type=submit]:focus {
+	border-left: 1px solid rgb(180, 180, 180);;
+	border-top: 1px solid rgb(180, 180, 180);;
+	border-right: 1px solid rgb(130, 130, 130);;
+	border-bottom: 1px solid rgb(130, 130, 130);;
+}
+
+input[type=submit]:active, button:active {
+	border-left: 1px solid rgb(130, 130, 130);;
+	border-top: 1px solid rgb(130, 130, 130);;
+	border-right: 1px solid rgb(180, 180, 180);;
+	border-bottom: 1px solid rgb(180, 180, 180);;
+}
+
+input:focus,textarea:focus,select:focus {
+	border: 1px solid rgb(120, 120, 120);;
+	background-color: rgb(225, 225, 225);;
+	color: rgb(0, 0, 0);
+}
+
+input [type="text"],input [type="password"] {
+	width: 250px
+}
+
+p.submit {
+	text-align: center
+}
+
+input [type="submit"],button,input [type="button"] {
+	background-color: rgb(210, 210, 210);
+}
+
+#public-content textarea {
+	width: 400px;
+	height: 150px;
+}
+
+label.own-line {
+	display: block;
+	margin-bottom: 0.2em;
+	position: relative;
+}
+
+form.table-like label.inline {
+    width: auto;
+}
+
+form.table-like label {
+    display: inline-block;
+    vertical-align: top;
+    width: 150px;
+}
+
+.vhffs-tool-tip {
+	top: 0px;
+	display: block;
+	position: absolute;;
+	border: 1px solid rgb(150, 150, 150);
+	background-color: rgb(240, 240, 240);
+	z-index: 10;
+	left: 3em;;
+	max-width: 250px;
+}
+
+div.info {
+	position: absolute;
+	top: 0px;
+	visibility: hidden;
+	border: 1px solid rgb(150, 150, 150);
+	background-color: rgb(240, 240, 240);
+	max-width: 500px;
+	min-height: 50px;
+	z-index: 200;
+}
+
+div.infoCentered {
+	left: 50%;
+	margin-left: -160px;
+}
+
+div.info div.content {
+	padding: 10px 10px 1px 10px;
+}
+
+div.info div.content p.info {
+	font-style: italic;
+}
+
+div.info div.title {
+	padding: 0 14px 0 0;;
+	margin: 0;
+	border-bottom: 1px solid rgb(150, 150, 150);
+	background-color: rgb(220, 220, 220);
+	text-align: center;
+	line-height: 16px;
+}
+
+div.info div.content textarea {
+	width: 100%;
+}
+
+div.info div.toolbar {
+	text-align: center;
+	padding: 0px 0px 5px 0px;
+}
+
+div.info img.closeButton {
+	position: absolute;
+	z-index: 500;
+	top: 2px;
+	right: 2px;
+}
+
+div#moderationInfo textarea {
+	height: 150px
+}
+
+div#fieldHelp {
+	float: right;
+	margin-right: 30px;;
+	visibility: hidden;;
+	border: 1px solid rgb(150, 150, 150);
+	background-color: rgb(240, 240, 240);;
+	width: 250px;
+}
+
+div#fieldHelp div#fieldHelpTitle {
+	font-weight: bold
+}
+
+input+span.tooltip {
+	font-weight: bold;
+}
+
+hr {
+	color: rgb(200, 200, 200);
+	background-color: rgb(200, 200, 200);
+	height: 1px;
+	margin: 0px 0px 15px 0px;;
+	border: 0;;
+	width: 569px
+}
+
+/* Paragraphs */
+p {
+	margin: 0.5em 0px 0.5em 0px;
+	padding: 0px;
+	line-height: 1.3em;
+	font-family: arial, sans serif;
+}
+
+/* Lists */
+ul {
+	margin: 0px 0px 7px 15px;
+	padding: 0px 0px 0px 15px;
+	font-family: arial;
+}
+
+ul li {
+	list-style-image: url('img/bullet.png');
+}
+
+#public-content a.webarea-link, 
+#public-content a.webcvs-link, 
+#public-content a.websvn-link, 
+#public-content a.webgit-link,
+#public-content a.webmercurial-link,
+#public-content a.list-archives-link {
+	text-decoration: none;
+	font-weight: bold
+}
+
+ol {
+	margin: 0px 0px 0px 9px;
+	padding: 0px 0px 0px 25px;
+	list-style-type: decimal;
+	list-style-position: outside;
+}
+
+/* Tables */
+table {
+	border: solid 1px rgb(150, 150, 150);
+	empty-cells: show;
+	border-collapse: collapse;
+	background-color: rgb(233, 232, 244);
+}
+
+table tr {
+	margin: 0px;
+	padding: 0px;
+}
+
+table td {
+	padding: 2px 7px 2px 7px;
+	border: solid 1px rgb(150, 150, 150);
+	text-align: left;
+}
+
+table th {
+	margin: 0px;
+	padding: 2px 7px 2px 7px;
+	border: solid 1px rgb(150, 150, 150);
+	empty-cells: show;
+	text-align: left;
+}
+
+table.moderation th {
+	border: none;
+	border-bottom: solid 1px rgb(150, 150, 150);
+}
+
+table.moderation td {
+	border: none;
+}
+
+table.moderation tr.buttons td {
+	text-align: center;
+	border-bottom: solid 1px rgb(150, 150, 150);;
+	padding-bottom: 5px
+}
+
+/*--------------------*/
+/* 6.3 - Footer Area  */
+/*--------------------*/
+#footer {
+	overflow: hidden;
+	clear: both;
+	width: 770px;
+	height: 1.4em;
+	margin: 0px;
+	padding: 0.5em 0px 0.5em 0px;
+	border-top: solid 1px rgb(125, 125, 125);
+	background-color: rgb(128, 161, 202);
+	color: rgb(255, 255, 255);
+}
+
+#footer p {
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+	line-height: 1.3em;
+}
+
+/*-------------------*/
+/* 6.4 - Hyperlinks  */
+/*-------------------*/
+a {
+	color: rgb(75, 75, 75);
+	text-decoration: underline;
+}
+
+a:hover {
+	color: rgb(0, 0, 0);
+	text-decoration: none;
+}
+
+a:visited {
+	color: rgb(150, 150, 150);
+}
+
+#footer a {
+	color: rgb(255, 255, 255);
+	text-decoration: underline;
+}
+
+#footer a:hover {
+	color: rgb(0, 0, 0);
+	text-decoration: none;
+}
+
+/*******************************/
+/* SECTION 7 - GENERIC CLASSES */
+/*******************************/
+
+/*-----------------------------*/
+/* 7.2 - Horizontal alignments */
+/*-----------------------------*/
+.align-left {
+	text-align: left;
+}
+
+.align-right {
+	text-align: right;
+}
+
+.align-center {
+	text-align: center;
+}
+
+/*****************************/
+/* SECTION 8 - MISCELLANEOUS */
+/*****************************/
+.clear {
+	clear: both;
+}
+
+.hide {
+	display: none;
+}
+
+br {
+	clear: none;
+}
+
+/**************************/
+/*        Login           */
+/**************************/
+
+.page-container-login div.logo {
+	text-align: center;
+	margin-bottom: 20px
+}
+
+div#tagging-panel {
+	margin-top:5px;
+}
+
+div#tagging-panel h1 {
+	margin: 0px;
+	margin-bottom: 10px;
+	padding: 0px;
+	color: rgb(88, 144, 168);
+	font-weight: bold;
+	border: none;
+}
+
+div#tagging-panel div.categories {
+	width: 285px;
+	margin-right: 5px;
+	float: left;
+}
+
+div#tagging-panel div.tags {
+	width: 285px;
+	margin-right: 5px;
+	float: right;
+}
+
+div#tagging-panel div.request {
+	clear:both;
+	padding-top:10px;
+}
+
+div#tagging-panel div.request label {
+	position:static;
+	float: none;
+	display:inline;
+	margin-right:5px;
+}
+
+/* quota */
+span.quota,
+span.quota-used {
+    display: inline-block;
+    vertical-align: middle;
+    height: 20px;
+}
+
+span.quota {
+    width: 300px;
+	background-color: rgb(75, 75, 75);
+}
+
+span.quota-used {
+	background-color: rgb(127, 162, 202);
+}
+
+/*-----------*/
+/* Subscribe */
+/*-----------*/
+
+div#recaptcha_widget_div {
+    float: left;
+}
+
+
+/*********************/
+/* Dijit overloading */
+/*********************/
+.tundra .dijitTextBox {
+	margin: 0px;
+	background: rgb(235, 235, 235);
+	color: rgb(30, 30, 30);
+	border: 1px solid rgb(150, 150, 150);;
+    width: 150px;
+}
+
+input[type=textbox],
+.tundra .dijitTextBox {
+    width: 150px;
+}
+
+.tundra .dijitTextBox input.dijitInputInner {
+    width: auto;
+}
+
+.tundra .dijitTextBox input {
+    height: 16px;
+    padding: 1px 0px;
+}
+
+.dijitTooltip .dijitTooltipContents img {
+    vertical-align: middle;
+}

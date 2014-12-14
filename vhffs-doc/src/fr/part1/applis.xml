@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>Applications tierces</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>Ce chapitre pr&eacute;sente la configuration des applications
+    tierces.</para>
+  </section>
+
+  <xi:include href="exim.xml" xmlns:xi="http://www.w3.org/2003/XInclude" />
+
+  <xi:include href="mydns.xml" xmlns:xi="http://www.w3.org/2003/XInclude" />
+</chapter>

@@ -1,0 +1,136 @@
+[% UNLESS mail.conf_allowed_catchall == catchall_state.none %]
+<h2>[% 'Catchall address' | i18n | html %]</h2>
+  <p>[% 'Catchall address receive all emails for which no box nor forward exists on this domain.' | i18n | html %]</p>
+  <p>[% 'To avoid blacklisting issues due to spam forwarding, catchall address are restricted to boxes belongin to this mail domain.' | i18n | html %]</p>
+  [% FOREACH catchall IN mail.catchall.values %]
+    <form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p>[% catchall.boxname | html %]&#160;<input
+	    type="submit" value="[% 'Delete this catchall box' | i18n | html %]" name="delete_catchall_submit"/></p>
+		<input type="hidden" name="boxname" value="[% catchall.boxname | html %]" />
+		<input type="hidden" name="name" value="[% mail.domain | html %]" />
+    </form>
+  [%END # FOREACH mail.catchall %]
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+  <p>
+	<label for="catchall">[% 'Catchall destination address:' | i18n | html %]</label>
+[% IF mail.conf_allowed_catchall == catchall_state.domain %]
+        <select name="catchall" id="catchall">
+          <option value="">---</option>
+[% FOREACH lp IN sorted_localparts %]
+[% IF lp.box AND lp.box.state == constants.object_statuses.ACTIVATED %]
+[% SET address = lp.localpart _ '@' _ mail.domain %]
+          <option value="[% lp.localpart _ '@' _ mail.domain | html %]">[% address | html %]</option>
+[% END %]
+[% END # lp IN sorted_localparts %]
+        </select>
+[% ELSE # mail.conf_allowed_catchall == catchall_state.open %]
+	<input type="text" name="catchall" id="catchall" />
+[% END %]
+	<input type="hidden" name="name" value="[% mail.get_domain | html %]" />
+	<input type="submit" name="add_catchall_submit" value="[% 'Add a catchall box' | i18n | html %]"/>
+  </p>
+</form>
+[% END # mail.conf_allowed_catchall == catchall_state.none %]
+<h2>[% 'Accounts' | i18n | html %]</h2>
+[% FOREACH lp IN sorted_localparts %]
+<fieldset>
+<legend>[% lp.localpart _ '@' _ mail.domain | html %]</legend>
+[% IF lp.box %]
+<fieldset>
+<legend>[% 'Box' | i18n | html %]</legend>
+[% IF lp.box.state == constants.object_statuses.ACTIVATED %]
+		<form class="table-like" method="post" action="#" accept-charset="utf-8">
+                <p>[% 'New password:' | i18n | html %]<input type="password" name="localpart_password" value="" autocomplete="off"/></p>
+[% IF nospam %]
+                <p>[% 'Enable antispam?' | i18n | html %]
+                  <input type="radio" name="use_antispam"[% ' checked="checked"' IF lp.nospam %] value="yes"/>&#160;[% 'Yes' | i18n | html %]
+                  <input type="radio" name="use_antispam"[% ' checked="checked"' UNLESS lp.nospam %] value="no"/>&#160;[% 'No' | i18n | html %]</p>
+[% END %]
+[% IF novirus %]
+                <p>[% 'Enable antivirus?' | i18n | html %]
+                  <input type="radio" name="use_antivirus"[% ' checked="checked"' IF lp.novirus %] value="yes"/>&#160;[% 'Yes' | i18n | html %]
+                  <input type="radio" name="use_antivirus"[% ' checked="checked"' UNLESS lp.novirus %] value="no"/>&#160;[% 'No' | i18n | html %]</p>
+[% END %]
+                <p><input type="submit" name="update_localpart_submit" value="[% 'Update' | i18n | html %]"/>&#160;<input type="submit" name="delete_box_submit" value="[% 'Delete this mail account' | i18n | html %]"/></p>
+			<input type="hidden" name="localpart" value="[% lp.localpart | html %]" />
+			<input type="hidden" name="name" value="[% mail.domain | html %]" />
+
+		</form>
+[% ELSE %]
+   <p>[% lp.box.state | stringify_status | html %]</p>
+[% END # lp.box.state == constants.object_statuses.ACTIVATED %]
+</fieldset>
+[% END # lp.box %]
+[% IF lp.redirects %]
+<fieldset>
+<legend>[% 'Redirects' | i18n | html %]</legend>
+  [% FOREACH lpr IN lp.redirects.values %]
+    <form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p><input type="text" name="newremote" value="[% lpr.redirect | html %]" />&#160;<input
+	    type="submit" value="[% 'Update forward' | i18n | html %]" name="update_forward_submit"/>&#160;<input
+	    type="submit" value="[% 'Delete forward' | i18n | html %]" name="delete_forward_submit"/></p>
+		<input type="hidden" name="localpart" value="[% lp.localpart | html %]" />
+		<input type="hidden" name="name" value="[% mail.domain | html %]" />
+		<input type="hidden" name="remote" value="[% lpr.redirect | html %]" />
+    </form>
+  [%END # FOREACH lp.redirects %]
+  <form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p class="button">
+		<input type="text" name="forward" id="new_forward_forward" />
+		<input type="hidden" name="localpart" id="new_forward_localpart" value="[% lp.localpart | html %]"/>
+		<input type="hidden" name="name" value="[% mail.domain | html %]" />
+		<input type="submit" value="[% 'Add forward' | i18n | html %]" name="add_forward_submit"/>
+	</p>
+  </form>
+</fieldset>
+[% END # IF lp.redirects %]
+[% IF lp.ml %]
+	<p>[% 'Is a mailing list' | i18n | html %]</p>
+[% END # IF lp.ml %]
+</fieldset>
+[% END # lp IN sorted_localparts %]
+
+<h3>[% 'Add an account' | i18n | html %]</h3>
+
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p>
+		<label for="new_box_localpart">[% 'Local part (left side of the @):' | i18n | html %]</label>
+		<input type="text" name="localpart" id="new_box_localpart" />@[% mail.get_domain | html %]
+	</p>
+	<p>
+		<label for="new_localpart_password">[% 'Password:' | i18n | html %]</label>
+		<input type="password" name="localpart_password" id="new_localpart_password" autocomplete="off"/>
+	</p>
+	<p class="button">
+		<input type="hidden" name="name" value="[% mail.get_domain | html %]" />
+		<input type="submit" value="[% 'Add mailbox' | i18n | html %]" name="add_box_submit"/>
+	</p>
+</form>
+
+<h3>[% 'Add forward' | i18n | html %]</h3>
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p>
+		<label for="new_forward_localpart">[% 'Local part (left side of the @):' | i18n | html %]</label>
+		<input type="text" name="localpart" id="new_forward_localpart" />@[% mail.domain | html %]
+	</p>
+	<p>
+		<label for="new_forward_forward">[% 'Forward to address:' | i18n | html %]</label>
+		<input type="text" name="forward" id="new_forward_forward" />
+	</p>
+	<p class="button">
+		<input type="hidden" name="name" value="[% mail.domain | html %]" />
+		<input type="submit" value="[% 'Add forward' | i18n | html %]" name="add_forward_submit"/>
+	</p>
+</form>
+
+[% INCLUDE 'acl/form.tt' 
+    object = mail %]
+
+[% INCLUDE 'object/delete.tt'
+    type = 'mail'
+    oid = mail.get_oid %]
+
+[% IF current_user.is_admin %]
+    [% INCLUDE 'admin/object/edit.tt' 
+        object = mail %]
+[% END %]

@@ -1,0 +1,11 @@
+[% USE date %]
+<p><label>[% 'Date:' | i18n | html %]</label>
+    [% date.format(mailing.date, '%x') %]</p>
+<p><label>[% 'Subject:' | i18n | html %]</label>
+    [% mailing.subject | html %]</p>
+<p><label>[% 'State:' | i18n | html %]</label>
+    [% mailing.state %]</p>
+<p>[% 'Body:' | i18n | html %]</p>
+<div>
+[% mailing.message | html_para %]
+</div>

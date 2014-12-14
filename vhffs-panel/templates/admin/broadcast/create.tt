@@ -1,0 +1,15 @@
+<h1>[% 'Send an email to all hosted people' | i18n | html %]</h1>
+
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p>
+		<label for="subject">[% 'Subject:' | i18n | html %]</label>
+		<input type="text" name="subject" id="subject" value="[% subject | html %]"/>
+	</p>
+	<p>
+		<label for="body">[% 'Message:' | i18n | html %]</label>
+		<textarea name="body" id="body" cols="60" rows="30">[% body | html %]</textarea>
+	</p>
+	<p class="button" id="buttonSend">
+		<input type="submit" value="[% 'Send' | i18n | html %]" />
+	</p>
+</form>

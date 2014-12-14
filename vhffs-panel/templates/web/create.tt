@@ -1,0 +1,24 @@
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p>
+		<label>[% 'Owner group for this web area:' | i18n | html %]</label>
+        [% group.get_groupname %]
+	</p>
+	<p>
+		<label for="servername">Address (ServerName directive):</label>
+		<input type="text" name="servername" id="servername" value="[% servername | html %]"/>
+	</p>
+	<p class="warning">
+        [% 'Be careful, if you want to create www.domain.tld, you should create a webspace with domain.tld as servername. VHFFS aliases www.domain.tld to domain.tld.' | i18n | html %]
+	</p>
+	<p>
+		<label for="description">[% 'How will this web area be used:' | i18n | html %]</label>
+		<textarea name="description" id="description" cols="45" rows="7">[% description | html %]</textarea>
+	</p>
+[% IF has_public_area %]
+	<p>[% 'Please consider that this description is going to be displayed in the public area. So you have to write it in impersonal form. You should take care to write it with correct grammar and tenses. Take all the time you need to fill it with the best content you are able to do.' | i18n | html %]</p>
+[% END %]
+	<p class="button" id="buttonSend">
+		<input type="hidden" name="group" value="[% group.get_groupname | html %]" />
+		<input type="submit" value="[% 'Send' %]" name="web_submit" />
+	</p>
+</form>

@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>[% title | html %]</title>
+	<link rel="stylesheet" type="text/css" href="/themes/[% theme %]/main.css"/>
+	<meta http-equiv="Content-type" content="application/xhtml+xml; charset=utf-8"/>
+	<meta name="theme" content="[% theme %]"/>
+	<script language="javascript" type="text/javascript" charset="utf-8" src="/js/prototype.js"></script>
+	<script language="javascript" type="text/javascript" charset="utf-8" src="/js/commons.js"></script>
+	<script language="javascript" type="text/javascript" charset="utf-8" src="/js/tooltip.js"></script>
+    <script language="javascript" type="text/javascript" charset="utf-8" src="/js/dojo/dojo.js"></script>
+[% IF refresh_url %]<meta http-equiv="refresh" content="5;[% refresh_url | html %]"/>[% END %]
+</head>
+<body>
+<div id="background-container">
+  <div class="page-container-panel">
+[% INCLUDE 'misc/header.tt' %]
+    <div class="content-panel">
+      [% IF page_title %]<h1>[% page_title | html %]</h1>[% END %]
+[% IF msg %]
+      <p>[% msg | html %]</p>
+[% END %]
+      [% INCLUDE 'misc/errors.tt' %]
+      [% INCLUDE 'misc/infos.tt' %]
+[% PROCESS $template %]
+    </div>
+    <div id="footer">
+      [% INCLUDE layouts/footer.tt %]
+    </div>
+  </div>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,15 @@
+# Local delivery for VHFFS handled boxes.
+# Box directory is fetched using a SQL query
+# on the VHFFS database.
+
+vhffs_local:
+  driver = appendfile
+  directory = VHFFS_VIRTUAL_LOCAL_DIR
+  maildir_format
+  user = Debian-exim
+  group = Debian-exim
+  mode = 0666
+  directory_mode = 0700
+# Can be used for quotas
+  maildir_use_size_file
+

@@ -1,0 +1,5 @@
+<h1>[% 'Last users' | i18n %]</h1>
+
+[% FOREACH u = users %]
+[% INCLUDE 'parts/user-general.tt' %]
+[% END %]

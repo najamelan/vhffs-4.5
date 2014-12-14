@@ -1,0 +1,6 @@
+usr/share/vhffs/api/*.pm
+usr/share/vhffs/api/Vhffs/*.pm
+usr/share/vhffs/api/Vhffs/Services/*.pm
+usr/share/vhffs/api/Vhffs/Tag/*.pm
+usr/share/vhffs/api/Vhffs/Robots/*.pm
+usr/share/vhffs/api/Vhffs/Panel/*.pm

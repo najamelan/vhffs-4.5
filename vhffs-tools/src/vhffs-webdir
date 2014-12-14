@@ -1,0 +1,29 @@
+#!%PERL%
+
+##############################################################################
+# This binary change directory to the specified website passed trough argument
+# This is a part of VHFFS distribution
+# Use as it : vhffs-webdir vhffs.org
+
+use strict;
+use lib '%VHFFS_LIB_DIR%';
+use Vhffs;
+use Vhffs::Services::Web;
+
+if( $#ARGV != 0 ) {
+	print 'Error ! Exec this script as it : webdir your.web.site'."\n";
+	print 'Example : vhffs-webdir vhffs.org'."\n";
+	exit( -1 );
+}
+
+my $vhffs = new Vhffs;
+exit 1 unless defined $vhffs;
+
+my $web = Vhffs::Services::Web::get_by_servername( $vhffs, $ARGV[0] );
+unless( defined $web ) {
+	print 'No such website'."\n";
+	exit 1;
+}
+
+my $webdir = $web->get_dir;
+print $webdir."\n";

@@ -1,0 +1,9 @@
+./configure
+make
+make install
+
+Use ./configure --help to get more help on configuration
+options.
+
+Consult vhffs wiki at http://www.vhffs.org for more detailed
+information on panel configuration.

@@ -1,0 +1,1 @@
+<p>[% 'Powered by %s' | i18n | pretty_print('<a href="http://www.vhffs.org">VHFFS</a>') %] [% constants.vhffs.VERSION %][% IF(constants.vhffs.RELEASE_NAME) %] ([% constants.vhffs.RELEASE_NAME %])[% END %]</p>

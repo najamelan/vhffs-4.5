@@ -1,0 +1,34 @@
+This package was debianized by Sébastien Le Ray <sebastien-vhffs@orniz.org> on
+Fri, 12 Jun 2009 18:43:39 +0200.
+
+It was downloaded from <svn://svn.tuxfamily.org/svnroot/vhffs4/vhffs/trunk>
+
+Upstream Authors:
+
+    Developpers :
+        - Julien Delange <god at gunnm dot org> : API, Panel, Listengine, documentation, website, robots, tools, shells and backend
+        - Julien Danjou < jd at naquadah dot org> : Listengine improvements, english fixes
+        - Florent Bayle < florent at sarcelle dot net> : IRC bots
+        - Sylvain Rochet <gradator at gradator dot net> : Some Panel improvements, download repositories, fixes to various buggy subsystems
+        - Sébastien Le Ray <sebastien-vhffs at orniz dot org> : Core refacotring, VHFFS 4.1 foundations, SQL improvments, templates refactoring
+
+Contributors :
+        - Alexandre Cucumel <kiouk at ... dot ...> : Original CSS and templates
+        - Kryskool from Ornix.org : some modifications on pgsql tables
+        - Samuel Lesueur <crafty@tuxfamily.org> : vhffs-forum, falseshell and some other minor contributions
+
+Copyright:
+
+    <Copyright (C) 2009 VHFFS Team and its contributors>
+
+License:
+
+    BSD, GPLv2
+
+The Debian packaging is:
+
+    Copyright (C) 2009 Sébastien Le Ray <sebastien-vhffs@orniz.org>
+
+and is licensed under the GPL version 3, 
+see `/usr/share/common-licenses/GPL-3'.
+

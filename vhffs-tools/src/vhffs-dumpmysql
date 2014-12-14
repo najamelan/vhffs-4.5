@@ -1,0 +1,26 @@
+#!%PERL%
+
+PAS FINI
+
+
+##############################################################################
+# This binary dumps a database into /tmp/dump file
+# This is a part of VHFFS distribution
+# Use as it : dump_mysql database_name
+
+use strict;
+use lib '%VHFFS_LIB_DIR%';
+use Vhffs;
+use Vhffs::Constants;
+use Vhffs::Functions;
+use Vhffs::Services::Mysql;
+
+
+my $vhffs = new Vhffs;
+my $objs = Vhffs::Services::Mysql::getall( $vhffs , Vhffs::Constants::ACTIVATED );
+my $obj;
+
+foreach $obj ( @{$objs} )
+{
+	$obj->blank_password;
+}

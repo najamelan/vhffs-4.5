@@ -1,0 +1,37 @@
+diff -Nru lighttpd-1.4.28.a/configure.ac lighttpd-1.4.28.b/configure.ac
+--- lighttpd-1.4.28.a/configure.ac	2010-08-13 11:10:15.000000000 +0000
++++ lighttpd-1.4.28.b/configure.ac	2011-04-16 22:07:20.000000000 +0000
+@@ -624,6 +624,7 @@
+ 
+ do_build="mod_cgi mod_fastcgi mod_extforward mod_proxy mod_evhost mod_simple_vhost mod_access mod_alias mod_setenv mod_usertrack mod_auth mod_status mod_accesslog"
+ do_build="$do_build mod_rrdtool mod_secdownload mod_expire mod_compress mod_dirlisting mod_indexfile mod_userdir mod_webdav mod_staticfile mod_scgi mod_flv_streaming"
++do_build="$do_build mod_partialcontentabuse"
+ 
+ plugins="mod_rewrite mod_redirect mod_ssi mod_trigger_b4_dl"
+ features="regex-conditionals"
+diff -Nru lighttpd-1.4.28.a/src/Makefile.am lighttpd-1.4.28.b/src/Makefile.am
+--- lighttpd-1.4.28.a/src/Makefile.am	2010-08-11 20:44:17.000000000 +0000
++++ lighttpd-1.4.28.b/src/Makefile.am	2011-04-16 22:07:20.000000000 +0000
+@@ -95,6 +95,11 @@
+ common_libadd =
+ endif
+ 
++lib_LTLIBRARIES += mod_partialcontentabuse.la
++mod_partialcontentabuse_la_SOURCES = mod_partialcontentabuse.c
++mod_partialcontentabuse_la_LDFLAGS = -module -export-dynamic -avoid-version -no-undefined
++mod_partialcontentabuse_la_LIBADD = $(common_libadd)
++
+ lib_LTLIBRARIES += mod_flv_streaming.la
+ mod_flv_streaming_la_SOURCES = mod_flv_streaming.c
+ mod_flv_streaming_la_LDFLAGS = -module -export-dynamic -avoid-version -no-undefined
+diff -Nru lighttpd-1.4.28.a/src/SConscript lighttpd-1.4.28.b/src/SConscript
+--- lighttpd-1.4.28.a/src/SConscript	2010-08-07 09:46:55.000000000 +0000
++++ lighttpd-1.4.28.b/src/SConscript	2011-04-16 22:07:20.000000000 +0000
+@@ -75,6 +75,7 @@
+ 	'mod_ssi' : { 'src' : [ 'mod_ssi_exprparser.c', 'mod_ssi_expr.c', 'mod_ssi.c' ], 'lib' : [ env['LIBPCRE'] ] },
+ 	'mod_flv_streaming' : { 'src' : [ 'mod_flv_streaming.c' ] },
+ 	'mod_magnet' : { 'src' : [ 'mod_magnet.c', 'mod_magnet_cache.c' ], 'lib' : [ env['LIBLUA'] ] },
++	'mod_partialcontentabuse' : { 'src' : [ 'mod_partialcontentabuse.c' ] },
+ }
+ 
+ staticenv = env.Copy(CPPFLAGS=[ env['CPPFLAGS'], '-DLIGHTTPD_STATIC', '-DOPENSSL_NO_KRB5'])

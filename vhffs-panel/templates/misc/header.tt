@@ -1,0 +1,26 @@
+<div id="header">
+  <div class="site-name">
+    <img src="/themes/[% theme %]/img/vhffs.png" alt="Virtual Hosting For Free Software"/> 
+  </div>
+  <!-- Flag navigations -->
+  <div class="navflag">
+[% FOREACH l IN languages %]
+    <a href="?[% query_string | html %];lang=[% l | html %]"><img src="/themes/[% theme %]/img/[% l | html %].png" alt="[% l %]"/></a>
+[% END %]
+  </div>
+
+  <!-- Navigation Level 1 -->
+
+  <div class="nav1">
+    <a href="?do=groupindex">[% 'Projects' | i18n | html %]</a>
+    <a href="?do=userprefs">[% 'Preferences' | i18n | html %]</a>
+    [% IF current_user.is_admin() OR current_user.is_moderator() %]
+    <a href="?do=admin">[% 'Administration' | i18n | html %]</a>
+    [% END %]
+    <a href="?do=contact">[% 'Contact' | i18n | html %]</a>
+    <a href="?do=logout">[% 'Logout' | i18n | html %]</a>
+    <span id="username">[% current_user.get_username() %]</span>
+  </div>
+
+</div> 
+[% INCLUDE 'menu/context.tt' %]

@@ -1,0 +1,209 @@
+			<form class="table-like" method="post" action="?do=userprefs" accept-charset="utf-8">
+				<p>
+					<label>[% 'Username:' | i18n | html %]</label>
+					<span class="formInput">[% user.get_username | html %]</span>
+				</p>
+	
+				<p>
+					<label for="firstname">[% 'Firstname:' | i18n | html %]</label>
+					<input name="firstname" id="firstname" value="[% user.get_firstname | html %]" type="text" />
+				</p>
+				
+				<p>
+					<label for="lastname">[% 'Last name:' | i18n | html %]</label>
+					<input name="lastname" id="lastname"  value="[% user.get_lastname %]" type="text" />
+				</p>
+			
+				<p>
+					<label for="mail">[% 'Email address:' | i18n | html %]</label>
+					<input name="mail" id="MAIL" maxlength="200" value="[% user.get_mail | html %]" type="text" />
+				</p>
+				
+				<p>
+					<label for="address">[% 'Address:' | i18n |html %]</label>
+					<input name="address" id="address" value="[% user.get_address | html %]" type="text" />
+				</p>
+
+				<p>
+					<label for="city">[% 'City:' | i18n | html %]</label>
+					<input name="city" id="city" value="[% user.get_city | html %]" type="text" />
+				</p>
+
+				<p>
+					<label for="zipcode">[% 'Zipcode:' | i18n | html %]</label>
+					<input name="zipcode" id="zipcode" value="[% user.get_zipcode | html %]" type="text" />
+				</p>
+	
+				<p>
+					<label for="country">[% 'Country:' | i18n | html %]</label>
+					<input name="country" id="country" value="[% user.get_country %]" type="text" />
+				</p>
+
+				<p>
+					<label for="password1">[% 'Password:' | i18n | html %]</label>
+					<input name="password1" id="password1" value="" type="password" autocomplete="off"/>
+				</p>
+				
+				<p>
+					<label for="password2">[% 'Password (confirm):' | i18n | html %]</label>
+					<input name="password2" id="password2" value="" type="password" autocomplete="off"/>
+				</p>
+
+				<p>
+					<label for="lang">[% 'Panel language:' | i18n | html %]</label>
+                    <select name="lang" id="lang">
+[% FOREACH l IN languages %]
+                        <option value="[% l | html %]"[% ' selected="selected"' IF user.get_lang == l %]>[% l | html %]</option>
+[% END %]
+					</select>
+				</p>
+
+				<p>
+					<label for="theme">[% 'Panel UI theme:' | i18n | html %]</label>
+					<select name="theme" id="theme">
+[% FOREACH t IN themes %]
+                        <option value="[% t | html %]"[% ' selected="selected"' IF user.get_theme == t %]>[% t | html %]</option>
+[% END %]
+					</select>
+				</p>
+
+				<p>
+					<label for="shell">[% 'Shell:' | i18n | html %]</label>
+					<select name="shell" id="shell">
+[% FOREACH s IN shells %]
+                        <option value="[% s | html %]"[% ' selected="selected"' IF user.get_shell == s %]>[% s | html %]</option>
+[% END %]
+					</select>
+				</p>
+[% IF newsletter.active %]
+				<p>
+					<label for="newsletter">[% 'Subscribe to newsletter' | i18n | html %]</label>
+					<input type="checkbox" name="newsletter" id="newsletter"[% ' checked="checked"' IF newsletter.subscribed %]/>
+				</p>
+[% END %]
+
+[% IF mail_user.defined() %]
+				<fieldset id="chooseMailMode">
+					<legend>[% 'We offer you the possibility to have one email box on the domain %s' | i18n | pretty_print(mail_user.get_domain) | html %]</legend>
+[% IF (!mail_user.get_localpart) || mail_user.get_redirect || 
+    (mail_user.get_box && mail_user.get_box.get_status == constants.object_statuses.ACTIVATED ) %]
+[% IF mail_user.get_config.url_doc %]
+                    <p><a href="[% mail_user.get_config.url_doc | html %]">[% 'Read more about this service.' | i18n | html %]</a></p>
+[% END %]
+					<p>
+						<input name="mail_activate" id="activate-platform-email" class="labeled"
+                            type="checkbox"[% ' checked="checked"' IF mail_user.get_localpart %]/>
+                            <label class="inline" for="activate-platform-email">[% 'Activate %s@%s email' | i18n | pretty_print(user.get_username, mail_user.get_domain) | html %]</label>
+					</p>
+                    <div id="platform-email-options"[% ' style="display:none"' UNLESS  mail_user.get_localpart %]>
+					<p>[% 'There are two possible usages:' | i18n | html %]</p>
+					
+					<p>
+						<input name="mail_usage" id="plaftorm-email-option-box" value="1" type="radio"
+                            class="labeled"[% ' checked="checked"' IF mail_user.get_box && !mail_user.get_redirect %]/>
+						<label class="inline" for="plaftorm-email-option-box" >[% 'Use VHFFS servers to manage this mail.' | i18n | html  %]
+                            <br/>[% 'You should use use the host pop.%s or imap.%s to fetch your mails.' | i18n | pretty_print(mail_user.get_domain, mail_user.get_domain) | html %]</label>
+					</p>
+					<div id="platform-email-box-options"[% ' style="display:none"' UNLESS mail_user.get_box && !mail_user.get_redirect %]>
+[% IF mail_user.use_nospam %]
+                        <p><input name="mail_nospam" id="mail_nospam" type="checkbox"
+                            class="labeled"[% ' checked="checked"' IF mail_user.get_localpart.get_nospam %]/>
+                            <label class="inline" for="mail_nospam">[% 'Activate anti-spam protection' | i18n | html %]</label></p>
+[% END %]
+[% IF mail_user.use_novirus %]
+                        <p><input name="mail_novirus" id="mail_novirus" type="checkbox"
+                            class="labeled"[% ' checked="checked"' IF mail_user.get_localpart.get_novirus %]/>
+                            <label class="inline" for="mail_novirus">[% 'Activate anti-virus protection' | i18n | html %]</label></p>
+[% END %]
+					</div>
+					<p>
+						<input name="mail_usage" 
+                            id="plaftorm-email-option-forward" value="2" class="labeled"
+                            type="radio"[% ' checked="checked"' IF mail_user.get_redirect %]/>
+						<label class="inline" for="plaftorm-email-option-forward">[% 'Forward emails from %s@%s to %s' | i18n | pretty_print(user.get_username, mail_user.get_domain, user.get_mail) | html %]</label>
+					</p>
+					</div>
+
+[% ELSE # mailbox does not exists or is activated %]
+                    <p>[% mail_user.get_box.get_status | stringify_status | html %]</p>
+[% END %]
+				</fieldset>
+[% END # mail_user.defined %]
+
+				<p class="button" id="buttonModify">
+[% IF user_help_url %]
+                    <a href="[% user_help_url | html %]">Aide</a>
+[% END %]
+					<input  type="submit"  value="[% 'Update' | i18n | html %]" name="prefs_submit" id="prefs_submit"/>
+				</p>
+
+				<input type="hidden" name="name" value="[% user.get_username | html %]"/>
+			</form>
+
+[% IF use_avatars %]
+			<h2>[% 'Send my avatar' | i18n | html %]</h2>
+			<form class="table-like" method="post" action="?do=avatarput;oid=[% user.get_oid %]" enctype="multipart/form-data" accept-charset="utf-8">
+				<h3>[% 'Current avatar' | i18n | html %]</h3>
+				<img alt="[% 'User\'s avatar' | i18n | html %]" src="?do=avatarget;oid=[% user.get_oid %]"/>
+				<p>[% 'The avatar is a PNG image that will appear next to your username in the public section.' | i18n | html %]
+				</p>
+		        <input type="hidden" name="oid" value="[% user.get_oid %]"/>
+
+				<p><input type="file" name="avatar" tabindex="1" size="45"/></p>
+				<p><input type="submit" value="[% 'Update my avatar' | i18n | html %]" /></p>
+			</form>
+[% END %]
+
+			<h2>[% 'Delete YOUR user' | i18n | html %]</h2>
+			
+			<form method="post" action="?do=userprefs" accept-charset="utf-8">
+			
+				<p>[% 'This action is non-reversible. Your user will be DESTROYED.' | i18n | html %]</p>
+				
+				<fieldset id="deleteUser" class="delete">
+					<legend>[% 'Are you SURE you want DELETE this user?' | i18n | html %]</legend>
+					<p>
+						<input type="radio" name="delete" id="deleteno" value="0" checked="checked" />
+						<label for="DELETENo">[% 'No, I\'m not sure, I\'d prefer to keep it.' | i18n | html %]</label>
+					</p>
+					<p>
+						<input type="radio" name="delete" id="deleteyes" value="1" />
+						<label for="DELETEYes">[% 'Yes I\'m sure of what I do' | i18n | html %]</label>
+					</p>
+				</fieldset>
+				
+				<p class="button" id="buttonDelete">
+					<input type="hidden" name="name" value="[% user.get_username | html %]"/>
+					<input type="submit" value="[% 'Delete my user' | i18n | html %]" name="delete_submit" id="delete_submit"/>
+				</p>
+                                
+			</form>
+
+[% IF current_user.is_admin %]
+    [% INCLUDE 'admin/object/edit.tt'
+        object = user %]
+    <h2>[% 'IRC nick'%]</h2>
+    <form class="table-like" method="post" action="#">
+        <input type="hidden" name="name" value="[% user.get_username | html %]"/>
+        <p><label for="user_ircnick">[% 'IRC nickname:' | i18n | html %]</label>
+        <input name="ircnick" id="user_ircnick" value="[% user.get_ircnick | html %]" type="text" />
+        </p>
+        <p><input type="submit" name="update_ircnick_submit" value="[% 'Update IRC nick' | i18n | html %]"/></p>
+    </form>
+    <h2>[% 'User\'s permissions' | i18n | html %]</h2>
+    <form class="table-like" method="post" action="#">
+        <input type="hidden" name="name" value="[% user.get_username %]"/>
+        <p><label for="user_permissions">[% 'User\'s permissions:' | i18n | html %]</label>
+        <select name="permissions" id="user_permissions">
+            <option value="[% constants.user_permissions.NORMAL %]"[% ' selected="selected"' IF user.get_admin == constants.user_permissions.NORMAL %]>
+                [% 'Normal' | i18n | html %]</option>
+            <option value="[% constants.user_permissions.MODERATOR %]"[% ' selected="selected"' IF user.get_admin == constants.user_permissions.MODERATOR %]>
+                [% 'Moderator' | i18n | html %]</option>
+            <option value="[% constants.user_permissions.ADMIN %]"[% ' selected="selected"' IF user.get_admin == constants.user_permissions.ADMIN %]>
+                [% 'Administrator' | i18n | html %]</option>
+        </select>
+        </p>
+        <p><input type="submit" name="update_permissions_submit" value="[% 'Update permissions' | i18n | html %]"/></p>
+    </form>
+[% END %]
+<script src="/js/vhffs/panel/user/prefs.js" type="text/javascript"></script>

@@ -1,0 +1,16 @@
+<div class="all-groups">
+<h1>[% 'All groups' | i18n %]</h1>
+[% INCLUDE common/pager.tt pager=pager%]
+
+<div class="pages-tabs">
+[<a href="?do=allgroups;letter=all" class="ajax">[% 'All' | i18n%]</a>]
+[% title_str = '%s (%d groups)' | i18n %]
+[% FOREACH l = letters %]
+[<a class="ajax" href="?do=allgroups;letter=[% l.letter %]" title="[% title_str | pretty_print(l.letter, l.count) %]">[% l.letter %]</a>]&#160;
+[% END %]
+</div>
+
+[% FOREACH g = groups %]
+[% INCLUDE 'parts/group-general.tt' %]
+[% END %]
+</div>

@@ -1,0 +1,160 @@
+#!%PERL% -w
+
+use POSIX qw(locale_h);
+use locale;
+use strict;
+use Locale::gettext;
+use Data::Dumper;
+
+use lib '%VHFFS_LIB_DIR%';
+use Vhffs;
+use Vhffs::Constants;
+use Vhffs::Object;
+use Vhffs::ObjectFactory;
+
+my $vhffs = new Vhffs;
+	
+
+sub list_moderation
+{
+	my $objects = Vhffs::Object::getall( $vhffs, undef, Vhffs::Constants::WAITING_FOR_VALIDATION );
+
+	unless( defined $objects )  {
+		print "There is nothing to moderate\n";
+	}
+	else {
+		foreach ( @{$objects} ) {
+			my $user = $_->get_owner;
+			my $group = $_->get_group;
+			my $object = Vhffs::ObjectFactory::fetch_object( $vhffs , $_->{object_id} );
+
+			print "\n";
+			print "oid: \t\t".$_->{object_id}."\n";
+			print "type: \t\t".Vhffs::Functions::type_string_from_type_id( $_->{type} )."\n";
+			print "name: \t\t".$object->get_label."\n";
+			print "user: \t\t".$user->get_username."\n";
+			print "group: \t\t".$group->get_groupname."\n";
+			print "description: \t".$_->get_description."\n";
+			print "\n";
+		}
+	}
+}
+
+
+sub moderate
+{
+	my $object;
+	my $vhffs;
+
+	my $oid = shift;
+	my $status = shift;
+
+	$object	= Vhffs::Object::get_by_oid( $vhffs , $oid );
+
+	if( ! defined $object )
+	{
+		print "Cannot fetch object\n";
+		return( -1 );
+	}
+	elsif( $object->get_status != Vhffs::Constants::WAITING_FOR_VALIDATION )
+	{
+		print "Object is not waiting for validation\n";
+		return( -2 );
+	}
+	else
+	{
+		if( $status == 1 )
+		{
+			$object->set_status( Vhffs::Constants::WAITING_FOR_CREATION );
+		}
+		else
+		{
+			$object->set_status( Vhffs::Constants::VALIDATION_REFUSED );
+		}
+
+		if( $object->commit < 0 )
+		{
+			print "Error while commit changes\n";
+			return( -3 );
+		}
+
+	}
+	return 0;
+}
+
+
+
+
+
+sub help
+{
+	print "Usage :\n";
+	print "  vhffs-moderate list - list all objects to moderate\n";
+	print "  vhffs-moderate accept <oid> - accept an object\n";
+	print "  vhffs-moderate refuse <oid> - refuse an object\n";
+	print "  vhffs-moderate help - display help\n";
+}
+
+
+
+
+
+if( ( $#ARGV > 1 ) || ( $#ARGV < 0 ) )
+{
+	help();
+	exit( 1 );
+}
+else
+{
+	my $arg;
+	my $oid;
+
+	$arg = $ARGV[0];
+	$oid = $ARGV[1];
+
+	if( $arg =~ /^list$/ )
+	{
+		list_moderation();
+	}
+	elsif( $arg =~ /^accept$/ )
+	{
+		my $object = Vhffs::Object::get_by_oid( $vhffs , $oid );
+
+		if( ! defined $object  ||  $object->moderate_accept < 0 )
+		{
+			print "Error while moderation\n";
+			exit( 1 );
+		}
+		else
+		{
+			print "Successfully moderated\n";
+			exit( 0 );
+		}
+	}
+	elsif( $arg =~ /^refuse$/ )
+	{
+		my $object = Vhffs::Object::get_by_oid( $vhffs , $oid );
+
+		if( ! defined $object  ||  $object->moderate_refuse('') < 0 )
+		{
+			print "Error while moderation\n";
+			exit( 1 );
+		}
+		else
+		{
+			print "Successfully moderated\n";
+			exit( 0 );
+		}
+	}
+	elsif( $arg =~ /^help$/ )
+	{
+		help();
+		exit( 0 );
+	}
+	else
+	{
+		print "Error, bad number of arguments or bad arguments\n";
+		help();
+		exit( 1 );
+	}
+}

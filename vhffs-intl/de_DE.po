@@ -1,0 +1,5697 @@
+# German translation for vhffs-intl
+# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
+# This file is distributed under the same license as the vhffs-intl package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: vhffs-intl\n"
+"Report-Msgid-Bugs-To: vhffs-dev@vhffs.org\n"
+"POT-Creation-Date: 2014-12-14 17:16+0100\n"
+"PO-Revision-Date: 2007-11-17 20:22+0000\n"
+"Last-Translator: Bruno Marmier <bruno@frinix.com>\n"
+"Language-Team: German <vhffs-dev@vhffs.org>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2007-11-17 22:48+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: vhffs-api/src/Vhffs/Listengine.pm:66
+msgid "\t\t\t\t   RIGHT can be subscriber or admin\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:383
+#, perl-format
+msgid ""
+"  %s-request@%s\n"
+"with the following subject :\n"
+"  \"subscription accept %s %s\" \n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:386
+#, perl-format
+msgid ""
+"  %s-request@%s\n"
+"with the following subject :\n"
+"  \"subscription refuse %s %s\" \n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:370
+#, perl-format
+msgid "%s has been added"
+msgstr "%s ist hinzugefügt worden"
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:368
+#, perl-format
+msgid "%s is already a member of this list"
+msgstr "%s ist schon Mitglied der Liste"
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:366
+#, perl-format
+msgid "%s is not a valid mail"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel.pm:474
+#, perl-format
+msgid "%s's Panel"
+msgstr "%s Panel"
+
+#: vhffs-api/src/Vhffs/Listengine.pm:138 vhffs-api/src/Vhffs/Listengine.pm:155
+#: vhffs-api/src/Vhffs/Listengine.pm:400
+#, perl-format
+msgid "%s-request@%s with subject \"help\"\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:362
+msgid "10 most used tags:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Web.pm:223
+#, perl-format
+msgid "<new site>.%s"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1160 vhffs-intl/template_strings.pl:1188
+#, perl-format
+msgid "@ represents the ORIGIN (%s)."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:280
+msgid ""
+"A CNAME, A or AAAA record with the same name already exists for this domain"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:451
+msgid "A Record deleted"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:446
+msgid "A Record updated"
+msgstr "A Eintrag aktualisiert"
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:324
+msgid "A TXT record with the same name already exists for this domain"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:364
+#, perl-format
+msgid ""
+"A mail to moderate is on the following mailing list:\n"
+"  %s\n"
+"\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:379
+#, perl-format
+msgid ""
+"A new person wants to subscribe to the following mailing list:\n"
+"  %s\n"
+"\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:474
+msgid "A record added"
+msgstr "A Eintrag hinzugefügt"
+
+#: vhffs-intl/template_strings.pl:1156
+msgid "A records (name -> IPv4)"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:463
+msgid "AAAA Record deleted"
+msgstr "AAAA Eintrag abgelöst"
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:458
+msgid "AAAA Record updated"
+msgstr "AAAA Eintrag aktualisiert"
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:469
+msgid "AAAA record added"
+msgstr "AAAA Eintrag hinzugefügt"
+
+#: vhffs-intl/template_strings.pl:1184
+msgid "AAAA records (name -> IPv6)"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Acl.pm:98
+msgid "ACL Administration"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Acl.pm:91
+msgid "ACL added"
+msgstr "ACL hinzugefügt"
+
+#: vhffs-api/src/Vhffs/Panel/Acl.pm:93
+msgid "ACL deleted"
+msgstr "ACL abgelöst"
+
+#: vhffs-intl/template_strings.pl:628
+msgid ""
+"ACL only describes right at panel level. They do not enforce any filesystem "
+"permissions, use FTP and/or SSH for this."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Acl.pm:92
+msgid "ACL updated"
+msgstr "ACL aktualisiert"
+
+#: vhffs-intl/template_strings.pl:948
+msgid "Absolute path of the command to run"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:400 vhffs-intl/template_strings.pl:476
+msgid "Accept"
+msgstr "Akzeptieren"
+
+#: vhffs-api/src/Vhffs/Panel.pm:151 vhffs-api/src/Vhffs/Panel.pm:172
+msgid "Access denied"
+msgstr "Zugriff verweigert"
+
+#: vhffs-intl/template_strings.pl:622
+msgid "Access rights management for this object"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:574
+msgid "Access to panel"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Robots/User.pm:81
+#, perl-format
+msgid "Account created on %s"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:592
+msgid "Account successfully created"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:16
+msgid "Accounts"
+msgstr "Konten"
+
+#: vhffs-intl/template_strings.pl:398 vhffs-intl/template_strings.pl:540
+msgid "Action"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:104
+#, perl-format
+msgid "Activate %s@%s email"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:112
+msgid "Activate anti-spam protection"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:114
+msgid "Activate anti-virus protection"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:15 vhffs-intl/template_strings.pl:236
+msgid "Activated"
+msgstr "Aktiviert"
+
+#: vhffs-intl/template_strings.pl:320
+msgid "Activated Bazaar:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:296
+msgid "Activated CVS:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:290
+msgid "Activated DNS:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:308
+msgid "Activated Git:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:314
+msgid "Activated Mercurial:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:336
+msgid "Activated MySQL DBs:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:342
+msgid "Activated PostgreSQL DBs:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:302
+msgid "Activated SVN:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:278
+msgid "Activated groups:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:348
+msgid "Activated lists:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:326
+msgid "Activated mail domains:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:284
+msgid "Activated webareas:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1010 vhffs-intl/template_strings.pl:1012
+msgid "Add"
+msgstr "Hinzufügen"
+
+#: vhffs-intl/template_strings.pl:874
+msgid "Add \"Reply-To\" header"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1168
+msgid "Add a A record"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1196
+msgid "Add a AAAA record"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1244
+msgid "Add a CNAME record"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1224
+msgid "Add a MX record"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1260
+msgid "Add a NS record"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1286
+msgid "Add a SRV record"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1316
+msgid "Add a TXT record"
+msgstr "TXT Eintrag hinzufügen"
+
+#: vhffs-intl/template_strings.pl:14
+msgid "Add a catchall box"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:480
+msgid "Add a category."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1040
+msgid "Add a tag"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1006
+msgid "Add a user in this group"
+msgstr "Benutzer an dieser Gruppe hinzufügen"
+
+#: vhffs-intl/template_strings.pl:48
+msgid "Add an account"
+msgstr "Konto hinzufügen"
+
+#: vhffs-intl/template_strings.pl:44 vhffs-intl/template_strings.pl:56
+#: vhffs-intl/template_strings.pl:62
+msgid "Add forward"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:54
+msgid "Add mailbox"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:898
+msgid "Add members"
+msgstr "Mitglieder hinzufügen"
+
+#: vhffs-intl/template_strings.pl:1182 vhffs-intl/template_strings.pl:1210
+#: vhffs-intl/template_strings.pl:1234 vhffs-intl/template_strings.pl:1250
+#: vhffs-intl/template_strings.pl:1266 vhffs-intl/template_strings.pl:1304
+#: vhffs-intl/template_strings.pl:1324
+msgid "Add record"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:902
+msgid "Add them!"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1142
+msgid "Address (Servername):"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:286
+msgid "Address is not correct !"
+msgstr "Adresse ist nich richtig!"
+
+#: vhffs-intl/template_strings.pl:80 vhffs-intl/template_strings.pl:608
+msgid "Address:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:900
+msgid "Addresses (one per line):"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:892
+msgid "Admin"
+msgstr "Admin"
+
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:182
+msgid "Admin Download repository"
+msgstr "Admin Download repository"
+
+#: vhffs-intl/extra_strings.pl:47
+msgid "Admin account"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:460 vhffs-intl/template_strings.pl:800
+msgid "Administration"
+msgstr "Administration"
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:238
+#, perl-format
+msgid "Administration for list %s"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:154
+msgid "Administrator"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:232 vhffs-api/src/Vhffs/Panel/Tag.pm:479
+#: vhffs-intl/extra_strings.pl:44
+msgid "Administrators"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:270
+msgid "Administrators:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:870
+msgid "Admins only"
+msgstr "Nur admins"
+
+#: vhffs-intl/template_strings.pl:1464
+msgid "Advanced search"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1392 vhffs-intl/template_strings.pl:1444
+msgid "All"
+msgstr "Alle"
+
+#: vhffs-api/src/Vhffs/Listengine.pm:46
+msgid "All commands can be sent as mail subject.\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1442
+msgid "All groups"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:48
+msgid ""
+"All mails with commands must be sent on YOURLIST-request@domain.tld list.\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:229
+msgid "An MX record with the same name already exists for this domain"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:254
+msgid "An NS record with the same name already exists for this domain"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cvs.pm:217
+msgid "An error occured during CVS repository update"
+msgstr "Während die CVS Repository Aktualisierung ist ein Fehler aufgetreten"
+
+#: vhffs-api/src/Vhffs/Listengine.pm:441
+#, perl-format
+msgid ""
+"An error occured during your approval of subscription of:\n"
+"  %s\n"
+"into the following mailing list:\n"
+"  %s\n"
+"\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:176
+#, perl-format
+msgid ""
+"An error occured during your subscription to the following list:\n"
+"  %s\n"
+"\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:364
+msgid "An error occured while adding the box"
+msgstr "Whärend der Erstellung des Mailbox ist ein Fehler aufgetreten."
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:369
+msgid "An error occured while adding the box (anti-spam or anti-virus adding)"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:236
+msgid "An error occured while adding the catchall box"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:468
+msgid "An error occured while applying changes. This user will NOT be deleted"
+msgstr ""
+"Whärend die Änderungen ist ein Fehler aufgetreten. Dieser Benutzer wird "
+"NICHT abgelöst"
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:381
+msgid "An error occured while changing the box password"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:155
+#, fuzzy
+msgid "An error occured while creating the bazaar repository"
+msgstr "Während der Erstellung des GIT Repository ist ein Fehler aufgetreten"
+
+#: vhffs-api/src/Vhffs/Panel/Git.pm:157
+msgid "An error occured while creating the git repository"
+msgstr "Während der Erstellung des GIT Repository ist ein Fehler aufgetreten"
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:128
+msgid "An error occured while creating the mail area"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:158
+#, fuzzy
+msgid "An error occured while creating the mercurial repository"
+msgstr "Während der Erstellung des GIT Repository ist ein Fehler aufgetreten"
+
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:142
+msgid ""
+"An error occured while creating the object. Check that this group doesn't "
+"already have a download repository"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:380
+msgid ""
+"An error occured while creating the object. The domain is not correct or "
+"aleady exists in Vhffs database"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cvs.pm:156
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:171
+msgid "An error occured while creating the object.It probably already exists"
+msgstr ""
+"Während der Erstellung dieses Objektes ist ein Fehler aufgetreten. "
+"Möglicherweise existiert schon das Objekt."
+
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:157
+msgid "An error occured while creating the svn repository"
+msgstr "Während der Erstellung des SVN Repository ist ein Fehler aufgetreten"
+
+#: vhffs-api/src/Vhffs/Panel/Broadcast.pm:184
+msgid "An error occured while deleting this mailing"
+msgstr "Während der Ablösung des Mailing ist ein Fehler aufgetreten."
+
+#: vhffs-api/src/Vhffs/Panel/Object.pm:224
+msgid "An error occured while deleting this object"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Object.pm:194
+msgid "An error occured while deleting this object."
+msgstr "Während der Ablösung dieses Objektes ist ein Fehler aufgetreten."
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:230
+msgid "An error occured while fetching the catchall box"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:718
+msgid "An error occured while saving your request"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:259
+#, perl-format
+msgid ""
+"An error occured while updating language for the following address: %s.\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:341
+#, perl-format
+msgid "An error occured while updating localpart %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:450
+msgid "An error occured while updating the project"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:427
+msgid "An error occured while updating the redirect"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:339
+msgid "An error occured while updating the user account"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Object.pm:142
+msgid "An error occured while updating this object."
+msgstr "Während der Aktualisierung dieses Objektes ist ein Fehler aufgetreten."
+
+#: vhffs-intl/template_strings.pl:134
+msgid "Are you SURE you want DELETE this user?"
+msgstr "Sind Sie SICHER dass Sie diesen Benutzer ABLÖSEN wollen ?"
+
+#: vhffs-intl/template_strings.pl:160
+msgid "Are you SURE you want to DELETE this object?"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Avatar.pm:252
+msgid "Avatar deleted"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:260
+msgid "Avatar management"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Broadcast.pm:105
+#: vhffs-api/src/Vhffs/Panel/Broadcast.pm:144
+msgid "Awaiting sending"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:620
+msgid "Back to login"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:590
+msgid "Back to login page"
+msgstr "Zurück zur Anmeldungseite"
+
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:225
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:215
+msgid "Bad password, should be at least 3 chars"
+msgstr "Ungültiges Passwort. Muss mindestens auf 3 Zeichen bestehen"
+
+#: vhffs-intl/template_strings.pl:682 vhffs-intl/template_strings.pl:746
+msgid "Bazaar"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:112
+#, fuzzy
+msgid "Bazaar Admin"
+msgstr "Gruppe Admin"
+
+#: vhffs-intl/extra_strings.pl:35
+msgid "Bazaar Repository"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:316
+msgid "Bazaar repositories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:337
+msgid "Bazaar repositories administration"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:280
+#, fuzzy, perl-format
+msgid "Bazaar repositories for %s"
+msgstr "CVS Repositories für %s"
+
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:311
+msgid "Bazaar search"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:318
+msgid "Bazaar waiting for moderation:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1326
+msgid ""
+"Be careful ! You must give the reason why you want to host this domain on "
+"our servers."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1150
+msgid ""
+"Be careful, if you want to create www.domain.tld, you should create a "
+"webspace with domain.tld as servername. VHFFS aliases www.domain.tld to "
+"domain.tld."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:536
+msgid "Body"
+msgstr "Textkörper"
+
+#: vhffs-intl/template_strings.pl:554
+msgid "Body:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:18
+msgid "Box"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:374
+#, perl-format
+msgid "Box %s deleted"
+msgstr "Briefkaste %s abgelöst"
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:327
+msgid "Box password updated"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:295
+msgid "Box successfully added"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:584
+msgid ""
+"But fortunately we're smart, so just type your login here and a new password "
+"will be sent to you by email!"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:416 vhffs-intl/template_strings.pl:490
+msgid "By"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Broadcast.pm:129
+#: vhffs-api/src/Vhffs/Panel/Broadcast.pm:168
+#: vhffs-api/src/Vhffs/Panel/Public.pm:186
+#: vhffs-api/src/Vhffs/Panel/Public.pm:331
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:539 vhffs-api/src/Vhffs/Panel/Tag.pm:608
+msgid "CGI Error"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Acl.pm:57 vhffs-api/src/Vhffs/Panel/Acl.pm:81
+#: vhffs-api/src/Vhffs/Panel/Avatar.pm:105
+#: vhffs-api/src/Vhffs/Panel/Avatar.pm:166
+#: vhffs-api/src/Vhffs/Panel/Avatar.pm:221
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:141
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:176
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:132 vhffs-api/src/Vhffs/Panel/Cron.pm:175
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:214 vhffs-api/src/Vhffs/Panel/Cvs.pm:142
+#: vhffs-api/src/Vhffs/Panel/Cvs.pm:179 vhffs-api/src/Vhffs/Panel/Cvs.pm:199
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:366 vhffs-api/src/Vhffs/Panel/DNS.pm:404
+#: vhffs-api/src/Vhffs/Panel/Git.pm:143 vhffs-api/src/Vhffs/Panel/Git.pm:178
+#: vhffs-api/src/Vhffs/Panel/Group.pm:465
+#: vhffs-api/src/Vhffs/Panel/Group.pm:488
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:114 vhffs-api/src/Vhffs/Panel/Mail.pm:150
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:220 vhffs-api/src/Vhffs/Panel/Mail.pm:258
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:286 vhffs-api/src/Vhffs/Panel/Mail.pm:319
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:358 vhffs-api/src/Vhffs/Panel/Mail.pm:392
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:421 vhffs-api/src/Vhffs/Panel/Mail.pm:448
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:155
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:204
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:260
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:294
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:322
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:349
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:144
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:180
+#: vhffs-api/src/Vhffs/Panel/Moderation.pm:64
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:145
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:180
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:220
+#: vhffs-api/src/Vhffs/Panel/Object.pm:96
+#: vhffs-api/src/Vhffs/Panel/Object.pm:122
+#: vhffs-api/src/Vhffs/Panel/Object.pm:161
+#: vhffs-api/src/Vhffs/Panel/Object.pm:212
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:135
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:170
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:210
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:129
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:163
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:144 vhffs-api/src/Vhffs/Panel/Svn.pm:177
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:219 vhffs-api/src/Vhffs/Panel/User.pm:274
+#: vhffs-api/src/Vhffs/Panel/User.pm:526 vhffs-api/src/Vhffs/Panel/User.pm:556
+#: vhffs-api/src/Vhffs/Panel/Web.pm:204 vhffs-api/src/Vhffs/Panel/Web.pm:241
+#: vhffs-api/src/Vhffs/Panel/Web.pm:286 vhffs-panel/index.pl:398
+#: vhffs-public/index.pl:90
+msgid "CGI Error !"
+msgstr "CGI Fehler !"
+
+#: vhffs-api/src/Vhffs/Panel/Object.pm:287
+#: vhffs-api/src/Vhffs/Panel/Public.pm:364
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:176 vhffs-api/src/Vhffs/Panel/Tag.pm:381
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:457
+msgid "CGI Error!"
+msgstr "CGI Fehler !"
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:624
+#: vhffs-api/src/Vhffs/Panel/Group.pm:663
+#: vhffs-api/src/Vhffs/Panel/Group.pm:703 vhffs-api/src/Vhffs/Panel/Tag.pm:253
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:417 vhffs-api/src/Vhffs/Panel/Tag.pm:497
+msgid "CGI error"
+msgstr "CGI Fehler"
+
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:218
+#: vhffs-api/src/Vhffs/Panel/Git.pm:220
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:222
+msgid "CGI error !"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:513
+msgid "CNAME Record added"
+msgstr "CNAME Eintrag hinzugefügt"
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:508
+msgid "CNAME Record deleted"
+msgstr "CNAME Eintrag abgelöst"
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:504
+msgid "CNAME Record updated"
+msgstr "CNAME Eintrag aktualisiert"
+
+#: vhffs-intl/template_strings.pl:1236
+msgid "CNAME records (aliases)"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:674 vhffs-intl/template_strings.pl:722
+msgid "CVS"
+msgstr "CVS"
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:219
+msgid "CVS Admin"
+msgstr "CVS Admin"
+
+#: vhffs-intl/template_strings.pl:1432
+msgid "CVS Repositories"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:31
+msgid "CVS Repository"
+msgstr "CVS Repository"
+
+#: vhffs-intl/template_strings.pl:292
+msgid "CVS repositories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cvs.pm:310
+msgid "CVS repositories administration"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cvs.pm:253
+#, perl-format
+msgid "CVS repositories for %s"
+msgstr "CVS Repositories für %s"
+
+#: vhffs-api/src/Vhffs/Panel/Cvs.pm:284
+msgid "CVS search"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:294
+msgid "CVS waiting for moderation:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:642
+msgid "Can destroy this service"
+msgstr "Darf ablösen"
+
+#: vhffs-intl/template_strings.pl:640
+msgid "Can manage ACL for this service"
+msgstr "Darf ACL bestimmen"
+
+#: vhffs-intl/template_strings.pl:638
+msgid "Can modify this service"
+msgstr "Darf ändern"
+
+#: vhffs-intl/template_strings.pl:636
+msgid "Can view this service"
+msgstr "Darf sehen"
+
+#: vhffs-intl/template_strings.pl:634
+msgid "Can't access"
+msgstr "Darf nicht zugreifen"
+
+#: vhffs-intl/template_strings.pl:1052
+msgid "Cancel"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:810
+msgid "Cancel request"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:120
+msgid "Cannot apply changes to the user"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Auth.pm:102
+msgid ""
+"Cannot create session file, please check that /tmp is readable and writeable"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:112
+msgid "Cannot create user, the username you entered already exists"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Avatar.pm:248
+msgid "Cannot delete this avatar"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel.pm:270
+msgid ""
+"Cannot fetch session file, please check that /tmp is readable and writeable"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Object.pm:72
+msgid "Cannot get information on this object"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Acl.pm:64
+#, perl-format
+msgid "Cannot get informations on object #%d"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Avatar.pm:116
+#: vhffs-api/src/Vhffs/Panel/Avatar.pm:177
+#: vhffs-api/src/Vhffs/Panel/Avatar.pm:232
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:182
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:181 vhffs-api/src/Vhffs/Panel/Cvs.pm:185
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:410 vhffs-api/src/Vhffs/Panel/Git.pm:184
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:186
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:186
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:176
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:169
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:183 vhffs-api/src/Vhffs/Panel/User.pm:241
+#: vhffs-api/src/Vhffs/Panel/Web.pm:247
+msgid "Cannot get informations on this object"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Stats.pm:57
+msgid "Cannot get statistics"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Object.pm:214
+msgid "Cannot retrieve informations about this object"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Contact.pm:69
+msgid "Cannot send message, CGI error..."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:616
+msgid "Captcha:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:268
+#, perl-format
+msgid "Catchall %s deleted"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:4
+msgid "Catchall address"
+msgstr "Catchall Adresse"
+
+#: vhffs-intl/template_strings.pl:6
+msgid ""
+"Catchall address receive all emails for which no box nor forward exists on "
+"this domain."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:240
+msgid "Catchall box successfully added"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:12
+msgid "Catchall destination address:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:354
+msgid "Categories:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:408
+msgid "Category"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:708
+msgid "Category can't be empty"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:316
+msgid "Category deleted"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:198
+msgid "Category does not exists"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:446
+msgid "Category label"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:644
+msgid "Category not found"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:462
+msgid "Category not found!"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:428 vhffs-intl/template_strings.pl:436
+#: vhffs-intl/template_strings.pl:458 vhffs-intl/template_strings.pl:1044
+msgid "Category:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:382
+msgid "Change user ID"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:87
+msgid "Change user-id"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:404
+msgid "Changed anti-virus status for your account"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:392
+msgid "Changed spam protection status for your account"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:282
+msgid "City is not correct !"
+msgstr "Stadt ist nicht korrekt"
+
+#: vhffs-intl/template_strings.pl:82 vhffs-intl/template_strings.pl:610
+msgid "City:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:856
+msgid "Closed"
+msgstr "Geschlossen"
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:89
+msgid "Codes do not match"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:940
+msgid "Collided, something went wrong, recovering"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:218
+msgid "Confirmation code was wrong.\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:802
+msgid "Contact"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:285
+msgid "Country is not correct !"
+msgstr "Land ist nicht korrekt !"
+
+#: vhffs-intl/template_strings.pl:86 vhffs-intl/template_strings.pl:612
+msgid "Country:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:442 vhffs-intl/template_strings.pl:516
+#: vhffs-intl/template_strings.pl:708 vhffs-intl/template_strings.pl:714
+#: vhffs-intl/template_strings.pl:720 vhffs-intl/template_strings.pl:726
+#: vhffs-intl/template_strings.pl:732 vhffs-intl/template_strings.pl:738
+#: vhffs-intl/template_strings.pl:744 vhffs-intl/template_strings.pl:750
+#: vhffs-intl/template_strings.pl:756 vhffs-intl/template_strings.pl:762
+#: vhffs-intl/template_strings.pl:768 vhffs-intl/template_strings.pl:774
+#: vhffs-intl/template_strings.pl:780
+msgid "Create"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:227
+msgid "Create Tag Category"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cvs.pm:165
+msgid "Create a CVS Repository"
+msgstr "CVS Repository erstellen"
+
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:161
+msgid "Create a Cron job"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:148
+msgid "Create a Download Repository"
+msgstr "Download Repository erstellen"
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:330
+msgid "Create a Project"
+msgstr "Neues Projekt erstellen"
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:136
+msgid "Create a mail space"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Web.pm:226
+msgid "Create a web space"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:472
+msgid "Create category"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:163
+msgid "Create new category"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1068
+msgid "Create new project"
+msgstr "Neues Projekt erstellen"
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:161
+msgid "Create new tag"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:406
+msgid "Create new tag."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:474
+msgid "Create tag"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:14
+msgid "Creation error"
+msgstr "Erstellungsfehler"
+
+#: vhffs-intl/extra_strings.pl:39
+msgid "Cron job"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:195
+msgid "Cron job Administration"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:231
+msgid "Cron job successfully updated"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:316
+msgid "Cron jobs administration"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:259
+#, perl-format
+msgid "Cron jobs for %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:290
+msgid "Cron search"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:692 vhffs-intl/template_strings.pl:776
+msgid "Crons"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:377
+msgid "Crons Admin"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:122
+msgid "Current avatar"
+msgstr "Aktuelles Avatar"
+
+#: vhffs-intl/template_strings.pl:1016
+msgid "Current logo"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:882
+msgid "Current members"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1038
+msgid "Current tags for this project"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:286 vhffs-intl/template_strings.pl:684
+#: vhffs-intl/template_strings.pl:752
+msgid "DNS"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:342
+msgid "DNS Admin"
+msgstr "DNS Admin"
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:573
+#, perl-format
+msgid "DNS Administration - %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:659
+msgid "DNS administration"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:633
+msgid "DNS search"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1332
+msgid "DNS servers:"
+msgstr "DNS servers:"
+
+#: vhffs-intl/template_strings.pl:288
+msgid "DNS waiting for moderation:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:140 vhffs-api/src/Vhffs/Panel/DNS.pm:176
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:188 vhffs-api/src/Vhffs/Panel/DNS.pm:206
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:218 vhffs-api/src/Vhffs/Panel/DNS.pm:230
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:243 vhffs-api/src/Vhffs/Panel/DNS.pm:255
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:268 vhffs-api/src/Vhffs/Panel/DNS.pm:281
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:298 vhffs-api/src/Vhffs/Panel/DNS.pm:313
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:325 vhffs-api/src/Vhffs/Panel/DNS.pm:337
+msgid "Database error"
+msgstr "Datenbankfehler"
+
+#: vhffs-intl/template_strings.pl:454 vhffs-intl/template_strings.pl:532
+#: vhffs-intl/template_strings.pl:820
+msgid "Date"
+msgstr "Datum"
+
+#: vhffs-intl/template_strings.pl:222
+msgid "Date of creation"
+msgstr "Erstellungsdatum"
+
+#: vhffs-intl/template_strings.pl:466 vhffs-intl/template_strings.pl:548
+msgid "Date:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:632 vhffs-intl/template_strings.pl:646
+msgid "Default"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:170 vhffs-intl/template_strings.pl:420
+#: vhffs-intl/template_strings.pl:424 vhffs-intl/template_strings.pl:494
+#: vhffs-intl/template_strings.pl:498 vhffs-intl/template_strings.pl:542
+#: vhffs-intl/template_strings.pl:1062 vhffs-intl/template_strings.pl:1166
+#: vhffs-intl/template_strings.pl:1194 vhffs-intl/template_strings.pl:1222
+#: vhffs-intl/template_strings.pl:1242 vhffs-intl/template_strings.pl:1258
+#: vhffs-intl/template_strings.pl:1284 vhffs-intl/template_strings.pl:1314
+msgid "Delete"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:130
+msgid "Delete YOUR user"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:262
+msgid "Delete avatar for this object"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:42
+msgid "Delete forward"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:896
+msgid "Delete from list"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:140
+msgid "Delete my user"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:10
+msgid "Delete this catchall box"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:36
+msgid "Delete this mail account"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:158
+msgid "Delete this object"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:22 vhffs-intl/template_strings.pl:252
+msgid "Deletion error"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:396 vhffs-intl/template_strings.pl:412
+#: vhffs-intl/template_strings.pl:484 vhffs-intl/template_strings.pl:1422
+#: vhffs-intl/template_strings.pl:1468
+msgid "Description"
+msgstr "Beschreibung"
+
+#: vhffs-intl/template_strings.pl:1144
+msgid "Description of your web area:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:254 vhffs-intl/template_strings.pl:432
+#: vhffs-intl/template_strings.pl:440 vhffs-intl/template_strings.pl:504
+#: vhffs-intl/template_strings.pl:512 vhffs-intl/template_strings.pl:958
+#: vhffs-intl/template_strings.pl:964 vhffs-intl/template_strings.pl:1078
+#: vhffs-intl/template_strings.pl:1088 vhffs-intl/template_strings.pl:1110
+#: vhffs-intl/template_strings.pl:1120 vhffs-intl/template_strings.pl:1338
+#: vhffs-intl/template_strings.pl:1344 vhffs-intl/template_strings.pl:1350
+#: vhffs-intl/template_strings.pl:1356 vhffs-intl/template_strings.pl:1368
+msgid "Description:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1248
+msgid "Destination:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:686 vhffs-intl/template_strings.pl:758
+msgid "Dl repos"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:36
+msgid "Domain Name"
+msgstr "Domainname"
+
+#: vhffs-intl/template_strings.pl:1336
+msgid "Domain name:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:602
+#, perl-format
+msgid "Domain names for %s"
+msgstr "Domainnamen für %s"
+
+#: vhffs-intl/template_strings.pl:66
+msgid "Domain:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1136
+#, perl-format
+msgid ""
+"Don't forget to subscribe %s to your mailing list if you are filtering posts."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:162
+msgid "Don't subscribe to the newsletter"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:28
+msgid "Download Repository"
+msgstr "Download Repository"
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:360
+msgid "Download repositories Admin"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:296
+msgid "Download repositories administration"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:238
+#, perl-format
+msgid "Download repositories for %s"
+msgstr "Download Repositories für %s"
+
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:270
+msgid "Download repositories search"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:208 vhffs-intl/template_strings.pl:418
+#: vhffs-intl/template_strings.pl:422 vhffs-intl/template_strings.pl:492
+#: vhffs-intl/template_strings.pl:496
+msgid "Edit"
+msgstr "Ändern"
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:334
+msgid "Email address changed"
+msgstr "Email Adresse aktualisiert"
+
+#: vhffs-intl/template_strings.pl:78
+msgid "Email address:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:283
+msgid "Email is not correct !"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:956
+msgid "Email to which send a report if something goes wrong"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:602
+msgid "Email:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:22
+msgid "Enable antispam?"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:28
+msgid "Enable antivirus?"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:310
+msgid "Error creating group (maybe a group with the same name already exists)"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Web.pm:216
+msgid "Error creating webarea."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:394
+msgid "Error for spam protection"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:406
+msgid "Error for virus protection"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Avatar.pm:200
+msgid "Error when uploading avatar for this object"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:238
+msgid "Error while activating object"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:232
+msgid "Error while creating object"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:248
+msgid "Error while modifying object"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Broadcast.pm:81
+msgid "Error while queuing mailing"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:244
+msgid "Error while suspending object"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Moderation.pm:81
+#: vhffs-api/src/Vhffs/Panel/Moderation.pm:87
+#: vhffs-api/src/Vhffs/Panel/Object.pm:307
+msgid "Error while updating object"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:423
+#: vhffs-api/src/Vhffs/Panel/Group.pm:768
+msgid "Error. This group doesn't exists"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:826
+msgid "Event"
+msgstr "Ereignis"
+
+#: vhffs-intl/template_strings.pl:1158
+msgid "Existing A records"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1186
+msgid "Existing AAAA records"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1214
+msgid "Existing MX records for this domain"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1270
+msgid "Existing SRV records for this domain"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1308
+msgid "Existing TXT records"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel.pm:277
+msgid "Expired session ! Please login again"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Avatar.pm:187
+msgid "Filetype not supported, only png is supported"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:904
+msgid "Fill with project's members emails"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1402
+msgid "First name"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1330
+msgid "First of all, you'll have to buy and set up your domain to a registrar."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:280
+msgid "Firstname is not correct !"
+msgstr "Vorname ist nicht korrekt !"
+
+#: vhffs-intl/template_strings.pl:74 vhffs-intl/template_strings.pl:604
+msgid "Firstname:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:430
+#, perl-format
+msgid "Forward %s successfully updated"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:458
+#, perl-format
+msgid "Forward %s to %s deleted"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:527
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:401 vhffs-api/src/Vhffs/Panel/User.pm:419
+msgid "Forward added"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:992
+#, perl-format
+msgid "Forward emails from %s@%s to "
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:116
+#, perl-format
+msgid "Forward emails from %s@%s to %s"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:60
+msgid "Forward to address:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:330
+msgid "Forwards:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:972
+msgid "Full history"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1436
+msgid "GIT Repositories"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:33
+msgid "GIT Repository"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:72 vhffs-api/src/Vhffs/Panel/Admin.pm:94
+#: vhffs-intl/template_strings.pl:662 vhffs-intl/template_strings.pl:968
+msgid "General"
+msgstr "Allgemein"
+
+#: vhffs-intl/template_strings.pl:1416
+msgid "General information"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:69 vhffs-api/src/Vhffs/Panel/Admin.pm:86
+msgid "Get Statistics"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:782
+msgid "Get statistics"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:678 vhffs-intl/template_strings.pl:734
+msgid "Git"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:237
+msgid "Git Admin"
+msgstr "Git Admin"
+
+#: vhffs-intl/template_strings.pl:304
+msgid "Git repositories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Git.pm:340
+msgid "Git repositories administration"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Git.pm:282
+#, perl-format
+msgid "Git repositories for %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Git.pm:314
+msgid "Git search"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:306
+msgid "Git waiting for moderation:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:588
+msgid "Give me a new password!"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:806
+msgid "Go to administration"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:377
+#, perl-format
+msgid ""
+"Greetings,\n"
+"\n"
+"You've been added to the list %s on platform %s.\n"
+"\n"
+"You may get some help on listengine by sending an email to %s-request@%s "
+"with subject help.\n"
+"\n"
+"Cheers.\n"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:26 vhffs-intl/template_strings.pl:394
+msgid "Group"
+msgstr "Gruppe"
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:389
+#, perl-format
+msgid "Group %s"
+msgstr "Gruppe %s"
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:146
+msgid "Group Admin"
+msgstr "Gruppe Admin"
+
+#: vhffs-intl/template_strings.pl:1018
+msgid "Group logo"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Public.pm:195
+msgid "Group not found"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Acl.pm:83
+msgid "Group or user not found"
+msgstr "Guppe oder Benutzer nicht gefunden"
+
+#: vhffs-intl/template_strings.pl:944
+msgid "Group owning this cron job:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1114 vhffs-intl/template_strings.pl:1362
+msgid "Group owning this database:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1334
+msgid "Group owning this domain:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:64
+msgid "Group owning this mail domain:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:906
+msgid "Group owning this mailing list:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1106
+msgid "Group owning this repository:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1024
+msgid "Group quota"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:452
+msgid "Group updated"
+msgstr "Gruppe aktualisiert"
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:585
+msgid "Group updated, please wait while quota is updated on filesystem"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:518 vhffs-intl/template_strings.pl:1418
+#: vhffs-intl/template_strings.pl:1466
+msgid "Groupname"
+msgstr "Gruppenname"
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:302
+msgid ""
+"Groupname must contain between 3 and 12 characters, only letters or numbers "
+"in lower case"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:274 vhffs-intl/template_strings.pl:666
+#: vhffs-intl/template_strings.pl:1406
+msgid "Groups"
+msgstr "Gruppen"
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:813
+msgid "Groups search"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:838
+msgid "Groups' administration"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Robots/User.pm:82
+#, perl-format
+msgid ""
+"Hello %s %s,\n"
+"\n"
+"We are pleased to announce that your account is now fully created on\n"
+"%s.\n"
+"You can now login on the panel.\n"
+"\n"
+"%s Administrators\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:332
+#, perl-format
+msgid ""
+"Hello %s %s,\n"
+"\n"
+"You changed your email, here are your new personal information :\n"
+"\n"
+"User: %s\n"
+"Mail: %s\n"
+"\n"
+"VHFFS administrators\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Object.pm:802
+#, perl-format
+msgid ""
+"Hello %s %s,\n"
+"\n"
+"Your %s (%s) on %s has been deleted.\n"
+"\n"
+"This is because it have been refused a long time ago and you didn't\n"
+"submit an update since.\n"
+"\n"
+"For reminder, the reason of refusal was:\n"
+"%s\n"
+"\n"
+"Don't be upset, submit it again if you forgot to update it in time.\n"
+"If you need further information, just reply to this email !\n"
+"\n"
+"%sCheers,\n"
+"The moderator team\n"
+"\n"
+"---------\n"
+"%s\n"
+"%s\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Object.pm:756
+#, perl-format
+msgid ""
+"Hello %s %s,\n"
+"\n"
+"Your %s (%s) on %s was successfully created.\n"
+"\n"
+"%sEnjoy!\n"
+"\n"
+"Cheers,\n"
+"The moderator team\n"
+"\n"
+"---------\n"
+"%s\n"
+"%s\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/User.pm:446
+#, perl-format
+msgid ""
+"Hello %s %s,\n"
+"\n"
+"Your account (%s) on %s has been deleted.\n"
+"\n"
+"This is because it was left unused for a long time\n"
+"\n"
+"Don't be upset, create it again and reply to this email to tell us\n"
+"why you really need to keep your account.\n"
+"If you need further information, just reply to this email !\n"
+"\n"
+"Cheers,\n"
+"The moderator team\n"
+"\n"
+"---------\n"
+"%s\n"
+"%s\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Object.pm:632
+#, perl-format
+msgid ""
+"Hello %s %s,\n"
+"\n"
+"Your request for a %s (%s) on %s was accepted, however, moderators wanted to "
+"add some precision:\n"
+"%s.\n"
+"\n"
+"%sPlease wait while we are creating your object.\n"
+"\n"
+"Cheers,\n"
+"The moderator team\n"
+"\n"
+"---------\n"
+"%s\n"
+"%s\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Object.pm:645
+#, perl-format
+msgid ""
+"Hello %s %s,\n"
+"\n"
+"Your request for a %s (%s) on %s was accepted.\n"
+"\n"
+"%sPlease wait while we are creating your object.\n"
+"\n"
+"Cheers,\n"
+"The moderator team\n"
+"\n"
+"---------\n"
+"%s\n"
+"%s\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Object.pm:702
+#, perl-format
+msgid ""
+"Hello %s %s,\n"
+"\n"
+"Your request for a %s (%s) on %s was refused.\n"
+"\n"
+"The reason of refusal given by moderators is:\n"
+"%s\n"
+"\n"
+"You can change the description and submit it again for moderation on the\n"
+"panel. You can delete this object on the panel if you have made\n"
+"a mistake. Don't be upset, if you don't understand why your request has\n"
+"been refused, just reply to this email !\n"
+"\n"
+"%sCheers,\n"
+"The moderator team\n"
+"\n"
+"---------\n"
+"%s\n"
+"%s\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/User.pm:208
+#, perl-format
+msgid ""
+"Hello %s %s, Welcome on %s\n"
+"\n"
+"Here are your login information :\n"
+"User: %s\n"
+"Password: %s\n"
+"\n"
+"Your account is NOT created yet, you cannot login on the panel now, you\n"
+"are going to receive another mail in a few minutes upon account creation.\n"
+"\n"
+"%s Administrators\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:44
+msgid "Hello and welcome on listengine help\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:818 vhffs-intl/template_strings.pl:976
+#: vhffs-intl/template_strings.pl:996 vhffs-intl/template_strings.pl:1378
+msgid "Help"
+msgstr "Hilfe"
+
+#: vhffs-api/src/Vhffs/Listengine.pm:50
+msgid "Here are the basic listengine commands:\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:838
+msgid "Here, you can send a message to the admin team"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:380
+#, perl-format
+msgid ""
+"His email address is:\n"
+"  %s\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Object.pm:82 vhffs-intl/template_strings.pl:812
+msgid "History"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:698
+msgid "Home"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1274
+msgid "Host"
+msgstr "Rechner"
+
+#: vhffs-intl/template_strings.pl:1264
+msgid "Host of your name server:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1296
+msgid "Host:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1152
+msgid "How will this web area be used:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:151
+msgid "However this list require approval for new subscribers.\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:112
+#, perl-format
+msgid "However you are (%s) already subscribed to this list.\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:578
+msgid "I've lost my password"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1180
+msgid "IPv4 address:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1208
+msgid "IPv6 address:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:531
+#, fuzzy
+msgid "IRC nick is not correct !"
+msgstr "Stadt ist nicht korrekt"
+
+#: vhffs-intl/template_strings.pl:142
+msgid "IRC nickname:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1054
+#, perl-format
+msgid ""
+"If you are new to VHFFS, you should start to read briefly the whole <a href="
+"\"%s\">help</a> available."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:84
+msgid ""
+"If you don't asked to be subscribed to this mailing list,\n"
+"just forget this email\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:100
+msgid ""
+"If you haven't asked to be unsubscribed from this list,\n"
+"please don't answer to this mail\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:978
+msgid ""
+"If you want more disk space for your project, please contact the "
+"administrators through the <a href=\"?do=contact\">contact form</a>. Don't "
+"forget to mention the name of the group."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:617
+msgid "If you want to create a new category, you have to create a new tag too"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:952
+#, perl-format
+msgid ""
+"In minutes, at which interval this cron should be started, the minimum "
+"interval is set to %d minutes"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:918 vhffs-intl/template_strings.pl:950
+msgid "Interval:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:175 vhffs-api/src/Vhffs/Panel/DNS.pm:187
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:217
+msgid "Invalid IP address"
+msgstr "Ungültige IP Adresse"
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:205
+msgid "Invalid IP v6 address"
+msgstr "Ungültige IP v6 Adresse"
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:278
+msgid "Invalid alias"
+msgstr "Ungültiges Alias"
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:181 vhffs-api/src/Vhffs/Panel/Tag.pm:430
+msgid "Invalid category"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:137
+msgid ""
+"Invalid cronpath, it must contain only letters, numbers, underscore, dash, "
+"dot or slash. A valid cronpath will be something like /home/group/script.sh)"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:148
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:138
+msgid ""
+"Invalid database name, it must contain only numbers, lowercase letters and "
+"underscore (the latter isn't allowed in first or last position) and be "
+"between 3 and 32 characters."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:267
+msgid "Invalid destination"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:292 vhffs-api/src/Vhffs/Panel/DNS.pm:309
+msgid "Invalid destination domain name"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:279
+msgid "Invalid destination host"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:368 vhffs-api/src/Vhffs/Panel/Mail.pm:116
+msgid "Invalid domain name"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:242
+msgid "Invalid host"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:227 vhffs-api/src/Vhffs/Panel/DNS.pm:253
+msgid "Invalid hostname"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:138
+msgid "Invalid interval, it must be a positive integer"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:158
+msgid "Invalid local part"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:237
+#: vhffs-api/src/Vhffs/Panel/Git.pm:239
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:241
+msgid "Invalid mailing list address"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:149
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:139
+msgid "Invalid password. It must contain at least 3 characters"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:293 vhffs-api/src/Vhffs/Panel/DNS.pm:310
+msgid "Invalid port"
+msgstr "Invalid port"
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:172 vhffs-api/src/Vhffs/Panel/DNS.pm:202
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:231 vhffs-api/src/Vhffs/Panel/DNS.pm:256
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:322
+msgid "Invalid prefix"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:228 vhffs-api/src/Vhffs/Panel/DNS.pm:294
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:311
+msgid "Invalid priority"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:290
+msgid "Invalid protocol syntax"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:571
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:199
+msgid "Invalid quota"
+msgstr "Ungültige Quote"
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:137 vhffs-api/src/Vhffs/Panel/DNS.pm:185
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:215 vhffs-api/src/Vhffs/Panel/DNS.pm:240
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:265 vhffs-api/src/Vhffs/Panel/DNS.pm:296
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:307 vhffs-api/src/Vhffs/Panel/DNS.pm:334
+msgid "Invalid record"
+msgstr "Ungültiger Eintrag"
+
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:143
+#: vhffs-api/src/Vhffs/Panel/Cvs.pm:144 vhffs-api/src/Vhffs/Panel/Git.pm:145
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:146
+msgid ""
+"Invalid reponame. It must contain between 3 and 64 characters, only "
+"lowercase letters and numbers"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:146
+msgid ""
+"Invalid repository name. It must contain between 3 and 64 characters, only "
+"lowercase letters and numbers"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Web.pm:206
+msgid "Invalid servername (doesn't conform to domain names rules)"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:291
+msgid "Invalid service syntax"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:93
+msgid ""
+"Invalid username, it must contain between 3 and 12 alphanumeric characters, "
+"all in lowercase"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:510
+msgid "Invalid visibility"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:295 vhffs-api/src/Vhffs/Panel/DNS.pm:312
+msgid "Invalid weight"
+msgstr "Ungültiges Gewicht"
+
+#: vhffs-intl/template_strings.pl:46
+msgid "Is a mailing list"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1126
+msgid "Is this a public repository?"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:410 vhffs-intl/template_strings.pl:482
+msgid "Label"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:430 vhffs-intl/template_strings.pl:438
+#: vhffs-intl/template_strings.pl:502 vhffs-intl/template_strings.pl:510
+msgid "Label:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1404
+msgid "Last name"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:76
+msgid "Last name:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1390
+msgid "Last projects"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:928
+msgid "Last return code:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:924
+msgid "Last run:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1398 vhffs-intl/template_strings.pl:1446
+msgid "Last users"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:281
+msgid "Lastname is not correct !"
+msgstr "Nachname ist nicht korrekt"
+
+#: vhffs-intl/template_strings.pl:606
+msgid "Lastname: "
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Public.pm:100
+#, perl-format
+msgid "Latest projects on %s"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:706 vhffs-intl/template_strings.pl:712
+#: vhffs-intl/template_strings.pl:718 vhffs-intl/template_strings.pl:724
+#: vhffs-intl/template_strings.pl:730 vhffs-intl/template_strings.pl:736
+#: vhffs-intl/template_strings.pl:742 vhffs-intl/template_strings.pl:748
+#: vhffs-intl/template_strings.pl:754 vhffs-intl/template_strings.pl:760
+#: vhffs-intl/template_strings.pl:766 vhffs-intl/template_strings.pl:772
+#: vhffs-intl/template_strings.pl:778
+msgid "List"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:109
+msgid "List all Bazaar repos"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:216
+msgid "List all CVS repos"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:234
+msgid "List all Git repos"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:252
+msgid "List all Mercurial repos"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:269
+msgid "List all MySQL databases"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:286
+msgid "List all Pg databases"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:198
+msgid "List all SVN repos"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:374
+msgid "List all cron jobs"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:339
+msgid "List all domain names"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:357
+msgid "List all download repositories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:143
+msgid "List all groups"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:303
+msgid "List all mail domains"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:321
+msgid "List all mailing lists"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:89
+msgid "List all objects"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:126
+msgid "List all users"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:181
+msgid "List all webareas"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cvs.pm:291
+msgid "List of all CVS repositories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:640
+msgid "List of all DNS"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:305
+msgid "List of all MySQL databases"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:295
+msgid "List of all PostgreSQL databases"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:318
+msgid "List of all bazaar repositories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:297
+msgid "List of all cron jobs"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:277
+msgid "List of all download repositories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Git.pm:321
+msgid "List of all git repositories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:820
+msgid "List of all groups"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:524
+msgid "List of all mail domains"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:446
+msgid "List of all mailing lists"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:322
+msgid "List of all mercurial repositories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Object.pm:263
+msgid "List of all objects"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:317
+msgid "List of all subversion repositories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:590
+msgid "List of all users"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Web.pm:365
+msgid "List of all web areas"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:276
+msgid "List updated"
+msgstr "Liste aktualisiert"
+
+#: vhffs-intl/template_strings.pl:346
+msgid "Lists waiting for moderation:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:50 vhffs-intl/template_strings.pl:58
+msgid "Local part (left side of the @):"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1380
+msgid "Log in"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Auth.pm:90
+msgid "Login failed !"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1014
+msgid "Logo"
+msgstr "Logo"
+
+#: vhffs-intl/template_strings.pl:804
+msgid "Logout"
+msgstr "Abmelden"
+
+#: vhffs-intl/template_strings.pl:792
+msgid "Lost password"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1028 vhffs-intl/template_strings.pl:1032
+#: vhffs-intl/template_strings.pl:1098 vhffs-intl/template_strings.pl:1102
+msgid "MB"
+msgstr "MB"
+
+#: vhffs-intl/template_strings.pl:690 vhffs-intl/template_strings.pl:770
+msgid "ML"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:490
+msgid "MX Record added"
+msgstr "MX Eintrag hinzugefügt"
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:485
+msgid "MX Record deleted"
+msgstr "MX Eintrag abgelöst"
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:480
+msgid "MX Record updated"
+msgstr "MX Eintrag aktualisiert"
+
+#: vhffs-intl/template_strings.pl:1230
+msgid "MX name:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1232
+msgid "MX priority:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1212
+msgid "MX records (mail servers)"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:688 vhffs-intl/template_strings.pl:764
+msgid "Mail"
+msgstr "E-Mail"
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:201
+msgid "Mail Administration for domain "
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:37
+msgid "Mail Domain"
+msgstr "Mail Domain"
+
+#: vhffs-intl/template_strings.pl:328
+msgid "Mail boxes:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:432
+msgid "Mail deleted"
+msgstr "Mail abgelöst"
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:123
+msgid "Mail domain successfully created !"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:322
+msgid "Mail domains"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:306
+msgid "Mail domains Admin"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:486
+#, perl-format
+msgid "Mail domains for %s"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:324
+msgid "Mail domains waiting for moderation:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:543
+msgid "Mail domains' administration"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:908
+msgid "Mail for the list:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:517
+msgid "Mail search"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:91
+msgid "Mail to all hosted people"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:954
+msgid "Mail to:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:335
+#, perl-format
+msgid "Mail with id %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:331
+msgid "Mailbox modified"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:383
+msgid "Mailbox password changed"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:371
+msgid "Mailbox successfully added"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:38
+msgid "Mailing List"
+msgstr "Mailing Liste"
+
+#: vhffs-intl/template_strings.pl:1440
+msgid "Mailing Lists"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:210
+#, perl-format
+msgid "Mailing list %s@%s not found"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:237
+msgid "Mailing list address is invalid"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:344
+msgid "Mailing lists"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:324
+msgid "Mailing lists Admin"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:465
+msgid "Mailing lists administration"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:408
+#, perl-format
+msgid "Mailing lists for %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:439
+msgid "Mailing lists search"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Broadcast.pm:137
+#: vhffs-api/src/Vhffs/Panel/Broadcast.pm:176
+msgid "Mailing not found"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Broadcast.pm:75
+msgid "Mailing successfully added"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Broadcast.pm:190
+msgid "Mailing successfully deleted"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:530
+msgid "Mailings to hosted people"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:164
+msgid "Manage existing categories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:162
+msgid "Manage existing tags"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:92
+msgid "Manage mailings"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:880
+msgid "Manage members"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:470
+msgid "Manage request"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:165
+msgid "Manage requests"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1460
+msgid "Matches"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:360
+msgid "Max tags for a group:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:888
+msgid "Member"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:866
+msgid "Members only"
+msgstr "Nur Mitglieder"
+
+#: vhffs-intl/template_strings.pl:868
+msgid "Members only, moderated"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:680 vhffs-intl/template_strings.pl:740
+msgid "Mercurial"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:255
+#, fuzzy
+msgid "Mercurial Admin"
+msgstr "Gruppe Admin"
+
+#: vhffs-intl/template_strings.pl:1438
+msgid "Mercurial Repositories"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:34
+msgid "Mercurial Repository"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:310
+msgid "Mercurial repositories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:341
+msgid "Mercurial repositories administration"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:284
+#, fuzzy, perl-format
+msgid "Mercurial repositories for %s"
+msgstr "CVS Repositories für %s"
+
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:315
+msgid "Mercurial search"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:312
+msgid "Mercurial waiting for moderation:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Contact.pm:63
+msgid "Message sent by the following account"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Contact.pm:66
+msgid "Message sent successfully"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:304 vhffs-api/src/Vhffs/Listengine.pm:319
+#, perl-format
+msgid "Message with id: %s"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:560
+msgid "Message:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:862
+msgid "Moderated for everyone"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:70 vhffs-api/src/Vhffs/Panel/Admin.pm:88
+#: vhffs-api/src/Vhffs/Panel/Moderation.pm:93
+#: vhffs-intl/template_strings.pl:784
+msgid "Moderation"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:152
+msgid "Moderator"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:48
+msgid "Moderator account"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:231 vhffs-api/src/Vhffs/Panel/Tag.pm:478
+#: vhffs-intl/extra_strings.pl:43
+msgid "Moderators"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:272
+msgid "Moderators:"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:20
+msgid "Modification applied"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:19
+msgid "Modification error"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:243
+#: vhffs-api/src/Vhffs/Panel/Cvs.pm:212 vhffs-api/src/Vhffs/Panel/Git.pm:245
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:247
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:243
+msgid ""
+"Modifications applied. Please wait while your repository is being updated"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:648 vhffs-intl/template_strings.pl:650
+#: vhffs-intl/template_strings.pl:986 vhffs-intl/template_strings.pl:994
+msgid "Modify"
+msgstr "Ändern"
+
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:194
+msgid "Modify Bazaar repository"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Git.pm:196
+msgid "Modify Git repository"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:198
+msgid "Modify Mercurial repository"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:195
+msgid "Modify Subversion repository"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Web.pm:268
+msgid "Modify webarea"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1254
+msgid ""
+"Modifying NS records configuration could lead to serious problem. Proceed "
+"with caution."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1400
+msgid "More info..."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1410 vhffs-intl/template_strings.pl:1414
+msgid "More..."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:164
+msgid "Moreover all associated services will be DESTROYED"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:265
+msgid "My Projects"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:670 vhffs-intl/template_strings.pl:710
+msgid "MySQL"
+msgstr "MySQL"
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:272
+msgid "MySQL Admin"
+msgstr "MySQL Admin"
+
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:202
+msgid "MySQL Administration"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:29
+msgid "MySQL DB"
+msgstr "MySQL DB"
+
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:267
+#, perl-format
+msgid "MySQL DBs for %s"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:334
+msgid "MySQL DBs waiting for moderation:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1364
+msgid "MySQL database name:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:332
+msgid "MySQL databases"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:324
+msgid "MySQL databases administration"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1366
+msgid "MySQL password for this database:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:298
+msgid "MySQL search"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:499
+msgid "NS Record added"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:495
+msgid "NS Record deleted"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1252
+msgid "NS records for this domain (nameservers)"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:390
+msgid "Name"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1172 vhffs-intl/template_strings.pl:1200
+msgid "Name for the record:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:652
+msgid "Name of the database:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1228 vhffs-intl/template_strings.pl:1262
+msgid "Name of the record:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:926 vhffs-intl/template_strings.pl:930
+msgid "Never run"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:816
+msgid "New"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:178
+msgid "New description:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:246
+#, perl-format
+msgid "New language is: %s\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:20
+msgid "New password:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1030 vhffs-intl/template_strings.pl:1100
+msgid "New quota:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:932
+msgid "Next run scheduled at:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:26 vhffs-intl/template_strings.pl:32
+#: vhffs-intl/template_strings.pl:1130 vhffs-intl/template_strings.pl:1178
+#: vhffs-intl/template_strings.pl:1206
+msgid "No"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1238
+msgid "No CNAME record for this domain."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1216
+msgid "No MX record for this domain"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1256
+msgid "No NS record for this domain (do not expect anything to work)."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1272
+msgid "No SRV records for this domain."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1310
+msgid "No TXT records for this domain."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:500
+msgid "No category found."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel.pm:263
+msgid "No cookie found, please accept the cookie and then please login again !"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Public.pm:143
+#: vhffs-api/src/Vhffs/Panel/Public.pm:383 vhffs-intl/template_strings.pl:528
+msgid "No group found"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:830
+msgid "No history information about this object."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:546
+msgid "No mailing recorded."
+msgstr ""
+
+#: vhffs-listengine/src/listengine.pl:817
+msgid "No message found or it was already moderated by someone else"
+msgstr ""
+
+#: vhffs-listengine/src/listengine.pl:774
+msgid "No message to moderate"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:210 vhffs-intl/template_strings.pl:378
+msgid "No object found"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:404
+msgid "No object waiting for validation."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1162
+msgid "No registered A records for this domain."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1190
+msgid "No registered AAAA records for this domain."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1426
+msgid "No tag for this group"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:426
+msgid "No tag found."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1002
+msgid "No user for this group."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Public.pm:304 vhffs-intl/template_strings.pl:194
+msgid "No user found"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:456
+msgid "No waiting tag requests."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:166
+msgid ""
+"No, I'm not sure, I prefer to keep this object. All these warnings scare me."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:136
+msgid "No, I'm not sure, I'd prefer to keep it."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:814
+msgid "None"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:150
+msgid "Normal"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1134
+msgid "Notify changes on mailing-list:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1048 vhffs-intl/template_strings.pl:1452
+#: vhffs-intl/template_strings.pl:1470
+msgid "OK"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:626
+msgid "OK, go to ACL management"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:198
+msgid "Object ID"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:214
+msgid "Object ID:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Moderation.pm:85
+msgid "Object accepted"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:212
+msgid "Object administration"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:258
+msgid "Object history"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:824
+msgid "Object label"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:174
+msgid "Object name:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Moderation.pm:70
+#: vhffs-api/src/Vhffs/Panel/Object.pm:296
+msgid "Object not found"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Moderation.pm:79
+msgid "Object refused"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Object.pm:256
+msgid "Object search"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:822
+msgid "Object type"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:172
+msgid "Object type:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Object.pm:305
+msgid "Object updated"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:196
+msgid "Objects list"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:452
+msgid "On object"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:576
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:193
+msgid "Only administrators are allowed to do this"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:520 vhffs-api/src/Vhffs/Panel/User.pm:550
+msgid "Only administrators can do this"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:461
+msgid ""
+"Only an administrator can remove someone from a group, please contact the "
+"administration team"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:56
+msgid "Only this list administrators can use the following commands.\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:860
+msgid "Open for everyone"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:864
+msgid "Open for members, moderated for non-members"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:854
+msgid "Open, approval required"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:852
+msgid "Open, no approval required"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:846 vhffs-intl/template_strings.pl:914
+#: vhffs-intl/template_strings.pl:1132
+msgid "Options"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1462
+msgid "Other tags"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:350
+msgid "Overall subscribers count:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:392
+msgid "Owner"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:220
+msgid "Owner GID:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:218
+msgid "Owner UID:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:202 vhffs-intl/template_strings.pl:370
+msgid "Owner group"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1086
+msgid "Owner group for this Bazaar repository:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:962
+msgid "Owner group for this CVS repository:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1348
+msgid "Owner group for this Git repository:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1354
+msgid "Owner group for this Mercurial repository:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1342
+msgid "Owner group for this SVN repository:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1148
+msgid "Owner group for this web area:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:200 vhffs-intl/template_strings.pl:368
+#: vhffs-intl/template_strings.pl:520
+msgid "Owner user"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1070
+msgid "Owner:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:94
+msgid "Panel UI theme:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:92
+msgid "Panel language:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:572
+msgid "Password"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:90
+msgid "Password (confirm):"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:236
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:226
+msgid "Password change request taken in account, please wait for processing"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:320
+msgid "Password changed"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:658
+msgid "Password for this database:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Auth.pm:178
+msgid "Password recovery failed!"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:52 vhffs-intl/template_strings.pl:88
+msgid "Password:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:287
+msgid "Passwords don't match"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:916 vhffs-intl/template_strings.pl:946
+msgid "Path:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1050
+msgid "Pending tag requests"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:672 vhffs-intl/template_strings.pl:716
+msgid "PgSQL"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:30
+msgid "PgSQL DB"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:264
+msgid "Platform statistics"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:832
+msgid "Platform temporary closed"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:180 vhffs-intl/template_strings.pl:1080
+#: vhffs-intl/template_strings.pl:1154
+msgid ""
+"Please consider that this description is going to be displayed in the public "
+"area. So you have to write it in impersonal form. You should take care to "
+"write it with correct grammar and tenses. Take all the time you need to fill "
+"it with the best content you are able to do."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:104
+msgid "Please enter a correct city"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:105
+msgid "Please enter a correct country"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:102
+msgid "Please enter a correct firstname"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:103
+msgid "Please enter a correct lastname"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:568
+msgid "Please enter your username and password"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:598
+msgid ""
+"Please fill in all fields, you'll be sent a mail containing your password"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:271
+msgid "Please read help of listengine\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1328
+#, perl-format
+msgid ""
+"Please read the %sdocumentation%s carefully before submitting your request"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:178
+msgid "Please try again !\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:219
+msgid "Please try again.\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Auth.pm:173
+#, perl-format
+msgid "Please wait %s, a new password will be sent to you in a few minutes..."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1408
+msgid "Popular tags"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1276
+msgid "Port"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1298
+msgid "Port:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:289
+msgid "PostgreSQL Admin"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:192
+msgid "PostgreSQL Administration"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:257
+#, perl-format
+msgid "PostgreSQL DBs for %s"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:340
+msgid "PostgreSQL DBs waiting for moderation:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1116
+msgid "PostgreSQL database name:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:338
+msgid "PostgreSQL databases"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:314
+msgid "PostgreSQL databases administration"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1118
+msgid "PostgreSQL password for this database:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:288
+msgid "PostgreSQL search"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:858
+msgid "Posting control:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:788 vhffs-intl/template_strings.pl:1382
+#, perl-format
+msgid "Powered by %s"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:190 vhffs-intl/template_strings.pl:192
+#: vhffs-intl/template_strings.pl:206 vhffs-intl/template_strings.pl:374
+#: vhffs-intl/template_strings.pl:376 vhffs-intl/template_strings.pl:524
+#: vhffs-intl/template_strings.pl:526 vhffs-intl/template_strings.pl:700
+#: vhffs-intl/template_strings.pl:798 vhffs-intl/template_strings.pl:974
+msgid "Preferences"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:173 vhffs-api/src/Vhffs/Panel/DNS.pm:203
+msgid "Prefix already exists"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:848
+msgid "Prefix on subject:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1278
+msgid "Priority"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1218 vhffs-intl/template_strings.pl:1300
+msgid "Priority:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:696
+msgid "Project"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:783
+msgid "Project History"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:551
+msgid "Project Preferences"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:319
+msgid "Project Successfully created !"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:988
+msgid "Project contact"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:984
+msgid "Project description:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:982 vhffs-intl/template_strings.pl:1076
+msgid "Project full name:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1072
+msgid "Project name:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:980
+msgid "Project owner:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1456
+msgid "Project search"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:796 vhffs-intl/template_strings.pl:1386
+msgid "Projects"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1064
+msgid "Projects you contribute to"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Object.pm:145 vhffs-intl/template_strings.pl:808
+#: vhffs-intl/template_strings.pl:1060
+msgid "Propose a new description"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1292
+msgid "Protocol:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:230 vhffs-api/src/Vhffs/Panel/Tag.pm:477
+#: vhffs-intl/extra_strings.pl:42 vhffs-intl/template_strings.pl:1124
+#: vhffs-intl/template_strings.pl:1384
+msgid "Public"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:229 vhffs-api/src/Vhffs/Panel/Tag.pm:476
+msgid "Public (available on group creation)"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:872
+msgid "Public archives"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:794
+msgid "Public area"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1374
+msgid ""
+"Public area is temporary closed. Administrators are performing some "
+"maintenances tasks or system encountered database error. Please come back in "
+"a few minutes."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1372
+msgid "Public area temporary closed"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:970 vhffs-intl/template_strings.pl:1058
+#: vhffs-intl/template_strings.pl:1066 vhffs-intl/template_strings.pl:1092
+#, perl-format
+msgid "Quota (used/total): %d/%dMB"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Public.pm:495
+#: vhffs-api/src/Vhffs/Panel/Public.pm:553
+msgid "RSS infos are not published"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1412
+msgid "Random tags"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:102
+msgid "Read more about this service."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:186
+msgid "Real Name"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:176
+msgid "Reason of refusal:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:139 vhffs-api/src/Vhffs/Panel/DNS.pm:186
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:216 vhffs-api/src/Vhffs/Panel/DNS.pm:241
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:266 vhffs-api/src/Vhffs/Panel/DNS.pm:308
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:335
+msgid "Record does not exists"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1290 vhffs-intl/template_strings.pl:1320
+msgid "Record name:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:138
+msgid "Record type doesn't exists"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:524
+msgid "Redirect deleted"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:425
+msgid "Redirect updated"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:38
+msgid "Redirects"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:402 vhffs-intl/template_strings.pl:478
+msgid "Refuse"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Object.pm:628 vhffs-api/src/Vhffs/Object.pm:699
+#: vhffs-api/src/Vhffs/Object.pm:753 vhffs-api/src/Vhffs/Object.pm:799
+#, perl-format
+msgid ""
+"Related documentation is available at:\n"
+"  %s\n"
+"\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1004
+msgid "Remove"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1376
+msgid "Report a bug"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1108
+msgid "Repository name:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1094
+msgid "Repository quota"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:210
+msgid "Repository updated, please wait while quota is updated on filesystem"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1042
+msgid "Request a new tag"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:753
+msgid "Request canceled"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:742
+msgid "Request not found"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:450
+msgid "Requester"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:462
+msgid "Requester:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:331
+#, perl-format
+msgid "Rights for subscriber %s updated"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:938
+msgid "Running"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:536
+msgid "SRV Record added"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:525
+msgid "SRV Record deleted"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:521
+msgid "SRV Record updated"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1268
+msgid "SRV records (servers)"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:676 vhffs-intl/template_strings.pl:728
+msgid "SVN"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:201
+msgid "SVN Admin"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1434
+msgid "SVN Repositories"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:32
+msgid "SVN Repository"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:278
+#, perl-format
+msgid "SVN repositories for %s"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:300
+msgid "SVN waiting for moderation:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:878
+msgid "Save options"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:380 vhffs-intl/template_strings.pl:1388
+#: vhffs-intl/template_strings.pl:1396
+msgid "Search"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:110
+msgid "Search for a Bazaar repository"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:217
+msgid "Search for a CVS repository"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:235
+msgid "Search for a Git repository"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:253
+msgid "Search for a Mercurial repository"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:270
+msgid "Search for a MySQL database"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:287
+msgid "Search for a Pg database"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:199
+msgid "Search for a SVN repository"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:375
+msgid "Search for a cron job"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:340
+msgid "Search for a domain name"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:358
+msgid "Search for a download repository"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:144
+msgid "Search for a group"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:304
+msgid "Search for a mail domain"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:322
+msgid "Search for a mailing list"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:182
+msgid "Search for a webarea"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:90
+msgid "Search for an object"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:127
+msgid "Search for an user"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:321
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:300 vhffs-api/src/Vhffs/Panel/Cvs.pm:294
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:643 vhffs-api/src/Vhffs/Panel/Git.pm:324
+#: vhffs-api/src/Vhffs/Panel/Group.pm:823
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:527
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:449
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:325
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:308
+#: vhffs-api/src/Vhffs/Panel/Object.pm:266
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:298
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:280
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:320 vhffs-api/src/Vhffs/Panel/User.pm:593
+#: vhffs-api/src/Vhffs/Panel/Web.pm:368
+#, perl-format
+msgid "Search result for %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Public.pm:152
+#: vhffs-api/src/Vhffs/Panel/Public.pm:396 vhffs-intl/template_strings.pl:1454
+msgid "Search results"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:70 vhffs-intl/template_strings.pl:562
+#: vhffs-intl/template_strings.pl:844 vhffs-intl/template_strings.pl:912
+#: vhffs-intl/template_strings.pl:960 vhffs-intl/template_strings.pl:966
+#: vhffs-intl/template_strings.pl:1084 vhffs-intl/template_strings.pl:1090
+#: vhffs-intl/template_strings.pl:1122 vhffs-intl/template_strings.pl:1340
+#: vhffs-intl/template_strings.pl:1346 vhffs-intl/template_strings.pl:1352
+#: vhffs-intl/template_strings.pl:1358 vhffs-intl/template_strings.pl:1370
+msgid "Send"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:556
+msgid "Send an email to all hosted people"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:272
+msgid "Send an email with the subject \"help\" to the following address: \n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:120
+msgid "Send my avatar"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:922
+msgid "Send reports to:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Broadcast.pm:107
+#: vhffs-api/src/Vhffs/Panel/Broadcast.pm:146
+msgid "Sent"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1294
+msgid "Service:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:702 vhffs-intl/template_strings.pl:1428
+msgid "Services"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:508
+msgid "Several users matched your query. Please choose between them."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:96
+msgid "Shell:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:876
+msgid "Signature:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Acl.pm:89
+msgid "Sorry, can't add or update ACL"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:828
+msgid "Source"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1026 vhffs-intl/template_strings.pl:1096
+msgid "Space used:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:332
+msgid "Spam status updated"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:936
+msgid "Stand-by"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:188 vhffs-intl/template_strings.pl:204
+#: vhffs-intl/template_strings.pl:372 vhffs-intl/template_strings.pl:522
+#: vhffs-intl/template_strings.pl:538
+msgid "State"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:552
+msgid "State:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:224 vhffs-intl/template_strings.pl:934
+msgid "Status:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:386
+msgid "Su!"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1246
+msgid "Subdomain name:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:534
+msgid "Subject"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:550 vhffs-intl/template_strings.pl:558
+#: vhffs-intl/template_strings.pl:840
+msgid "Subject:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:576 vhffs-intl/template_strings.pl:618
+#: vhffs-intl/template_strings.pl:790
+msgid "Subscribe"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:850
+msgid "Subscribe control:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:98
+msgid "Subscribe to newsletter"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:162
+msgid "Subscribe to the newsletter"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:303
+#, perl-format
+msgid "Subscriber %s deleted"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:596
+msgid "Subscription"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:125
+#, perl-format
+msgid ""
+"Subscription to the following list is forbidden:\n"
+"  %s\n"
+"\n"
+"Have a nice day.\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:298
+msgid "Subversion repositories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:336
+msgid "Subversion repositories administration"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:310
+msgid "Subversion search"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Avatar.pm:204
+msgid "Successfully created or updated avatar"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:17 vhffs-intl/template_strings.pl:242
+msgid "Suspended"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:540
+msgid "TXT Record added"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:551
+msgid "TXT Record deleted"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:546
+msgid "TXT Record updated"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1306
+msgid "TXT records for this domain (textual information)"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:444
+msgid "Tag Requests"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:642
+msgid "Tag added"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:322
+msgid "Tag categories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:223
+msgid "Tag category successfully created"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:468
+msgid "Tag category successfully updated"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:681 vhffs-api/src/Vhffs/Panel/Tag.pm:280
+msgid "Tag deleted"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:448
+msgid "Tag label"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1046
+msgid "Tag label:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:713
+msgid "Tag name can't be empty"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:631
+#: vhffs-api/src/Vhffs/Panel/Group.pm:670 vhffs-api/src/Vhffs/Panel/Tag.pm:651
+msgid "Tag not found"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:386
+msgid "Tag not found!"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:558
+msgid "Tag request accepted"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:573
+msgid "Tag request deleted"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:579
+msgid "Tag request details"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:549
+msgid "Tag request not found"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:722
+msgid "Tag request saved, please wait while a moderator approve it"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:153
+msgid "Tag successfully created"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:392
+msgid "Tag successfully updated"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:460
+msgid "Tag:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:358
+msgid "Tagged groups:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:464
+msgid "Tagged object:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:286 vhffs-intl/template_strings.pl:352
+#: vhffs-intl/template_strings.pl:694 vhffs-intl/template_strings.pl:786
+#: vhffs-intl/template_strings.pl:1036 vhffs-intl/template_strings.pl:1424
+#: vhffs-intl/template_strings.pl:1458
+msgid "Tags"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:167
+msgid "Tags Admin"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:366
+msgid "Tags cloud"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:364
+msgid "Tags cloud / category"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:350
+msgid "Tags' administration"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:68
+msgid "Tell us for what purpose you want to create this mail domain:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:910
+msgid "Tell us what the use of this mailing list will be:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:323 vhffs-api/src/Vhffs/Panel/DNS.pm:336
+msgid "Text can't be empty"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1322
+msgid "Textual information:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:150
+msgid "The Bazaar object was successfully created !"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cvs.pm:152
+msgid "The CVS object was successfully created !"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:145
+msgid "The Cron job was successfully created !"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:375
+msgid "The DNS object was successfully created !"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Git.pm:152
+msgid "The GIT object was successfully created !"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:153
+msgid "The Mercurial object was successfully created !"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:154
+msgid "The MySQL DB was successfully created !"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:144
+msgid "The PostgreSQL DB was successfully created !"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:153
+msgid "The SVN object was successfully created !"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:126
+msgid ""
+"The avatar is a PNG image that will appear next to your username in the "
+"public section."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:177
+msgid "The confirmation code was wrong\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1112 vhffs-intl/template_strings.pl:1360
+#, perl-format
+msgid ""
+"The database name is prefixed by your groupname followed by an underscore "
+"(%s_dbname). The database user is the database full name (%s_dbname)."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:139 vhffs-api/src/Vhffs/Panel/Cron.pm:222
+#: vhffs-api/src/Vhffs/Panel/Group.pm:529
+msgid "The email you entered fails syntax check"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:305
+#: vhffs-api/src/Vhffs/Panel/Group.pm:444
+msgid "The first letter of groupname and full name must be the same"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:351
+#, perl-format
+msgid ""
+"The following address %s is not allowed to execute commands on the list %s\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:190
+#, perl-format
+msgid ""
+"The following address %s is not on the following mailing list:\n"
+"  %s\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:301
+msgid "The groupname must not be the same as your username"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:245
+#, perl-format
+msgid ""
+"The listengine language preference was changed for the following address "
+"%s.\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:166
+msgid "The mailing list object was successfully created !"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:290
+msgid "The message does not exists or was moderated before you.\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:287
+#, perl-format
+msgid "The message with the following id %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Object.pm:134
+#: vhffs-api/src/Vhffs/Panel/Object.pm:136
+msgid "The new description has been submitted"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:137
+msgid "The repository was successfully created !"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:114
+msgid ""
+"The state of you subscription was not changed, you are still subscribed\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Web.pm:212
+msgid "The webarea was successfully created !"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:106
+msgid "There are two possible usages:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:417
+msgid ""
+"There is a problem with the address you filled in your profile, unable to "
+"add forwarding"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:141
+msgid ""
+"There is no default mail domain on this platform, you have to create a mail "
+"domain before creating a mailing list"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:162
+msgid ""
+"This action is non-reversible. This object will be physically destroyed and "
+"deleted from the database, there is no way to recover your data."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:132
+msgid "This action is non-reversible. Your user will be DESTROYED."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:291
+msgid ""
+"This box already exists for this domain or parameters are not valid. Check "
+"your domain."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:270
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:249 vhffs-api/src/Vhffs/Panel/Cvs.pm:243
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:592 vhffs-api/src/Vhffs/Panel/Git.pm:272
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:476
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:398
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:274
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:257
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:247
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:228
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:268 vhffs-api/src/Vhffs/Panel/Web.pm:317
+msgid "This group is not activated yet"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:297
+msgid "This host is already registered for this service"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:98
+#, perl-format
+msgid ""
+"This mail must contains the following subject : \"confirm unsubscribe %s\"\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:82
+#, perl-format
+msgid ""
+"This mail must have the following subject : \"confirm subscribe %s\"\n"
+"On most clients it should work by just replying this email\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:365
+#, perl-format
+msgid ""
+"This mail was sent by %s with the following subject:\n"
+"  %s\n"
+"\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Object.pm:103
+#: vhffs-api/src/Vhffs/Panel/Object.pm:168
+msgid "This object does not exist"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Avatar.pm:243
+msgid "This object does not have an avatar"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Object.pm:186
+#: vhffs-api/src/Vhffs/Panel/Object.pm:188
+msgid "This object has been deleted"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:773
+msgid "This object is not functional yet. Please wait creation or moderation."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Web.pm:253
+msgid "This object is not functionnal yet. Please wait creation or moderation."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Object.pm:109
+#: vhffs-api/src/Vhffs/Panel/Object.pm:174
+msgid "This object is not in refused state"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Object.pm:218
+msgid "This object will NOT be deleted"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Object.pm:226
+msgid "This object will be deleted"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Avatar.pm:110
+#: vhffs-api/src/Vhffs/Panel/Avatar.pm:171
+#: vhffs-api/src/Vhffs/Panel/Avatar.pm:226
+msgid "This platform does not provide avatar support"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:834
+msgid ""
+"This platform is temporary closed. Administrators are performing some "
+"maintenances tasks or system encountered database error. Please come back in "
+"a few minutes to log in."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:464
+msgid "This user is still in a group"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:470
+msgid "This user will BE DELETED"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:475
+msgid "This user will NOT be DELETED"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:475
+msgid "This user will be removed from this group as soon as possible"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:382
+msgid "To accept this subscriber, send a message to\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:8
+msgid ""
+"To avoid blacklisting issues due to spam forwarding, catchall address are "
+"restricted to boxes belongin to this mail domain."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:366
+#, perl-format
+msgid ""
+"To put this post on the list, send a message to:\n"
+"  %s-request@%s\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:385
+msgid "To refuse this subscriber, send a message to\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:276
+msgid "Total groups count:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:268
+msgid "Total users count:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:388
+msgid "Type"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:216
+msgid "Type:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:473
+#, perl-format
+msgid "Unable to add A record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:468
+#, perl-format
+msgid "Unable to add AAAA record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:512
+#, perl-format
+msgid "Unable to add CNAME record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:489
+#, perl-format
+msgid "Unable to add MX record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:498
+#, perl-format
+msgid "Unable to add NS record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:535
+#, perl-format
+msgid "Unable to add SRV record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:539
+#, perl-format
+msgid "Unable to add TXT record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:397
+#, perl-format
+msgid "Unable to add forward %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:644
+msgid "Unable to add tag, check it was not already added to your project"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:499
+msgid ""
+"Unable to add user, he might already be in the group (waiting for addition "
+"or deletion)"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:227
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:231
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:221
+msgid "Unable to apply changes"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:248
+#: vhffs-api/src/Vhffs/Panel/Git.pm:250
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:252
+#: vhffs-api/src/Vhffs/Panel/Web.pm:297
+msgid "Unable to apply modifications"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:583
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:206
+msgid "Unable to apply modifications, please try again later"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:327
+#, perl-format
+msgid "Unable to change rights for subscriber %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:263 vhffs-api/src/Vhffs/Panel/Tag.pm:632
+msgid "Unable to create category"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:203 vhffs-api/src/Vhffs/Panel/Tag.pm:637
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:663
+msgid "Unable to create tag"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:450
+#, perl-format
+msgid "Unable to delete A record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:462
+#, perl-format
+msgid "Unable to delete AAAA record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:507
+#, perl-format
+msgid "Unable to delete CNAME record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:484
+#, perl-format
+msgid "Unable to delete MX record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:494
+#, perl-format
+msgid "Unable to delete NS record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:524
+#, perl-format
+msgid "Unable to delete SRV record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:550
+#, perl-format
+msgid "Unable to delete TXT record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:370
+#, perl-format
+msgid "Unable to delete box %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:264
+#, perl-format
+msgid "Unable to delete catchall %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:318
+msgid "Unable to delete category"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:454
+#, perl-format
+msgid "Unable to delete forward %s to %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:683 vhffs-api/src/Vhffs/Panel/Tag.pm:282
+msgid "Unable to delete tag"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:174 vhffs-api/src/Vhffs/Panel/DNS.pm:204
+msgid ""
+"Unable to find default redirection address, please contact administrators"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:283
+msgid "Unable to get Bazaar repositories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cvs.pm:256
+msgid "Unable to get CVS repositories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:605
+msgid "Unable to get DNS"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Git.pm:286
+msgid "Unable to get Git repositories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:287
+msgid "Unable to get Mercurial repositories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:270
+msgid "Unable to get MySQL databases."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:260
+msgid "Unable to get PostgreSQL databases."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:412
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:282
+msgid "Unable to get SVN repositories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:262
+msgid "Unable to get cron jobs"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:242
+msgid "Unable to get download repositories"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:156
+#, perl-format
+msgid "Unable to get information on mail domain %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:489
+msgid "Unable to get mail domains"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Web.pm:330
+msgid "Unable to get webareas"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:445
+#, perl-format
+msgid "Unable to modify A record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:457
+#, perl-format
+msgid "Unable to modify AAAA record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:503
+#, perl-format
+msgid "Unable to modify CNAME record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:479
+#, perl-format
+msgid "Unable to modify MX record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:520
+#, perl-format
+msgid "Unable to modify SRV record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:545
+#, perl-format
+msgid "Unable to modify TXT record: %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:426
+#, perl-format
+msgid "Unable to modify forward %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:477
+msgid "Unable to remove user from group"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:272
+msgid "Unable to save object"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:470
+msgid "Unable to update category"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:248
+msgid "Unable to update repository"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:394
+msgid "Unable to update tag"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:537 vhffs-api/src/Vhffs/Panel/User.pm:562
+msgid "Unable to update user, please try again later"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:270
+msgid ""
+"Unknow command\n"
+"\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Broadcast.pm:109
+#: vhffs-api/src/Vhffs/Panel/Broadcast.pm:148
+msgid "Unknown"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:141 vhffs-api/src/Vhffs/Panel/DNS.pm:177
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:189 vhffs-api/src/Vhffs/Panel/DNS.pm:207
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:219 vhffs-api/src/Vhffs/Panel/DNS.pm:232
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:244 vhffs-api/src/Vhffs/Panel/DNS.pm:257
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:269 vhffs-api/src/Vhffs/Panel/DNS.pm:282
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:299 vhffs-api/src/Vhffs/Panel/DNS.pm:314
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:326 vhffs-api/src/Vhffs/Panel/DNS.pm:338
+msgid "Unknown error"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:217
+#, perl-format
+msgid "Unsubscribe for the list %s was not complete.\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:34 vhffs-intl/template_strings.pl:118
+#: vhffs-intl/template_strings.pl:182 vhffs-intl/template_strings.pl:256
+#: vhffs-intl/template_strings.pl:434 vhffs-intl/template_strings.pl:508
+#: vhffs-intl/template_strings.pl:644 vhffs-intl/template_strings.pl:660
+#: vhffs-intl/template_strings.pl:942 vhffs-intl/template_strings.pl:1138
+#: vhffs-intl/template_strings.pl:1146 vhffs-intl/template_strings.pl:1164
+#: vhffs-intl/template_strings.pl:1192 vhffs-intl/template_strings.pl:1220
+#: vhffs-intl/template_strings.pl:1240 vhffs-intl/template_strings.pl:1282
+#: vhffs-intl/template_strings.pl:1312
+msgid "Update"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:144
+msgid "Update IRC nick"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:474
+msgid "Update Tag Category"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:40
+msgid "Update forward"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1020
+msgid "Update logo"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:128
+msgid "Update my avatar"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:156 vhffs-intl/template_strings.pl:894
+msgid "Update permissions"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1034 vhffs-intl/template_strings.pl:1104
+msgid "Update quota"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:414 vhffs-intl/template_strings.pl:488
+msgid "Updated"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Avatar.pm:193
+msgid "Uploaded file is too big. The maximum size is 200 kbytes"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1170 vhffs-intl/template_strings.pl:1198
+#: vhffs-intl/template_strings.pl:1226 vhffs-intl/template_strings.pl:1288
+#: vhffs-intl/template_strings.pl:1318
+#, perl-format
+msgid "Use @ for ORIGIN (%s)"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:108
+msgid "Use VHFFS servers to manage this mail."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1174
+msgid "Use our servers as destination IP for this A record?"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1202
+msgid "Use our servers as destination IP for this AAAA record?"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:356
+msgid "Used tags/existing:"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:25 vhffs-intl/template_strings.pl:630
+msgid "User"
+msgstr "Benutzer"
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:129
+msgid "User Admin"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:491
+msgid "User Preferences"
+msgstr "Benutzer Einstellungen"
+
+#: vhffs-intl/extra_strings.pl:49
+msgid "User account"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel.pm:286
+msgid "User does not exist"
+msgstr "Der Benutzer existiert nicht"
+
+#: vhffs-api/src/Vhffs/Panel/Auth.pm:95
+msgid "User is not active yet"
+msgstr "Der Benutzer ist nicht aktiv"
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:471
+#: vhffs-api/src/Vhffs/Panel/Group.pm:506
+#: vhffs-api/src/Vhffs/Panel/Public.pm:339
+msgid "User not found"
+msgstr "Benutzer nicht gefunden"
+
+#: vhffs-intl/template_strings.pl:1448
+msgid "User search"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:539 vhffs-api/src/Vhffs/Panel/User.pm:564
+msgid "User successfully updated"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:497
+msgid "User will be added as soon as possible"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:124
+msgid "User's avatar"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:146
+msgid "User's permissions"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:148
+msgid "User's permissions:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:184 vhffs-intl/template_strings.pl:570
+#: vhffs-intl/template_strings.pl:1450
+msgid "Username"
+msgstr "Benutzername:"
+
+#: vhffs-intl/template_strings.pl:654
+msgid "Username for this database:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:72 vhffs-intl/template_strings.pl:384
+#: vhffs-intl/template_strings.pl:586 vhffs-intl/template_strings.pl:600
+#: vhffs-intl/template_strings.pl:1008
+msgid "Username:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:266 vhffs-intl/template_strings.pl:664
+#: vhffs-intl/template_strings.pl:998 vhffs-intl/template_strings.pl:1394
+#: vhffs-intl/template_strings.pl:1420
+msgid "Users"
+msgstr "Benutzer"
+
+#: vhffs-intl/template_strings.pl:1000
+msgid "Users currently in this group"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:583
+msgid "Users search"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:608
+msgid "Users' administration"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:12 vhffs-intl/template_strings.pl:228
+msgid "Validation refused"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:544
+msgid "View"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:337
+msgid "Virus status updated"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:486
+msgid "Visibility"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:506 vhffs-intl/template_strings.pl:514
+msgid "Visibility:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:234
+msgid "Waiting for activation"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:886
+msgid "Waiting for approval"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:884
+msgid "Waiting for confirmation"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:13 vhffs-intl/template_strings.pl:230
+msgid "Waiting for creation"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:890
+msgid "Waiting for deletion"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:18 vhffs-intl/template_strings.pl:246
+msgid "Waiting for modification"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:16 vhffs-intl/template_strings.pl:240
+msgid "Waiting for suspension"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:11 vhffs-intl/template_strings.pl:226
+msgid "Waiting for validation"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:299
+msgid "Wanted language is not in the language list"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:291
+msgid "Wanted shell is not in the shell list"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:303
+msgid "Wanted theme is not in the theme list"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:836
+msgid "Warn the admin team "
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:656
+msgid ""
+"Warning, password change isn't immediate, you've to check periodically to "
+"see if it's done"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:431
+#, perl-format
+msgid ""
+"We confirm that you REFUSED the subscription of:\n"
+"  %s\n"
+"\n"
+"to the following mailing list:\n"
+"  %s\n"
+"\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:411
+#, perl-format
+msgid ""
+"We confirm that you accepted the subscription of:\n"
+"  %s\n"
+"\n"
+"to the following mailing list:\n"
+"  %s\n"
+"\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:990
+#, perl-format
+msgid "We offer you the possibility to forward emails from %s@%s."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:100
+#, perl-format
+msgid "We offer you the possibility to have one email box on the domain %s"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:668 vhffs-intl/template_strings.pl:704
+msgid "Web"
+msgstr "Web"
+
+#: vhffs-api/src/Vhffs/Panel/Admin.pm:184
+msgid "Web Admin"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1140
+msgid "Web area administration"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Web.pm:299
+msgid "Web area successfully modified"
+msgstr ""
+
+#: vhffs-intl/extra_strings.pl:27
+msgid "Webarea"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:282
+msgid "Webarea waiting for moderation:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:280
+msgid "Webareas"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Web.pm:327
+#, perl-format
+msgid "Webareas for %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Web.pm:358
+msgid "Webareas search"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Web.pm:384
+msgid "Webareas' administration"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1430
+msgid "Websites"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1280
+msgid "Weight"
+msgstr "Gewicht"
+
+#: vhffs-intl/template_strings.pl:1302
+msgid "Weight:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/User.pm:207 vhffs-intl/template_strings.pl:564
+#: vhffs-intl/template_strings.pl:566
+#, perl-format
+msgid "Welcome on %s"
+msgstr "%s, Wilkommen"
+
+#: vhffs-intl/extra_strings.pl:21 vhffs-intl/template_strings.pl:250
+msgid "Will be deleted"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:580
+#, perl-format
+msgid "Woah, %s users and %s groups already trust %s"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:24 vhffs-intl/template_strings.pl:30
+#: vhffs-intl/template_strings.pl:1128 vhffs-intl/template_strings.pl:1176
+#: vhffs-intl/template_strings.pl:1204
+msgid "Yes"
+msgstr "Ja"
+
+#: vhffs-intl/template_strings.pl:138
+msgid "Yes I'm sure of what I do"
+msgstr "Ja, ich bin sicher was ich mache"
+
+#: vhffs-intl/template_strings.pl:168
+msgid "Yes I'm sure of what I do, I do not know the fear."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:205
+msgid "You are not a subscriber on this list.\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel.pm:152 vhffs-api/src/Vhffs/Panel.pm:173
+msgid "You are not allowed to access this page"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:344
+msgid "You are not allowed to add members (ACL rights)"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Object.pm:114
+#: vhffs-api/src/Vhffs/Panel/Object.pm:179
+msgid "You are not allowed to do it, you don't own this object"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:317
+msgid "You are not allowed to manager subscribers' rights (ACL rights)"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:214 vhffs-api/src/Vhffs/Panel/Mail.pm:252
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:279 vhffs-api/src/Vhffs/Panel/Mail.pm:306
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:364 vhffs-api/src/Vhffs/Panel/Mail.pm:385
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:412 vhffs-api/src/Vhffs/Panel/Mail.pm:441
+msgid "You are not allowed to modify this object"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Web.pm:281
+msgid "You are not allowed to modify this web area"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:111
+#, perl-format
+msgid ""
+"You asked to be subscribed to the following list:\n"
+"\n"
+"%s\n"
+"\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:624
+msgid ""
+"You can adjust rights on this group for each user in the VHFFS database. "
+"Please read help before manage it."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:47
+msgid "You can also send a command list in the mail body.\n"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1082
+msgid ""
+"You can chose some tags to be applied to your group right now. More tags "
+"will be available in your project's preferences once it is created."
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:468
+msgid ""
+"You can either accept the request (and possibly change the name of the tag/"
+"category) or reattach it to an existing category and/or tag. If you choose "
+"to create a category, you've to create the tag too."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:747
+msgid "You can only delete requests attached to your group"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1022
+msgid "You can upload a custom logo for your group."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:250
+msgid "You cannot add NS records on origin"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:134
+msgid "You cannot delete NS records on origin"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:473
+msgid "You cannot remove the owner of the group"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:64
+msgid "You cannot subscribe to VHFFS"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:204
+#, perl-format
+msgid "You cannot unsubscribe from the list %s\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:191
+msgid "You demand was refused\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:160
+msgid "You do not own this domain !"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:637
+msgid "You don't have enough privileges to add this tag"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:676
+msgid "You don't have enough privileges to delete this tag"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:166
+#, perl-format
+msgid ""
+"You have been successfully removed from the following list:\n"
+"  %s\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:231
+#, perl-format
+msgid "You have been successfully removed from the list %s.\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:135 vhffs-api/src/Vhffs/Listengine.pm:149
+#, perl-format
+msgid ""
+"You have been successfully subscribed to the following mailing list:\n"
+"  %s\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:191 vhffs-api/src/Vhffs/Panel/Tag.pm:426
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:506 vhffs-api/src/Vhffs/Panel/Web.pm:291
+msgid "You have to enter a description"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:186 vhffs-api/src/Vhffs/Panel/Tag.pm:422
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:502
+msgid "You have to enter a label"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:258 vhffs-api/src/Vhffs/Panel/Tag.pm:622
+msgid "You have to enter a label and a description for the category"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Tag.pm:627 vhffs-api/src/Vhffs/Panel/Tag.pm:656
+msgid "You have to enter a label and a description for the tag"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Broadcast.pm:70
+msgid "You have to enter a message body"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Moderation.pm:75
+msgid "You have to enter a refuse reason"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Broadcast.pm:69
+msgid "You have to enter a subject"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Public.pm:295
+msgid "You have to enter an username"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:265
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:244 vhffs-api/src/Vhffs/Panel/Cvs.pm:238
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:587 vhffs-api/src/Vhffs/Panel/Git.pm:267
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:471
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:393
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:269
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:252
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:242
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:223
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:263 vhffs-api/src/Vhffs/Panel/Web.pm:312
+msgid "You have to select a group first"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Auth.pm:138
+msgid "You left your VHFFS session!"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:582
+msgid "You lost your password? You're a bad guy!"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:137 vhffs-api/src/Vhffs/Listengine.pm:154
+#: vhffs-api/src/Vhffs/Listengine.pm:399
+msgid "You may get some help on listengine by sending an email to\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:356
+msgid "You must choose a method for your mail"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:81 vhffs-api/src/Vhffs/Listengine.pm:97
+msgid "You must confirm your request by sending a confirmation email\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:100
+msgid "You must declare a valid mail address"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:95
+msgid "You must declare your city"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:94
+msgid "You must declare your country"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:97
+msgid "You must declare your firstname"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:98
+msgid "You must declare your lastname"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:99
+msgid "You must declare your mail address"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:92
+msgid "You must declare your username"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:96
+msgid "You must declare your zipcode"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:144
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:136 vhffs-api/src/Vhffs/Panel/Cvs.pm:145
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:369 vhffs-api/src/Vhffs/Panel/Git.pm:146
+#: vhffs-api/src/Vhffs/Panel/Group.pm:303
+#: vhffs-api/src/Vhffs/Panel/Group.pm:442
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:117
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:157
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:147
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:147
+#: vhffs-api/src/Vhffs/Panel/Object.pm:127
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:137
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:131
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:147 vhffs-api/src/Vhffs/Panel/Web.pm:207
+msgid "You must enter a description"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:304
+#: vhffs-api/src/Vhffs/Panel/Group.pm:443
+msgid "You must enter a full name"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:467
+#: vhffs-api/src/Vhffs/Panel/Group.pm:490
+msgid "You must enter an username"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Group.pm:358
+msgid "You must specify a project name"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:354
+msgid "You need to enter at least one new member"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:110
+#, perl-format
+msgid "You should use use the host pop.%s or imap.%s to fetch your mails."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:152
+msgid "You will receive an email with the decision of administrators.\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel.pm:294
+msgid "You're are not allowed to browse panel"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:460
+msgid "You're not allowed to delete this user"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:126
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:275
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:112 vhffs-api/src/Vhffs/Panel/Cron.pm:254
+#: vhffs-api/src/Vhffs/Panel/Cvs.pm:126 vhffs-api/src/Vhffs/Panel/Cvs.pm:248
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:351 vhffs-api/src/Vhffs/Panel/DNS.pm:597
+#: vhffs-api/src/Vhffs/Panel/Git.pm:128 vhffs-api/src/Vhffs/Panel/Git.pm:277
+#: vhffs-api/src/Vhffs/Panel/Group.pm:437
+#: vhffs-api/src/Vhffs/Panel/Group.pm:459
+#: vhffs-api/src/Vhffs/Panel/Group.pm:484
+#: vhffs-api/src/Vhffs/Panel/Group.pm:517
+#: vhffs-api/src/Vhffs/Panel/Group.pm:617
+#: vhffs-api/src/Vhffs/Panel/Group.pm:656
+#: vhffs-api/src/Vhffs/Panel/Group.pm:695
+#: vhffs-api/src/Vhffs/Panel/Group.pm:733
+#: vhffs-api/src/Vhffs/Panel/Group.pm:778
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:100 vhffs-api/src/Vhffs/Panel/Mail.pm:481
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:133
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:403
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:129
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:279
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:126
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:262
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:116
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:252
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:116
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:233
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:128 vhffs-api/src/Vhffs/Panel/Svn.pm:273
+#: vhffs-api/src/Vhffs/Panel/Web.pm:190 vhffs-api/src/Vhffs/Panel/Web.pm:258
+#: vhffs-api/src/Vhffs/Panel/Web.pm:322
+msgid "You're not allowed to do this (ACL rights)"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Avatar.pm:182
+#: vhffs-api/src/Vhffs/Panel/Avatar.pm:237
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:188
+#: vhffs-api/src/Vhffs/Panel/Bazaar.pm:213
+#: vhffs-api/src/Vhffs/Panel/Cron.pm:187 vhffs-api/src/Vhffs/Panel/Cron.pm:207
+#: vhffs-api/src/Vhffs/Panel/Cvs.pm:191 vhffs-api/src/Vhffs/Panel/Cvs.pm:197
+#: vhffs-api/src/Vhffs/Panel/DNS.pm:416 vhffs-api/src/Vhffs/Panel/DNS.pm:432
+#: vhffs-api/src/Vhffs/Panel/Git.pm:190 vhffs-api/src/Vhffs/Panel/Git.pm:215
+#: vhffs-api/src/Vhffs/Panel/Group.pm:363
+#: vhffs-api/src/Vhffs/Panel/Group.pm:428
+#: vhffs-api/src/Vhffs/Panel/Mail.pm:163
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:218
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:255
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:289
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:192
+#: vhffs-api/src/Vhffs/Panel/Mercurial.pm:217
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:192
+#: vhffs-api/src/Vhffs/Panel/Mysql.pm:214
+#: vhffs-api/src/Vhffs/Panel/Object.pm:216
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:182
+#: vhffs-api/src/Vhffs/Panel/Pgsql.pm:204
+#: vhffs-api/src/Vhffs/Panel/Repository.pm:175
+#: vhffs-api/src/Vhffs/Panel/Svn.pm:189 vhffs-api/src/Vhffs/Panel/Svn.pm:214
+#: vhffs-api/src/Vhffs/Panel/User.pm:246 vhffs-api/src/Vhffs/Panel/User.pm:252
+msgid ""
+"You're not allowed to do this, object is not in active state or you don't "
+"have enough ACL rights"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Acl.pm:85
+msgid "You're not allowed to manage this object's ACL"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Acl.pm:71 vhffs-api/src/Vhffs/Panel/Object.pm:78
+msgid "You're not allowed to view this object's ACL"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Object.pm:816
+#, perl-format
+msgid "Your %s (%s) on %s has been deleted due to lack of updates"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Object.pm:767
+#, perl-format
+msgid "Your %s (%s) on %s was successfully created"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/User.pm:457
+#, perl-format
+msgid ""
+"Your account (%s) on %s has been deleted because it was unused for a long "
+"time"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:842
+msgid "Your message:"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1056
+msgid "Your projects"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:594
+msgid ""
+"Your registration request has been sent. Please wait while we're creating "
+"you account, it may take several minutes."
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Object.pm:657
+#, perl-format
+msgid "Your request for a %s (%s) on %s was accepted"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Object.pm:716
+#, perl-format
+msgid "Your request for a %s (%s) on %s was refused"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:397
+#, perl-format
+msgid ""
+"Your subscription was accepted to the following mailing list:\n"
+"  %s\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:421
+#, perl-format
+msgid ""
+"Your subscription was refused to the following mailing list:\n"
+"  %s\n"
+"\n"
+"Have a nice day.\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/Subscribe.pm:101
+msgid "Your zipcode is not correct! Please enter a correct zipcode"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:614
+msgid "Zipcode"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/User.pm:284
+msgid "Zipcode is not correct !"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:84
+msgid "Zipcode:"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Panel/MailingList.pm:376
+#, perl-format
+msgid "[%s] You've been added to the list %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:321
+msgid "cannot be removed from the list\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:289
+msgid "cannot be removed.\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:51
+msgid "help\t\t - show this help\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:336
+#, perl-format
+msgid "in the moderation queue of the list %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:54
+msgid "lang [fr|us|es]\t - set listengine language\n"
+msgstr ""
+
+#: vhffs-listengine/src/listengine.pl:992
+#, perl-format
+msgid "listengine - list of messages to moderate for %s"
+msgstr ""
+
+#: vhffs-listengine/src/listengine.pl:875
+#: vhffs-listengine/src/listengine.pl:897
+#: vhffs-listengine/src/listengine.pl:908
+msgid "listengine help"
+msgstr ""
+
+#: vhffs-listengine/src/listengine.pl:940
+#: vhffs-listengine/src/listengine.pl:951
+#: vhffs-listengine/src/listengine.pl:967
+#: vhffs-listengine/src/listengine.pl:979
+#: vhffs-listengine/src/listengine.pl:1006
+#: vhffs-listengine/src/listengine.pl:1017
+msgid "listengine moderation"
+msgstr ""
+
+#: vhffs-listengine/src/listengine.pl:925
+#: vhffs-listengine/src/listengine.pl:1060
+msgid "listengine result command"
+msgstr ""
+
+#: vhffs-listengine/src/listengine.pl:1084
+msgid "listengine: unknown command"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:920
+msgid "minutes"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:59
+msgid "moderate XXXXX\t\t\t - accept the message with message-id XXXXX\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:60
+msgid ""
+"moderate accept XXXXX\t\t\t - accept the message with message-id XXXXX\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:62
+msgid "moderate list\t\t\t - give the message list for moderation\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:61
+msgid ""
+"moderate refused XXXXX\t\t\t - refuse the message with message-id XXXXX\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Object.pm:597
+msgid "no reason given"
+msgstr ""
+
+#: vhffs-intl/template_strings.pl:1074
+msgid ""
+"only lowercase alphanumerical letters, no space, from 3 to 12 characters"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:288 vhffs-api/src/Vhffs/Listengine.pm:320
+#, perl-format
+msgid "present in the moderation queue for the list %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:52
+msgid "subscribe\t - subscribe the shipper to the list\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:57
+msgid ""
+"subscription accept XXXXX\t\t - accept the subscription with key XXXXX\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:58
+msgid ""
+"subscription refuse XXXXX\t\t - refuse the subscription with key XXXXX\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:53
+msgid "unsubscribe\t - unsubscribe from this list\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:67
+msgid "user info user@domain.tld\t\t - show user information\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:65
+msgid "user right RIGHT user@domain.tld\t - change right for this user\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:64
+msgid ""
+"user subscribe user@domain.tld\t\t - register the user user@domain.tld on "
+"the list\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:63
+msgid ""
+"user unsubscribe user@domain.tld\t - delete user user@domain.tld from list\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:305
+#, perl-format
+msgid "was removed from the moderation queue from the list %s"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:337
+msgid "was sent on the list.\n"
+msgstr ""
+
+#: vhffs-api/src/Vhffs/Listengine.pm:367
+#, perl-format
+msgid ""
+"with the following subject :\n"
+"  \"moderate %s\" \n"
+msgstr ""
+
+#~ msgid "An error occured while adding the box (anti-spam adding)"
+#~ msgstr ""
+#~ "Whärend der Erstellung des Mailbox (Anti-spam Hinzufügung) ist ein Fehler "
+#~ "aufgetreten."
+
+#~ msgid "An error occured while adding the box (anti-virus adding)"
+#~ msgstr ""
+#~ "Whärend der Erstellung des Mailbox (Anti-virus Hinzufügung) ist ein "
+#~ "Fehler aufgetreten."
+
+#~ msgid "An error occured while updating the mail domain"
+#~ msgstr ""
+#~ "Während der Aktualisierung des Mail Domain ist ein Fehler aufgetreten"
+
+#~ msgid "Catchall address successfully changed"
+#~ msgstr "Catchall Adresse erfolgreich geändert"
+
+#~ msgid "Hello %s, welcome in VHFFS !"
+#~ msgstr "Hello %s, Wilkommen bei VHFFS !"
+
+#~ msgid "\n"
+#~ msgstr "\n"
+
+#~ msgid "Add !"
+#~ msgstr "Hinzufügen"
+
+#~ msgid "Add a popbox to this domain"
+#~ msgstr "Pop mailbox an diesem Domain hinzufügen"
+
+#~ msgid "Add an A record"
+#~ msgstr "A Eintrag hinzufügen"
+
+#~ msgid "Add an AAAA record"
+#~ msgstr "AAAA Eintrag hinzufügen"
+
+#~ msgid "Address"
+#~ msgstr "Adresse"
+
+#~ msgid "Address (ServerName directive)"
+#~ msgstr "Adresse (ServerName directive)"
+
+#~ msgid "Address (Servername)"
+#~ msgstr "Adresse (Servername)"
+
+#~ msgid "Addresses (one per line)"
+#~ msgstr "Adressen (eine per Linie)"
+
+#, fuzzy
+#~ msgid "Admin Bazaar Repository"
+#~ msgstr "Admin CVS Repository"
+
+#~ msgid "Admin CVS Repository"
+#~ msgstr "Admin CVS Repository"
+
+#~ msgid "Admin Git Repository"
+#~ msgstr "Admin Git Repository"
+
+#, fuzzy
+#~ msgid "Admin Mercurial Repository"
+#~ msgstr "Admin Git Repository"
+
+#~ msgid "Admin Subversion Repository"
+#~ msgstr "Admin Subversion Repository"
+
+#~ msgid "All AAAA TYPE for your domain name"
+#~ msgstr "Alle AAAA TYPE für ihres Domain"
+
+#~ msgid "All CNAME TYPE for your domain name"
+#~ msgstr "Alle CNAME TYPE für ihres Domain"
+
+#~ msgid "All CNAME for your domain name"
+#~ msgstr "Alle CNAME für ihres Domain"
+
+#~ msgid "All MX TYPE for your domain name"
+#~ msgstr "Alle MX TYPE für ihres Domain"
+
+#~ msgid "All NS TYPE for your domain name"
+#~ msgstr "Alle NS TYPE für ihres Domain"
+
+#~ msgid "All SRV records for your domain name"
+#~ msgstr "Alle SRV Einträge für ihres Domain"
+
+#~ msgid "All users in this group"
+#~ msgstr "Alle Benutzer in dieser Gruppe"
+
+#~ msgid ""
+#~ "An error occured while applying changes. This web area will NOT be deleted"
+#~ msgstr ""
+#~ "Whärend die Änderungen ist ein Fehler aufgetreten. Diees Webarea wird "
+#~ "NICHT abgelöst"
+
+#~ msgid "An error occured while deleting the CVS repository"
+#~ msgstr "Während der Ablösung des CVS Repository ist ein Fehler aufgetreten."
+
+#~ msgid "An error occured while deleting the Download repository"
+#~ msgstr ""
+#~ "Während der Ablösung des Download Repository ist ein Fehler aufgetreten."
+
+#~ msgid "An error occured while deleting the Subversion repository"
+#~ msgstr ""
+#~ "Während der Ablösung des Subversion Repository ist ein Fehler aufgetreten."
+
+#, fuzzy
+#~ msgid "An error occured while deleting the bazaar repository"
+#~ msgstr "Während der Ablösung des CVS Repository ist ein Fehler aufgetreten."
+
+#~ msgid "An error occured while deleting the git repository"
+#~ msgstr "Während der Ablösung des GIT Repository ist ein Fehler aufgetreten."
+
+#, fuzzy
+#~ msgid "An error occured while deleting the mercurial repository"
+#~ msgstr "Während der Ablösung des GIT Repository ist ein Fehler aufgetreten."
+
+#~ msgid "Are you SURE you want DELETE this Mail Area ?"
+#~ msgstr "Sind Sie SICHER Sie wollen das Mail Area ablösen ?"
+
+#~ msgid "Are you SURE you want DELETE this MySQL database ?"
+#~ msgstr "Sind Sie SICHER dass Sie dieses MySQL Datenbank ABLÖSEN wollen ?"
+
+#~ msgid "Are you SURE you want DELETE this PostgreSQL database ?"
+#~ msgstr ""
+#~ "Sind Sie SICHER dass Sie dieses PostgreSQL Datenbank ABLÖSEN wollen ?"
+
+#~ msgid "Are you SURE you want DELETE this Web Area ?"
+#~ msgstr "Sind Sie SICHER dass Sie dieses Webarea ABLÖSEN wollen ?"
+
+#, fuzzy
+#~ msgid "Are you SURE you want DELETE this bazaar repository?"
+#~ msgstr "Sind Sie SICHER dass Sie dieses GIT Repository ABLÖSEN wollen ?"
+
+#~ msgid "Are you SURE you want DELETE this cvs repository ?"
+#~ msgstr "Sind Sie SICHER dass Sie dieses CVS Repository ABLÖSEN wollen ?"
+
+#~ msgid "Are you SURE you want DELETE this domain ?"
+#~ msgstr "Sind Sie SICHER dass Sie dieses Domain ABLÖSEN wollen ?"
+
+#~ msgid "Are you SURE you want DELETE this download repository ?"
+#~ msgstr ""
+#~ "Sind Sie SICHER dass Sie dieses Download Repository ABLÖSEN wollen ?"
+
+#~ msgid "Are you SURE you want DELETE this git repository?"
+#~ msgstr "Sind Sie SICHER dass Sie dieses GIT Repository ABLÖSEN wollen ?"
+
+#~ msgid "Are you SURE you want DELETE this mailing list ?"
+#~ msgstr "Sind Sie SICHER dass Sie diese Mailingliste ABLÖSEN wollen ?"
+
+#, fuzzy
+#~ msgid "Are you SURE you want DELETE this mercurial repository?"
+#~ msgstr "Sind Sie SICHER dass Sie dieses GIT Repository ABLÖSEN wollen ?"
+
+#~ msgid "Are you SURE you want DELETE this project ?"
+#~ msgstr "Sind Sie SICHER dass Sie dieses Projekt ABLÖSEN wollen ?"
+
+#, fuzzy
+#~ msgid "BAZAAR stats"
+#~ msgstr "Web statistiken"
+
+#~ msgid "Back to Login"
+#~ msgstr "Zurück zur Anmeldung"
+
+#~ msgid "CGI Error ! %s"
+#~ msgstr "CGI Fehler ! %s"
+
+#~ msgid "CVS Root"
+#~ msgstr "CVS Root"
+
+#~ msgid "CVS repository updated"
+#~ msgstr "CVS Repository aktualisiert"
+
+#~ msgid "City"
+#~ msgstr "Stadt"
+
+#~ msgid "Confirm Password"
+#~ msgstr "Bestätige Passwort"
+
+#~ msgid "Country"
+#~ msgstr "Country"
+
+#~ msgid "Create a DNS"
+#~ msgstr "DNS erstellen"
+
+#~ msgid "Create a MySQL database"
+#~ msgstr "MySQL Datenbank erstellen"
+
+#~ msgid "Create a PostgreSQL database"
+#~ msgstr "PostgreSQL Datenbank erstellen"
+
+#~ msgid "Create a Subversion Repository"
+#~ msgstr "Subversion Repository erstellen"
+
+#, fuzzy
+#~ msgid "Create a bazaar Repository"
+#~ msgstr "CVS Repository erstellen"
+
+#~ msgid "Create a git Repository"
+#~ msgstr "Git Repository erstellen"
+
+#, fuzzy
+#~ msgid "Create a mercurial Repository"
+#~ msgstr "Git Repository erstellen"
+
+#~ msgid "Create a new mailing list"
+#~ msgstr "Neue Mailingliste erstellen"
+
+#~ msgid "Created"
+#~ msgstr "Erzeugt"
+
+#~ msgid "DB Name"
+#~ msgstr "DB Name"
+
+#~ msgid "Database will NOT be deleted !"
+#~ msgstr "Datenbank wird NICHT abgelöst !"
+
+#~ msgid "Database will be DELETE"
+#~ msgstr "Datenbank WIRD abgelöst"
+
+#~ msgid "Delete this PostgreSQL database"
+#~ msgstr "PostgreSQL Datenbank ablösen"
+
+#~ msgid "Delete this database"
+#~ msgstr "Datenbank ablösen"
+
+#~ msgid "Delete this list"
+#~ msgstr "Liste ablösen"
+
+#~ msgid "Delete this mail domain"
+#~ msgstr "Domain ablösen"
+
+#~ msgid "Delete this project"
+#~ msgstr "Dieses Projekt ablösen"
+
+#~ msgid "Delete this repository"
+#~ msgstr "Repository ablösen"
+
+#~ msgid "Description of your webarea"
+#~ msgstr "Beschreibung des Webareas"
+
+#~ msgid "Domain"
+#~ msgstr "Domain"
+
+#~ msgid "Domain names"
+#~ msgstr "Domainnamen"
+
+#~ msgid "Edit Object"
+#~ msgstr "Ojekt ändern"
+
+#~ msgid "Edit this object"
+#~ msgstr "Dieses Objekt ändern"
+
+#~ msgid "Error"
+#~ msgstr "Fehler"
+
+#~ msgid "Error !"
+#~ msgstr "Fehler !"
+
+#~ msgid "Error for virus protection\n"
+#~ msgstr "Fehler in virus Verteidigung\n"
+
+#~ msgid "Firstname"
+#~ msgstr "Vorname"
+
+#~ msgid "GIT"
+#~ msgstr "GIT"
+
+#~ msgid "GIT repositories for %s"
+#~ msgstr "GIT Repositories für %s"
+
+#~ msgid "GIT root"
+#~ msgstr "GIT root"
+
+#~ msgid "Group error"
+#~ msgstr "Gruppe Fehler"
+
+#~ msgid "Home page"
+#~ msgstr "Homepage"
+
+#~ msgid "IP"
+#~ msgstr "IP"
+
+#~ msgid "Language"
+#~ msgstr "Sprache"
+
+#~ msgid "Lastname"
+#~ msgstr "Nachname"
+
+#~ msgid "Login"
+#~ msgstr "Benutzername"
+
+#~ msgid "Or listen to the code"
+#~ msgstr "Oder hören Sie den Code"
+
+#, fuzzy
+#~ msgid "This bazaar repository will NOT be deleted"
+#~ msgstr "Datenbank wird NICHT abgelöst !"
+
+#~ msgid "User %s does not exist"
+#~ msgstr "Benutzer %s existiert nicht"
+
+#~ msgid "Username for this database"
+#~ msgstr "Benutzername für diese Datenbank"
+
+#~ msgid "Users stats"
+#~ msgstr "Benutzer Statistiken"
+
+#~ msgid "Vhffs Statistics"
+#~ msgstr "Vhffs Statistiken"
+
+#~ msgid "WEB stats"
+#~ msgstr "Web statistiken"
+
+#~ msgid "Change Password"
+#~ msgstr "Passwort ändern"
+
+#~ msgid "Change rights"
+#~ msgstr "Berechtigungen ändern"
+
+#~ msgid "Enable anti-spam"
+#~ msgstr "Anti-spam aktivieren"
+
+#~ msgid "Enable anti-virus"
+#~ msgstr "Anti-virus aktivieren"
+
+#~ msgid "All groups on %s"
+#~ msgstr "Alle Gruppen auf %s"
+
+#~ msgid "Are you SURE you want DELETE this  subversion repository ?"
+#~ msgstr "Sind Sie SICHER Sie wollen das Subversion Repository ablösen ?"
+
+#~ msgid "Current group:"
+#~ msgstr "Aktuelle Gruppe"
+
+#~ msgid "Box sucessfully added"
+#~ msgstr "Briefkasten erfolgreich hinzugefügt"
+
+#~ msgid "CGI ERROR"
+#~ msgstr "CGI ERROR"
+
+#~ msgid "CGI ERROR !"
+#~ msgstr "CGI ERROR !"
+
+#~ msgid "CGI ERROR!"
+#~ msgstr "CGI ERROR!"
+
+#~ msgid "CGI problem"
+#~ msgstr "CGI Problem"
+
+#~ msgid "CVS repository for this group"
+#~ msgstr "CVS Repository für diese Gruppe"
+
+#~ msgid "GIT repository for this group"
+#~ msgstr "GIT Repository für diese Gruppe"
+
+#~ msgid "Go on login page"
+#~ msgstr "Zur Anmeldungseite"
+
+#~ msgid "User sucessfuly updated"
+#~ msgstr "Benutzer erfolgreich aktualisiert"
+
+#~ msgid "Website for this group"
+#~ msgstr "Website für die Gruppe"

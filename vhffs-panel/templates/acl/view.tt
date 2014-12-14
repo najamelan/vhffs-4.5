@@ -1,0 +1,64 @@
+<p>[% 'ACL only describes right at panel level. They do not enforce any filesystem permissions, use FTP and/or SSH for this.' | i18n | html %]</p>
+<div class="acltable">
+<div class="tableheader">
+  <p>
+    <span>[% 'User' | i18n | html %]</span>
+    <span><b>[% 'Default' | i18n | html %]</b></span>
+    <span>[% 'Can\'t access' | i18n | html %]</span>
+    <span>[% 'Can view this service' | i18n | html %]</span>
+    <span>[% 'Can modify this service' | i18n | html %]</span>
+    <span>[% 'Can manage ACL for this service' | i18n | html %]</span>
+    <span>[% 'Can destroy this service' | i18n | html %]</span>
+    <span>[% 'Update' | i18n | html %]</span>
+  </p>
+</div>
+<div class="tablebody">
+  <form method="post" action="#" accept-charset="utf-8">
+    <p>
+      <span><b>[% 'Default' | i18n | html %]</b></span>
+      <span> </span>
+      <span><input type="radio" name="perm[% default_acl.granted_oid %]" value="[% constants.acl.DENIED %]"[% ' checked="checked"' IF default_acl.perm == constants.acl.DENIED %]/></span>
+      <span><input type="radio" name="perm[% default_acl.granted_oid %]" value="[% constants.acl.UNDEFINED %]"[% ' checked="checked"' IF default_acl.perm == constants.acl.item('VIEW') %]/></span>
+      <span><input type="radio" name="perm[% default_acl.granted_oid %]" value="[% constants.acl.MODIFY %]"[% ' checked="checked"' IF default_acl.perm == constants.acl.MODIFY %]/></span>
+      <span><input type="radio" name="perm[% default_acl.granted_oid %]" value="[% constants.acl.MANAGEACL %]"[% ' checked="checked"' IF default_acl.perm == constants.acl.MANAGEACL %]/></span>
+      <span><input type="radio" name="perm[% default_acl.granted_oid %]" value="[% constants.acl.DELETE %]"[% ' checked="checked"' IF default_acl.perm == constants.acl.DELETE %]/></span>
+      <span>
+        <input type="hidden" name="granted_oid" value="[% default_acl.granted_oid %]" />
+        <input type="hidden" name="oid" value="[% target.get_oid %]" />
+        <input type="submit" value="[% 'Modify' | i18n | html %]" name="update_acl_submit"/>
+      </span>
+    </p>
+  </form>
+  <form method="post" action="#" accept-charset="utf-8">
+    <p>
+      <span><b>[% owner_acl.name %]</b></span>
+      <span><input type="radio" name="perm[% owner_acl.granted_oid %]" value="[% constants.acl.UNDEFINED %]" disabled="disabled"/></span>
+      <span><input type="radio" name="perm[% owner_acl.granted_oid %]" value="[% constants.acl.DENIED %]" disabled="disabled"/></span>
+      <span><input type="radio" name="perm[% owner_acl.granted_oid %]" value="[% constants.acl.item('VIEW') %]" disabled="disabled"/></span>
+      <span><input type="radio" name="perm[% owner_acl.granted_oid %]" value="[% constants.acl.MODIFY %]" disabled="disabled"/></span>
+      <span><input type="radio" name="perm[% owner_acl.granted_oid %]" value="[% constants.acl.MANAGEACL %]" disabled="disabled"/></span>
+      <span><input type="radio" name="perm[% owner_acl.granted_oid %]" value="[% constants.acl.DELETE %]" checked="checked" disabled="disabled"/></span>
+      <span> </span>
+    </p>
+  </form>
+[% FOREACH acl IN users_acl %]
+  <form method="post" action="#" accept-charset="utf-8">
+    <p>
+      <span>[% acl.name %]</span>
+      <span><input type="radio" name="perm[% acl.granted_oid %]" value="[% constants.acl.UNDEFINED %]"[% ' checked="checked"' IF acl.perm == constants.acl.UNDEFINED %]/></span>
+      <span><input type="radio" name="perm[% acl.granted_oid %]" value="[% constants.acl.DENIED %]"[% ' checked="checked"' IF acl.perm == constants.acl.DENIED %]/></span>
+      <span><input type="radio" name="perm[% acl.granted_oid %]" value="[% constants.acl.item('VIEW') %]"[% ' checked="checked"' IF acl.perm == constants.acl.item('VIEW') %]/></span>
+      <span><input type="radio" name="perm[% acl.granted_oid %]" value="[% constants.acl.MODIFY %]"[% ' checked="checked"' IF acl.perm == constants.acl.MODIFY %]/></span>
+      <span><input type="radio" name="perm[% acl.granted_oid %]" value="[% constants.acl.MANAGEACL %]"[% ' checked="checked"' IF acl.perm == constants.acl.MANAGEACL %]/></span>
+      <span><input type="radio" name="perm[% acl.granted_oid %]" value="[% constants.acl.DELETE %]"[% ' checked="checked"' IF acl.perm == constants.acl.DELETE %]/></span>
+      <span>
+        <input type="hidden" name="granted_oid" value="[% acl.granted_oid %]" />
+        <input type="hidden" name="oid" value="[% target.get_oid %]" />
+        <input type="submit" value="[% 'Modify' | i18n | html %]" name="update_acl_submit"/>
+      </span>
+    </p>
+  </form>
+[% END %]
+<span class="clear">&#160;</span>
+</div>
+</div>

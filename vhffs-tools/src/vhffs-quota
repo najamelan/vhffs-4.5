@@ -1,0 +1,69 @@
+#!%PERL%
+
+
+#This is a part of VHFFS distribution
+#Please respect the licence and my dog
+
+
+#Use some VHFFS modules, it can be useful
+use lib '%VHFFS_LIB_DIR%';
+use Vhffs;
+use Vhffs::Group;
+
+
+#Check arguments
+if( ( $#ARGV != 1 ) && ( $#ARGV != 2 ) )
+{
+	print "Error, use as it : vhffs_quota group action value\n";
+	print "Actions:\n";
+	print "get\t-\t get quota information for this group\n";
+	print "set\t-\t set this quota (in Mb) for this group\n";
+	print "Examples:\tvhffs-quota mygroup get\n";
+	print "\t\tvhffs-quota mygroup set 100\n";
+	exit( 0 );
+}
+
+my $groupname = $ARGV[0];
+my $action = $ARGV[1];
+my $size = $ARGV[2] if ( $#ARGV >= 2 );
+
+#Init VHFFS subsystem
+my $vhffs = new Vhffs;
+
+#Create new group
+my $group = Vhffs::Group::get_by_groupname( $vhffs , $groupname );
+
+if( ! defined $group )
+{
+	print "Error while build vhffs object\n";
+	exit( -1 );
+}
+
+if( $action eq 'get' )
+{
+	print "Quota used for this group:\t".$group->get_quota_used."Mb\n";
+	print "Quota allowed for this group:\t".$group->get_quota."Mb\n";
+}
+elsif( $action eq 'set' )
+{
+	if( ! ( $size =~ /^[0-9]+$/ ) )
+	{
+		print "Invalid size\n";
+		exit( -3 );
+	} 
+	
+	$group->set_quota( $size );
+	
+	if( $group->commit < 0 )
+	{
+		print "Error while update group quota\n";
+	}
+	else
+	{
+		print "Update quota for group ".$group->get_groupname.", set to ".$size."\n";
+	}
+}
+else
+{
+	print "Sorry guy, I don't know this command. Please try again\n";
+}

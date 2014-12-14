@@ -1,0 +1,35 @@
+#!%PERL%
+
+use lib '%VHFFS_LIB_DIR%';
+use Vhffs::User;
+use Vhffs::Group;
+use Vhffs;
+
+my $vhffs = new Vhffs;
+
+my ($groupname, $realname, $owner_uid, $description);
+
+print 'Groupname: ';
+chomp($groupname = <STDIN>);
+print 'Real name: ';
+chomp($realname = <STDIN>);
+while(1) {
+	print 'Owner name: ';
+	my $username;
+	chomp($username = <STDIN>);
+	my $owner = Vhffs::User::get_by_username($vhffs, $username);
+	unless(defined $owner) {
+		print "User not found\n";
+		redo;
+	}
+	$owner_uid = $owner->get_uid;
+	last;
+}
+
+print 'Description: ';
+chomp($description = <STDIN>);
+if(defined Vhffs::Group::create($vhffs, $groupname, $realname, $owner_uid, undef, $description)) {
+	print "Group created\n";
+} else {
+	print "Unable to create group, check for duplicates!\n";
+}

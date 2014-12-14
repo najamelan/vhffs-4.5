@@ -1,0 +1,2 @@
+<h1>[% 'Public area temporary closed' | i18n | html %]</h1>
+<p class="error">[% 'Public area is temporary closed. Administrators are performing some maintenances tasks or system encountered database error. Please come back in a few minutes.' | i18n | html %]</p>

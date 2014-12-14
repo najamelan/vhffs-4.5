@@ -1,0 +1,6 @@
+[% title_str = 'Details for user %s' | i18n %]
+<div class="user-details">
+<h1 class="username">[% user.username | html | format(title_str) %]</h1>
+[% u = user %]
+[% INCLUDE 'parts/user-general.tt' %]
+</div>

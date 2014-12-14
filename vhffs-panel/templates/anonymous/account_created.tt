@@ -1,0 +1,6 @@
+<div class="logo"></div>
+<div class="login">
+    <h1>[% 'Account successfully created' | i18n | html %]</h1>
+    <p class="info">[% 'Your registration request has been sent. Please wait while we\'re creating you account, it may take several minutes.' | i18n | html %]</p>
+    <p class="button"><a href="?do=login">[% 'Back to login' %]</a></p>
+</div>

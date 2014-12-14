@@ -1,0 +1,23 @@
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p class="info">[% 'The database name is prefixed by your groupname followed by an underscore (%s_dbname). The database user is the database full name (%s_dbname).' | i18n | pretty_print(group.get_groupname, group.get_groupname) | html %]</p>
+	<p>
+		<label>[% 'Group owning this database:' | i18n | html %]</label>
+		[% group.get_groupname | html %]
+	</p>
+	<p>
+        <label for="db_suffix">[% 'MySQL database name:' | i18n | html %]</label>
+		[% group.get_groupname | html %]_<input type="text" name="db_suffix" id="db_suffix" value="[% db_suffix | html %]"/>
+	</p>
+	<p>
+		<label for="db_pass">[% 'MySQL password for this database:' | i18n | html %]</label>
+		<input type="password" name="db_pass" id="db_pass" autocomplete="off"/>
+	</p>
+	<p>
+		<label for="description">[% 'Description:' | i18n | html %]</label>
+		<textarea name="description" id="description" cols="45" rows="7">[% description | html %]</textarea>
+	</p>
+	<p class="button" id="buttonSend">
+		<input type="hidden" name="group" value="[% group.get_groupname | html %]" />
+		<input type="submit" value="[% 'Send' | i18n | html %]" name="mysql_submit"/>
+	</p>
+</form>

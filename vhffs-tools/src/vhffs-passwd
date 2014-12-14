@@ -1,0 +1,36 @@
+#!%PERL%
+
+use lib '%VHFFS_LIB_DIR%';
+use Vhffs::User;
+use Vhffs;
+
+if( $#ARGV != 1 )
+{
+	print "Usage: vhffs-passwd user passwd\n";
+	exit( 1 );
+}
+
+my $vhffs = new Vhffs;
+my $user = Vhffs::User::get_by_username( $vhffs , $ARGV[0] );
+
+
+if( defined $user )
+{
+	$user->set_password( $ARGV[1] );
+	
+	if( $user->commit <= 0 )
+	{
+		print "Change password failed\n";
+		exit( 2 );
+	}
+	else
+	{
+		print "Successfully change password\n";
+		exit( 0 );
+	}
+}
+else
+{
+	print "No such user with this username\n";
+	exit( -1 );
+}

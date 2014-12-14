@@ -1,0 +1,37 @@
+[% IF objects.size() > 0 %]
+<table>	
+    <thead>
+        <tr>
+        	<th>[% 'Type' | i18n | html %]</th>
+            <th>[% 'Name' | i18n | html %]</th>
+            <th>[% 'Owner' | i18n | html %]</th>
+            <th>[% 'Group' | i18n | html %]</th>
+            <th class="mainColumn">[% 'Description' | i18n | html %]</th>
+            <th>[% 'Action' | i18n | html %]</th>
+        </tr>
+    </thead>
+    <tbody>
+[% FOREACH o IN objects %]
+        <tr>
+            <td>[% o.type | stringify_type | i18n | html %]</td>
+            <td>[% o.get_label | html %]</td>
+            <td><a href="?do=userprefs;name=[% o.get_owner.get_username | html %]">[% o.get_owner.get_username | html %]</a>
+                [% '(' _ o.get_owner.get_note _ ')' IF use_notation %]</td>
+            <td><a href="?do=groupview;group=[% o.get_group.get_groupname | html %]">[% o.get_group.get_groupname | html %]</a></td>
+            <td class="mainColumn">[% o.get_description | html | html_para %]</td>
+            <td>
+                <form action="?do=moderation" method="post" accept-charset="utf-8">
+                   <p><textarea name="message" cols="30" rows="4"></textarea></p>
+                   <p>
+                    <input type="hidden" name="oid" value="[% o.get_oid %]"/>
+                    <input type="submit" name="accept" value="[% 'Accept' | i18n | html %]"/>
+                    <input type="submit" name="refuse" value="[% 'Refuse' | i18n | html %]"/></p>
+                </form>
+            </td>
+        </tr>
+[% END %]
+    </tbody>
+</table>
+[% ELSE %]
+<p>[% 'No object waiting for validation.' | i18n | html %]</p>
+[% END %]

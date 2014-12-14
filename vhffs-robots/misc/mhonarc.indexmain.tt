@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>[% 'Mailing list archives for ' _ list.get_localpart _ '@' _ list.get_domain | html %]</title>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+	<style type="text/css">
+	body {
+		background: white;
+		margin-top: 5px;
+		text-align: left;
+	}
+	a {
+		color: blue;
+		text-decoration: none;
+	}
+	table#mailing-list-index {
+		border: 1px solid #000000;
+		width: variable;
+		border-collapse: collapse;
+	}
+	td {
+		border: 1px dotted #6495ed;
+		width: variable;
+		padding: 2px;
+	}
+	tr.odd {
+		background-color: #ffffff;
+	}
+	tr.even {
+		background-color: #e1ffe1; /* the tower */
+	}
+	th {
+		border: 1px solid #000000;
+		width: variable;
+		padding: 4px;
+	}
+	.alignright {
+		text-align: right;
+	}
+	</style>
+</head>
+<body>
+<h1>[% 'Index page for ' _ list.get_localpart _ '@' _ list.get_domain | html %]</h1>
+<table id="mailing-list-index">
+<thead>
+	<tr>
+		<th>Month/Year</th>
+		<th>View by</th>
+		<th>Messages count</th>
+		<th>Total size</th>
+	</tr>
+</thead>
+<tbody>
+[% FOREACH md IN monthly_data %]
+	<tr class="[% loop.index() % 2 ? 'even' : 'odd' %]">
+		<td>[% md.year %]-[% md.month %]</td>
+		<td><a href="[% md.year %]/[% md.month %]/threads.html">[ Thread ]</a> or <a href="[% md.year %]/[% md.month %]/maillist.html">[ Date ]</a></td>
+		<td class="alignright">[% md.number %]</td>
+		<td class="alignright">[% md.size %]</td>
+	</tr>
+[% END %]
+</tbody>
+</table>
+</body>
+</html>

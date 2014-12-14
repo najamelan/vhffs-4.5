@@ -1,0 +1,5 @@
+usr/lib/vhffs/extra/*
+usr/share/vhffs/backend/mirror/*
+usr/lib/vhffs/extra/forum/*
+usr/lib/vhffs/extra/vhffs-fssync/*
+usr/lib/vhffs/extra/mediawiki/*

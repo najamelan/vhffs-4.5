@@ -1,0 +1,37 @@
+hide pgsql_servers = PGHOST::PGPORT/DB/USER/PASS
+
+VHFFS_MAIL_HOME=/data/mail/boxes
+
+# Domains handled by VHFFS (no matter if it is by forwarding, mailing listing or local delivering)
+VHFFS_LOCAL_DOMAINS = ${lookup pgsql{SELECT mx.domain FROM vhffs_mxdomain mx INNER JOIN vhffs_object o ON o.object_id=mx.object_id WHERE o.state = 6 AND domain = E'${quote_pgsql:$domain}'}}
+
+# Used to determine if we perform local delivery for the mail we're processing
+VHFFS_VIRTUAL_LOCAL_DOMAINS = ${lookup pgsql{select vhffs_boxes.domain from vhffs_boxes where local_part = E'${quote_pgsql:$local_part}' and vhffs_boxes.domain = E'${quote_pgsql:$domain}' and vhffs_boxes.state = 6}}
+
+# Gets the Maildir path for a given address
+VHFFS_VIRTUAL_LOCAL_DIR = VHFFS_MAIL_HOME/${lookup pgsql{select d.boxes_path || '/' || b.mbox_name  from vhffs_mxdomain d inner join vhffs_boxes b on b.domain = d.domain where d.domain = E'${quote_pgsql:$domain}' and b.local_part = E'${quote_pgsql:$local_part}'}{$value}fail}/Maildir
+
+# Get the remote address for a forward (isn't executed if we've got a local box (since we stop processing
+# and vhffs doesn't allow multiple boxes/forwards/ml with the same localpart))
+VHFFS_FORWARD_ADDRESS = ${lookup pgsql{select remote_name from vhffs_forward where local_part = E'${quote_pgsql:$local_part}' and domain = E'${quote_pgsql:$domain}'}}
+
+# Request returning a result if the current mail has a mailing list as recipient
+VHFFS_ML_EXISTS = ${lookup pgsql{select domain from vhffs_ml where local_part=E'${quote_pgsql:$local_part}' and domain=E'${quote_pgsql:$domain}'}}
+
+# Returns the catchall address for a domain, if defined
+VHFFS_VIRTUAL_CATCHALL = ${lookup pgsql{select catchall from vhffs_mxdomain where domain = E'${quote_pgsql:$domain}' and catchall != ''}}
+
+# Mailing lists configuration
+
+# Base dir for listengine.pl
+VHFFS_LISTENGINE_HOME=/usr/lib/vhffs/listengine/
+
+# listengine.pl path
+VHFFS_LISTENGINE_SCRIPT=VHFFS_LISTENGINE_HOME/listengine.pl
+
+# UID/GID must be allowed to write in ml archives dir
+VHFFS_LISTENGINE_UID=www-data
+VHFFS_LISTENGINE_GID=www-data
+
+# Predefines Macro
+MAIN_LOCAL_DOMAINS=VHFFS_LOCAL_DOMAINS:DEBCONFlocal_domainsDEBCONF

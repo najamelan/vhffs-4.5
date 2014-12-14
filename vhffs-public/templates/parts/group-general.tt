@@ -1,0 +1,16 @@
+<h2 class="groupname">[% g.realname | html%]</h2>
+<div class="group-info">
+[% IF groups_avatar %]
+<img class="group-avatar" src="?do=avatar;oid=[% g.object_id %]" alt="[% g.groupname %]"/>
+[% END %]
+<p><a href="?do=group;name=[% g.groupname %]" class="groupname ajax">[% g.groupname %]</a> (<span class="owner">[% g.owner_name %]</span>)</p>
+<div class="description">
+[% g.description | html | html_para %]
+</div>
+<div class="tags">
+[% FOREACH t = g.tags %]
+	<a href="?do=tags;search=[% t.category_label | uri %]::[% t.tag_label | uri %]" class="ajax">[% t.category_label | html %]::[% t.tag_label | html %]</a>[% ', ' UNLESS loop.last() %]
+[% END %]
+</div>
+<p class="more-group"><a href="?do=group;name=[% g.groupname %]" class="ajax">[% 'More info...' | i18n %]</a></p>
+</div>

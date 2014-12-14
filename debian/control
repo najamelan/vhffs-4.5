@@ -1,0 +1,127 @@
+Source: vhffs
+Section: admin
+Priority: extra
+Maintainer: Sébastien Le Ray <sebastien-vhffs@orniz.org>
+Build-Depends: debhelper (>= 7), autotools-dev, libfuse-dev, libpq-dev, libglib2.0-dev
+Standards-Version: 3.8.0
+Homepage: http://www.vhffs.org
+XS-Vcs-Svn: svn://svn.tuxfamily.org/svnroot/vhffs4/vhffs/
+
+Package: vhffs
+Architecture: any
+Depends: perl, vhffs-api, vhffs-panel
+Suggests: mydns-pgsql, postgresql (>=8.1), exim4-daemon-heavy, mysql, subversion, apache2, git, cvs
+Description: Virtual Hosting For Free Software
+ VHFFS is a tool to manage hosting platforms handling
+ a huge number of users. It provides a web panel,
+ SVN/GIT/CVS services, Web, MySQL, PostgreSQL
+ hosting, DNS handling, mail boxes, forwards and lists.
+ Sample configuration files are provided for various
+ services (Exim, apache, etc.).
+
+Package: vhffs-api
+Architecture: all
+Depends: vhffs-common, perl, perl-modules, libcaptcha-recaptcha-perl, libcgi-session-perl, libcgi-simple-perl, libconfig-general-perl, libcrypt-gpg-perl, libdatetime-perl, libdatetime-locale-perl, libdbi-perl, libemail-valid-perl, libgd-gd2-perl, libhtml-template-perl, libhtml-template-expr-perl, liblocale-gettext-perl, liblockfile-simple-perl, libmime-lite-perl, libtemplate-perl,libdbd-pg-perl
+Description: VHFFS - API Part
+ This package is required for most VHFFS components
+ to work. You'll also need it if you want to develop
+ for VHFFS.
+
+Package: vhffs-panel
+Architecture: all
+Depends: vhffs-panel-members, vhffs-panel-public
+Description: Meta package for vhffs panel (public & members part).
+ Empty package installing vhffs-panel-mmembers and
+ vhffs-panel-public.
+
+Package: vhffs-panel-members
+Architecture: all
+Depends: vhffs-api, apache2, perl, libcgi-fast-perl
+Description: VHFFS - Web panel for VHFFS. Members part
+ Provides a web panel to request services creation,
+ moderation and administration.
+
+Package: vhffs-panel-public
+Architecture: all
+Depends: vhffs-api, apache2, perl, libcgi-fast-perl
+Description: VHFFS - Web panel for VHFFS. Public part
+ Provides a public web interface to consult hosted
+ projects
+
+Package: vhffs-robots
+Architecture: all
+Depends: vhffs-api,perl
+Description: VHFFS - Services robots
+ This package contains robots needed by VHFFS for
+ services creation/deletion/update.
+
+Package: vhffs-fs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: VHFFS - VHFFS Fuse File System
+ Use VHFFS database to provide a custom view of user
+ home directory.
+
+Package: vhffs-fssync
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: VHFFS - VHFFS Remote synchronous file-copying tool
+ Use Linux inotify to synchronize file-systems over TCP,
+ useful for mirroring downloads repositories on several downloads
+ servers at different locations.
+
+Package: vhffs-common
+Architecture: all
+Description: VHFFS - Common files
+ VHFFS common files (conguration, database initialization
+ scripts).
+
+Package: vhffs-extra
+Architecture: any
+Description: VHFFS - Extra packages
+ Some additional packages, patches, etc. for VHFFS.
+
+Package: vhffs-jabber
+Architecture: all
+Depends: jabberd2
+Description: VHFFS - Jabber connector
+ Connector allowing jabber to use VHFFS database as
+ authentication backend.
+
+Package: vhffs-listengine
+Architecture: all
+Depends: vhffs-api, libdatetime-format-mail-perl
+Description: VHFFS - Listengine dispatcher
+ Script bouncing mail to mailing list subscribers.
+ You probably wish to install it on MTA box.
+
+Package: vhffs-shells
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: VHFFS - Custom shells
+ Provides shell which can be used as default shell
+ for users stored in VHFFS DB.
+ .
+ falseshell is a disabled shell which prints a
+ nice message before throwing user away.
+ .
+ tuxshell limits user to the execution of svn (through
+ svn+ssh:// virtual protocol, CVS and GIT.
+
+Package: vhffs-tools
+Architecture: all
+Depends: libncursesw5,libcurses-ui-perl,libterm-readpassword-perl
+Description: VHFFS - CLI tools
+ Provides some command line tools to interact with
+ VHFFS DB. Some of them, written after taking huge
+ quantity of vodka even use ncurses!
+
+Package: vhffs-l10n
+Architecture: all
+Description: VHFFS - Localization
+ Contains French, Spanish and English translations.
+
+Package: vhffs-doc
+Architecture: all
+Description: VHFFS - documentation package
+ Sample configuration files and documentation for VHFFS.

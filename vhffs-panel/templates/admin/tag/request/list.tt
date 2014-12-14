@@ -1,0 +1,29 @@
+[% USE date %]
+<h2>[% 'Tag Requests' | i18n | html %]</h2>
+[% IF requests.size() %]
+<table border="1">
+    <thead>
+    <tr>
+    	<th>[% 'Category label' | i18n | html %]</th>
+    	<th>[% 'Tag label' | i18n | html %]</th>
+	    <th>[% 'Requester' | i18n | html %]</th>
+        <th>[% 'On object' | i18n | html %]</th>
+	    <th>[% 'Date' | i18n | html %]</th>
+    </tr>
+    </thead>
+    <tbody>
+[% FOREACH r IN requests %]
+<tr>
+	<td><a href="?do=tagrequestdetails;request_id=[% r.request_id %]">
+		[% r.category_label | i18n | html %]</a></td>
+	<td>[% r.tag_label | i18n | html %]</td>
+	<td>[% (r.get_requester ? r.get_requester.get_username : 'DELETED') | html %]</td>
+	<td>[% (r.get_tagged ? r.get_tagged.get_label : 'DELETED') | html %]</td>
+	<td>[% date.format(r.created, '%x') %]</td>
+</tr>
+[% END %]
+</tbody>
+</table>
+[% ELSE %]
+<p class="info">[% 'No waiting tag requests.' | i18n | html %]</p>
+[% END %]

@@ -1,0 +1,31 @@
+grouppath /data/groups
+webspath /data/web
+repositoriespath /data/repository
+dbhost 127.0.0.1
+dbport 5432
+dbuser vhffs
+dbpass mypass
+dbname vhffs
+dbtimeout 10
+# bits to enforce when chmoding files
+forcemodefile 00400
+forcemodedir 02700
+# bits to clear when chmoding files
+clearmodefile 07002
+clearmodedir 05002
+# -- set this value to your blockdev which contain the /data if you want to check stats locally
+#datablockdev /dev/sda5
+# -- set these values to your rpcserver IP or host and path which contain the /data if your want to remotely check stats
+#    please note that only Linux support extended RPC features and we need that
+#datarpcserver 192.168.1.10
+#datarpcpath /data
+# -- set this value to the prefix of your /data on this server
+#dataprefixpath /data
+# -- set this value to your blockdev which contain the /data/repository if you want to check stats locally
+#repositoriesblockdev /dev/sda6
+# -- set these values to your rpcserver IP or host and path which contain the /data/repository if your want to remotely check stats
+#    please note that only Linux support extended RPC features and we need that
+#repositoriesrpcserver 192.168.1.10
+#repositoriesrpcpath /data/repository
+# -- set this value to the prefix of your /data/repository on this server
+#repositoriesprefixpath /data/repository

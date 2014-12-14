@@ -1,0 +1,126 @@
+<form class="table-like" method="post" action="#">
+	<fieldset>
+		<legend>[% 'Options' | i18n | html %]</legend>
+		<p>[% 'Prefix on subject:' | i18n | html %]
+			<input type="text" size="20" name="prefix" value="[% list.get_prefix %]"/>
+		</p>
+		<p>[% 'Subscribe control:' | i18n | html %]
+			<select name="subscribe_control" id="SUBSCRIBE_CONTROL">
+				<option value="[% constants.mailinglist.SUBSCRIBE_NO_APPROVAL_REQUIRED %]"[% ' selected="selected"' IF list.sub_ctrl == constants.mailinglist.SUBSCRIBE_NO_APPROVAL_REQUIRED %]>
+					[% 'Open, no approval required' | i18n | html %]
+				</option>
+				<option value="[% constants.mailinglist.SUBSCRIBE_APPROVAL_REQUIRED %]"[% ' selected="selected"' IF list.sub_ctrl == constants.mailinglist.SUBSCRIBE_APPROVAL_REQUIRED %]>
+                    [% 'Open, approval required' | i18n | html %]
+				</option>
+				<option value="[% constants.mailinglist.SUBSCRIBE_CLOSED %]"[% ' selected="selected"' IF list.sub_ctrl == constants.mailinglist.SUBSCRIBE_CLOSED %]>
+                    [% 'Closed' | i18n | html %]
+				</option>
+			</select>
+		</p>
+		<p>[% 'Posting control:' | i18n | html %]
+			<select name="posting_control" id="POSTING_CONTROL">
+				<option value="[% constants.mailinglist.POSTING_OPEN_ALL %]"[% ' selected="selected"' IF list.post_ctrl == constants.mailinglist.POSTING_OPEN_ALL %]>
+                    [% 'Open for everyone' | i18n | html %]
+				</option>
+				<option value="[% constants.mailinglist.POSTING_MODERATED_ALL %]"[% ' selected="selected"' IF list.post_ctrl == constants.mailinglist.POSTING_MODERATED_ALL %]>
+                    [% 'Moderated for everyone' | i18n | html %]
+				</option>
+				<option value="[% constants.mailinglist.POSTING_OPEN_MEMBERS_MODERATED_OTHERS %]"[% ' selected="selected"' IF list.post_ctrl == constants.mailinglist.POSTING_OPEN_MEMBERS_MODERATED_OTHERS %]>
+                    [% 'Open for members, moderated for non-members' | i18n | html %]
+				</option>
+				<option value="[% constants.mailinglist.POSTING_MEMBERS_ONLY %]"[% ' selected="selected"' IF list.post_ctrl == constants.mailinglist.POSTING_MEMBERS_ONLY %]>
+                    [% 'Members only' | i18n | html %]
+				</option>
+				<option value="[% constants.mailinglist.POSTING_MEMBERS_ONLY_MODERATED %]"[% ' selected="selected"' IF list.post_ctrl == constants.mailinglist.POSTING_MEMBERS_ONLY_MODERATED %]>
+                    [% 'Members only, moderated' | i18n | html %]
+				</option>
+				<option value="[% constants.mailinglist.POSTING_ADMINS_ONLY %]"[% ' selected="selected"' IF list.post_ctrl == constants.mailinglist.POSTING_ADMINS_ONLY %]>
+                    [% 'Admins only' | i18n | html %]
+				</option>
+			</select>
+		</p>
+		<p>
+			<input type="checkbox" name="public_archive" id="public_archive"[% ' checked="checked"' IF list.get_open_archive %] class="labeled"/>
+			<label for="public_archive">[% 'Public archives' | i18n | html %]</label>
+		</p>
+		<p>
+			<input type="checkbox" name="reply_to"  id="reply_to"[% ' checked="checked"' IF list.get_replyto %] class="labeled"/>
+			<label for="reply_to">[% 'Add "Reply-To" header' | i18n | html %]</label>
+		</p>
+    <p>[% 'Signature:' | i18n | html %]</p>
+    <p><textarea name="signature" rows="7" cols="50">[% list.get_signature | html %]</textarea></p>
+        <input type="hidden" name="domain" value="[% list.get_domain | html %]" />
+		<input type="hidden" name="local" value="[% list.get_localpart | html %]" />
+		<p><input type="submit" name="options_submit" value="[% 'Save options' | i18n | html %]"/></p>
+    </fieldset>
+</form>
+
+<h2>[% 'Manage members' | i18n | html %]</h2>
+<h3>[% 'Current members' | i18n | html %] ([% list.get_members.size() %])</h3>
+
+[% FOREACH m IN list.get_members.values() %]
+<fieldset>
+<legend>[% m.member | html %]</legend>
+    <form class="table-like" method="post" action="#">
+        <p><select name="right">
+            <option value="[% constants.mailinglist.RIGHT_SUB_WAITING_FOR_REPLY %]"[% ' selected="selected"' IF m.perm == constants.mailinglist.RIGHT_SUB_WAITING_FOR_REPLY %]>
+                [% 'Waiting for confirmation' | i18n | html %]</option>
+            <option value="[% constants.mailinglist.RIGHT_SUB_WAITING_FOR_VALIDATION %]"[% ' selected="selected"' IF m.perm == constants.mailinglist.RIGHT_SUB_WAITING_FOR_VALIDATION %]>
+                [% 'Waiting for approval' | i18n | html %]</option>
+            <option value="[% constants.mailinglist.RIGHT_SUB %]"[% ' selected="selected"' IF m.perm == constants.mailinglist.RIGHT_SUB %]>
+                [% 'Member' | i18n | html %]</option>
+            <option value="[% constants.mailinglist.RIGHT_SUB_WAITING_FOR_DEL %]"[% ' selected="selected"' IF m.perm == constants.mailinglist.RIGHT_SUB_WAITING_FOR_DEL %]>
+                [% 'Waiting for deletion' | i18n | html %]</option>
+            <option value="[% constants.mailinglist.RIGHT_ADMIN %]"[% ' selected="selected"' IF m.perm == constants.mailinglist.RIGHT_ADMIN %]>
+                [% 'Admin' | i18n | html %]</option>
+       	</select></p>
+        <input type="hidden" name="member" value="[% m.member | html  %]" />
+        <input type="hidden" name="local" value="[% list.get_localpart | html %]" />
+        <input type="hidden" name="domain" value="[% list.get_domain | html %]" />
+        <input type="submit" name="change_rights_submit" value="[% 'Update permissions' | i18n | html %]" />
+	<input type="submit" name="delete_submit" value="[% 'Delete from list' | i18n | html %]" />
+	</form>
+</fieldset>
+[% END %]
+
+<h3>[% 'Add members' | i18n | html %]</h3>
+
+<form class="table-like" method="post" action="#">
+	<div style="display:none;">
+		<textarea name="projectmembers" id="projectmembers">[% group_emails | html %]</textarea>
+	</div>
+
+<script type="text/javascript"><!-- 
+
+function fill_with_project_members() {
+    document.getElementById("members").value = document.getElementById("projectmembers").value;
+};
+
+// --></script>
+
+	<p>
+		<label for="members">[% 'Addresses (one per line):' | i18n | html %]</label>
+		<textarea name="members" id="members" rows="7" cols="50"></textarea>
+	</p>
+	<p class="button">
+		<input type="hidden" name="domain" value="[% list.get_domain | html %]" />
+		<input type="hidden" name="local" value="[% list.get_localpart | html %]" />
+		<input type="submit" value="[% 'Add them!' | i18n | html %]" name="add_members_submit" />
+		<input type="button" name="fill_members" id="fill_members" value="[% 'Fill with project\'s members emails' | i18n | html %]" onclick="javascript:fill_with_project_members();"/>
+    </p>
+    <p>
+	</p>
+</form>
+
+[% INCLUDE 'acl/form.tt' 
+    object = list %]
+
+[% INCLUDE 'object/delete.tt'
+    type = 'mailinglist'
+    oid = list.get_oid %]
+
+[% IF current_user.is_admin %]
+    [% INCLUDE 'admin/object/edit.tt' 
+        object = list %]
+[% END %]
+

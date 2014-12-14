@@ -1,0 +1,46 @@
+<a name="tags"></a><h2>[% 'Tags' | i18n | html %]</h2>
+[% IF current_tag_categories.size() %]
+<h3>[% 'Current tags for this project' | i18n | html %]</h3>
+<ul>
+[% FOREACH c IN current_tag_categories %]
+<li>[% c.label | html %]:
+[% FOREACH t IN c.tags %]
+<a href="?do=groupprefs;group=[% group.get_groupname | html %];delete_tag_submit=true;tag_id=[% t.tag_id %]#tags">[% t.label | html %]</a>[% ', ' UNLESS loop.last %]
+[% END # t IN c.tags %]
+[% ';' UNLESS loop.last() %]
+</li>
+[% END # c IN current_tag_categories%]
+</ul>
+[% END %]
+<h3>[% 'Add a tag' | i18n | html %]</h3>
+<ul>
+[% FOREACH c IN tag_categories %]
+<li>[% c.label | html %]:
+[% FOREACH t IN c.tags %]
+<a href="?do=groupprefs;group=[% group.get_groupname | html %];add_tag_submit=true;tag_id=[% t.tag_id %]#tags">[% t.label | html %]</a>[% ', ' UNLESS loop.last() %]
+[% END # t IN c.tags %]
+;</li>
+[% END # c IN tag_categories %]
+</ul>
+<h3>[% 'Request a new tag' | i18n | html %]</h3>
+<form class="table-like" name="requestTagForm" action="#" method="post">
+<p><label for="requestTagCategory">[% 'Category:' | i18n | html %]</label>
+<input type="text" name="category" id="requestTagCategory"/>
+</p>
+<p><label for="requestTagTag">[% 'Tag label:' | i18n | html %]</label>
+<input type="text" name="tag" id="requestTagTag"/>
+</p>
+<input type="hidden" name="group" value="[% group.get_groupname %]" />
+<p class="button"><input type="submit" name="request_tag_submit" value="[% 'OK' | i18n | html %]"/></p>
+</form>
+[% IF tag_requests.size() %]
+<h3>[% 'Pending tag requests' | i18n | html %]</h3>
+<ul>
+[% FOREACH r IN tag_requests %]
+<li>
+[% r.category_label | html %]::[% r.tag_label | html %]
+[<a href="?group=[% group.get_groupname | html %];cancel_tag_request_submit=true;request_id=[% r.request_id %]">[% 'Cancel' | i18n | html %]</a>]
+</li>
+[% END # r IN tag_requests %]
+</ul>
+[% END # tag_requests.size() %]

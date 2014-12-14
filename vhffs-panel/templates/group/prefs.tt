@@ -1,0 +1,120 @@
+<p class="info">[% 'If you want more disk space for your project, please contact the administrators through the <a href="?do=contact">contact form</a>. Don\'t forget to mention the name of the group.' | i18n %]</p>
+
+<h2>[% group.get_groupname | html %]</h2>
+
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+    <p>
+        <label>[% 'Project owner:' | i18n | html %]</label>
+        [% group.get_owner.get_username() | html %]
+    </p>
+    <p><label for="realname" class="realname">[% 'Project full name:' | i18n | html %]</label><input type="text" size="30" maxlength="100" value="[% group.get_realname | html %]" name="realname" id="realname"/></p>
+    <p><label for="description" class="description">[% 'Project description:' | i18n | html %]</label>
+        <textarea name="description" id="description" class="description" cols="45" rows="7">[% group.get_description | html %]</textarea></p>
+    <p class="button" id="buttonModify">
+        <input type="hidden" name="group" value="[% group.get_groupname | html %]"/>
+        <input type="submit" value="[% 'Modify' | i18n | html %]" name="update_desc_submit"/>
+    </p>
+</form>
+
+[% IF mailgroup.defined() %]
+<h2>[% 'Project contact' | i18n | html %]</h2>
+<p>
+[% 'We offer you the possibility to forward emails from %s@%s.' | i18n | pretty_print(group.get_groupname, mailgroup.get_config.domain) %]
+<form class="table-like" action="#" method="post" accept-charset="utf-8">
+[% 'Forward emails from %s@%s to ' | i18n | pretty_print(group.get_groupname, mailgroup.get_config.domain) %]
+<input type="text" name="contact_email" id="contact_email" value="[% mailgroup.get_redirect.get_redirect %]"/> 
+<input type="hidden" name="group" value="[% group.get_groupname %]"/>
+<input type="submit" value="[% 'Modify' | i18n %]" name="contact_email_submit"/>
+</form>
+[% IF mailgroup.get_config.url_doc %]
+<a href="[% mailgroup.get_config.url_doc | html %]">[% 'Help' | i18n | html %]</a>
+[% END %]
+</p>
+[% END %]
+
+<h2>[% 'Users' | i18n | html %]</h2>
+<h3>[% 'Users currently in this group' | i18n | html %]</h3>
+[% UNLESS group_users.size() > 0 %]
+<p class="info">[% 'No user for this group.' | i18n | html %]</p>
+[% END %]
+[% FOREACH u IN group_users %]
+[% IF u.active %]
+<form class="table-like" action="#" method="post" accept-charset="utf-8">
+<input type="hidden" name="username" value="[% u.username %]"/>
+<input type="hidden" name="group" value="[% group.get_groupname | html %]"/>
+<p><label>[% u.username | html %] ([% u.firstname | html %] [% u.lastname | html %])</label>
+    <input type="submit" value="[% 'Remove' | i18n | html %]" name="remove_user_submit"/></p>
+</form>
+[% ELSE %]
+<p>[% u.username | html %] ([% u.firstname | html %] [% u.lastname | html %]) &#8212; [% u.state %]</p>
+[% END # u.active %]
+[% END # u IN group_users %]
+
+[% IF current_user.is_admin() OR current_user.is_moderator() %]
+<p>
+[% FOREACH u IN group_users %]
+[% u.firstname | html %] [% u.lastname | html %] &#60;[% u.mail | html %]&#62;[% ', ' UNLESS loop.last() %]
+[% END %]
+</p>
+[% END # current_user.is_admin() OR current_user.is_moderator() %]
+
+<a name="add_user"></a>
+<h3>[% 'Add a user in this group' | i18n | html %]</h3>
+
+<form class="table-like" method="post" action="#add_user" accept-charset="utf-8">
+	<p>
+		<label for="username_add">
+            [% 'Username:' | i18n | html %]
+		</label>
+		<input type="text" name="username" id="username_add" />
+                <input type="hidden" name="group" value="[% group.get_groupname | html %]"/>
+		<input type="submit" value="[% 'Add' | i18n | html %]" name="add_user_submit"/>
+	</p>
+</form>
+
+[% IF add_user_error %]<p class="error">[% add_user_error | html %]</p>[% END %]
+[% IF add_user_info %]<p class="info">[% add_user_info | html %]</p>[% END %]
+
+[% FOREACH u IN add_user_list %]
+<form class="table-like" action="#" method="post" accept-charset="utf-8">
+<input type="hidden" name="username" value="[% u.username %]"/>
+<input type="hidden" name="group" value="[% group.get_groupname | html %]"/>
+<p><label>[% u.username | html %] ([% u.realname | html %])</label>
+<input type="submit" name="add_user_submit" value="[% 'Add' | i18n | html %]"/></p>
+</form>
+[% END %]
+
+[% INCLUDE 'group/tags.tt' %]
+
+[% IF use_avatars %]
+<h2>[% 'Logo' | i18n | html %]</h2>
+<h3>[% 'Current logo' | i18n | html %]</h3>
+    <p><img src="?do=avatarget;oid=[% group.get_oid %]" alt="[% 'Group logo' | i18n | html %]"/></p>
+<h3>[% 'Update logo' | i18n | html %]</h3>
+<form class="table-like" method="post" action="?do=avatarput;oid=[% group.get_oid %]" enctype="multipart/form-data" accept-charset="utf-8">
+    <p>[% 'You can upload a custom logo for your group.' | i18n | html %]</p>
+    <input type="hidden" name="oid" value="[% group.get_oid %]"/>
+    <p><input type="file" name="avatar"/></p>
+    <p><input type="submit" value="[% 'Update' %]" /></p>
+</form>
+[% END %]
+
+[% INCLUDE 'acl/form.tt' 
+    object = group %]
+
+[% INCLUDE 'object/delete.tt'
+    type = 'group'
+    oid = group.get_oid %]
+
+[% IF current_user.is_admin() %]
+    [% INCLUDE 'admin/object/edit.tt'
+        object = group %]
+    <h2>[% 'Group quota' | i18n | html %]</h2>
+    <form class="table-like" method="post" action="#">
+        <p><label>[% 'Space used:' | i18n | html %]</label>[% group.get_quota_used %]/[% group.get_quota %]&#160;[% 'MB' | i18n | html %]</p>
+        <p><label for="new_quota">[% 'New quota:' | i18n | html %]</label>
+           <input type="text" name="new_quota" id="new_quota" value="[% group.get_quota %]"/>&#160;[% 'MB' | i18n | html %]</p>
+           <input type="hidden" name="group" value="[% group.get_groupname | html %]"/>
+        <p><input type="submit" name="update_quota_submit" value="[% 'Update quota' | i18n | html %]"/></p>
+    </form>
+[% END %]

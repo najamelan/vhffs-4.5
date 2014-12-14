@@ -1,0 +1,109 @@
+<h1>[% 'Platform statistics' | i18n | html %]</h1>
+
+<h2>[% 'Users' | i18n | html %]</h2>
+<ul>
+	<li>[% 'Total users count:' | i18n | html %] [% users_count %]</li>
+	<li>[% 'Administrators:' | i18n | html %] [% administrators_count %]</li>
+	<li>[% 'Moderators:' | i18n | html %] [% moderators_count %]</li>
+</ul>
+
+
+<h2>[% 'Groups' | i18n | html %]</h2>
+<ul>
+	<li>[% 'Total groups count:' | i18n | html %] [% groups_count %]</li>
+	<li>[% 'Activated groups:' | i18n | html %] [% activated_groups_count %]</li>
+</ul>
+
+
+<h2>[% 'Webareas' | i18n | html %]</h2>
+<ul>
+	<li>[% 'Webarea waiting for moderation:' | i18n | html %] [% waiting_web_count %]</li>
+	<li>[% 'Activated webareas:' | i18n | html %] [% activated_web_count %]</li>
+</ul>
+
+
+<h2>[% 'DNS' | i18n | html %]</h2>
+<ul>
+	<li>[% 'DNS waiting for moderation:' | i18n | html %] [% waiting_dns_count %]</li>
+	<li>[% 'Activated DNS:' | i18n | html %] [% activated_dns_count %]</li>
+</ul>
+
+
+<h2>[% 'CVS repositories' | i18n | html %]</h2>
+<ul>
+	<li>[% 'CVS waiting for moderation:' | i18n | html %] [% waiting_cvs_count %]</li>
+	<li>[% 'Activated CVS:' | i18n | html %] [% activated_cvs_count %]</li>
+</ul>
+
+
+<h2>[% 'Subversion repositories' | i18n | html %]</h2>
+<ul>
+	<li>[% 'SVN waiting for moderation:' | i18n | html %] [% waiting_svn_count %]</li>
+	<li>[% 'Activated SVN:' | i18n | html %] [% activated_svn_count %]</li>
+</ul>
+
+<h2>[% 'Git repositories' | i18n | html %]</h2>
+<ul>
+	<li>[% 'Git waiting for moderation:' | i18n | html %] [% waiting_git_count %]</li>
+	<li>[% 'Activated Git:' | i18n | html %] [% activated_git_count %]</li>
+</ul>
+
+<h2>[% 'Mercurial repositories' | i18n | html %]</h2>
+<ul>
+	<li>[% 'Mercurial waiting for moderation:' | i18n | html %] [% waiting_mercurial_count %]</li>
+	<li>[% 'Activated Mercurial:' | i18n | html %] [% activated_mercurial_count %]</li>
+</ul>
+
+<h2>[% 'Bazaar repositories' | i18n | html %]</h2>
+<ul>
+	<li>[% 'Bazaar waiting for moderation:' | i18n | html %] [% waiting_bazaar_count %]</li>
+	<li>[% 'Activated Bazaar:' | i18n | html %] [% activated_bazaar_count %]</li>
+</ul>
+
+<h2>[% 'Mail domains' | i18n | html %]</h2>
+<ul>
+	<li>[% 'Mail domains waiting for moderation:' | i18n | html %] [% waiting_mail_domains_count %]</li>
+	<li>[% 'Activated mail domains:' | i18n | html %] [% activated_mail_domains_count %]</li>
+	<li>[% 'Mail boxes:' | i18n | html %] [% mail_boxes_count %]</li>
+	<li>[% 'Forwards:' | i18n | html %] [% mail_forwards_count %]</li>
+</ul>
+
+<h2>[% 'MySQL databases' | i18n | html %]</h2>
+<ul>
+	<li>[% 'MySQL DBs waiting for moderation:' | i18n | html %] [% waiting_mysql_count %]</li>
+	<li>[% 'Activated MySQL DBs:' | i18n | html %] [% activated_mysql_count %]</li>
+</ul>
+
+<h2>[% 'PostgreSQL databases' | i18n | html %]</h2>
+<ul>
+	<li>[% 'PostgreSQL DBs waiting for moderation:' | i18n | html %] [% waiting_pgsql_count %]</li>
+	<li>[% 'Activated PostgreSQL DBs:' | i18n | html %] [% activated_pgsql_count %]</li>
+</ul>
+
+<h2>[% 'Mailing lists' | i18n | html %]</h2>
+<ul>
+	<li>[% 'Lists waiting for moderation:' | i18n | html %] [% waiting_ml_count %]</li>
+    <li>[% 'Activated lists:' | i18n | html %] [% activated_ml_count %]</li>
+    <li>[% 'Overall subscribers count:' | i18n | html %] [% ml_subscribers_count %]</li>
+</ul>
+
+<h2>[% 'Tags' | i18n | html %]</h2>
+<ul>
+        <li>[% 'Categories:' | i18n | html %] [% tag_categories_count %]</li>
+        <li>[% 'Used tags/existing:' | i18n | html %] [% used_tags_count %]/[% total_tags_count %]</li>
+        <li>[% 'Tagged groups:' | i18n | html %] [% tagged_groups_count %]/[% activated_groups_count %]</li>
+        <li>[% 'Max tags for a group:' | i18n | html %] [% max_tags_count %]</li>
+[% IF top10_tags.size() > 0 %]
+        <li>[% '10 most used tags:' | i18n | html %]: [% FOREACH t IN top10_tags %][% t.category %]::[% t.tag_label %] ([% t.nb_groups %])[% ', ' UNLESS loop.last() %][% END %]</li>
+[% END %]
+</ul>
+<h2>[% 'Tags cloud / category' | i18n | html %]</h2>
+[% IF all_tags.size() > 0 %]
+[% FOREACH t IN all_tags %][% t.category %]::[% t.tag_label %] ([% t.nb_groups %])[% ', ' UNLESS loop.last() %][% END %] - 
+[% END %]
+
+<h2>[% 'Tags cloud' | i18n | html %]</h2>
+
+[% IF all_sorted_tags.size() > 0 %]
+[% FOREACH t IN all_sorted_tags %][% t.category %]::[% t.tag_label %] ([% t.nb_groups %])[% ', ' UNLESS loop.last() %][% END %] - 
+[% END %]

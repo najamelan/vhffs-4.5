@@ -1,0 +1,691 @@
+/*
+# Copyright (c) vhffs project and its contributors
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without 
+# modification, are permitted provided that the following conditions 
+# are met:
+#
+# 1. Redistributions of source code must retain the above copyright 
+#   notice, this list of conditions and the following disclaimer.
+#2. Redistributions in binary form must reproduce the above copyright
+#   notice, this list of conditions and the following disclaimer in 
+#   the documentation and/or other materials provided with the 
+#   distribution.
+#3. Neither the name of vhffs nor the names of its contributors 
+#   may be used to endorse or promote products derived from this 
+#   software without specific prior written permission.
+#
+#THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+#"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+#LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+#FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+#COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+#INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+#BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+#LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+#CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+# ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+# POSSIBILITY OF SUCH DAMAGE.
+*/	
+
+-- This platform's objects.
+-- Almost every entity in VHFFS has his corresponding record
+-- in vhffs_object. This table contains fields commons to all
+-- services. This is an implementation of inheritance... Maybe
+-- we could have used PostgreSQL built-in facilities...
+
+CREATE TABLE vhffs_object (
+-- ID of the object (referenced by child tables)
+	object_id serial,
+-- Owner of this object
+	owner_uid int4 NOT NULL,
+-- Group owning this object
+	owner_gid int4 NOT NULL,
+-- When was this object created?
+	date_creation int8 NOT NULL,
+-- State of the object (waiting for validation/creation/deletion and so on).
+	state int4 NOT NULL,
+-- Description of the object
+	description TEXT,
+-- Why this object has been refused, if applicable.
+	refuse_reason TEXT,
+-- Type of service. Allows us to provided customized
+-- info for each service through a factory (we could have
+-- used a view aggregating all services with common fields...)
+	type int4 NOT NULL DEFAULT 0,
+	CONSTRAINT vhffs_object_pkey PRIMARY KEY (object_id)
+) WITH (OIDS);
+
+-- Access control lists
+CREATE TABLE vhffs_acl (
+-- This object...
+	granted_oid int4,
+-- ...has this permission...
+	perm int4 NOT NULL,
+-- ...on this object
+	target_oid int4 ,
+	CONSTRAINT vhffs_acl_pkey PRIMARY KEY (granted_oid, target_oid)
+) WITH (OIDS);
+
+-- Platform's groups
+CREATE TABLE vhffs_groups (
+-- UNIX GID
+	gid serial,
+-- Name of the group (UNIX)
+	groupname varchar(50) NOT NULL,
+-- Human readable name (panel)
+	realname varchar(100),
+-- Group password (not used)
+	passwd varchar(20),
+-- This group quota (except for download repo), in MB
+	quota int4 NOT NULL,
+-- Used quota (MB)
+	quota_used int4 NOT NULL DEFAULT 0,
+	object_id int4 NOT NULL,
+	CONSTRAINT vhffs_groups_pkey PRIMARY KEY (gid)
+) WITH (OIDS);
+
+SELECT setval('vhffs_groups_gid_seq', @MINGID@);
+
+-- Platform's users
+CREATE TABLE vhffs_users (
+-- UNIX UID
+	uid serial,
+-- Main GID
+	gid int4 NOT NULL,
+-- Name of the user
+	username varchar(50) NOT NULL,
+-- Shell for the user
+	shell varchar(20) NOT NULL,
+-- Crypt'ed password
+	passwd varchar NOT NULL,
+-- Home path
+	homedir varchar(40) NOT NULL,
+-- Access rights (user, moderator, administrator)
+	admin int4 NOT NULL,
+	object_id int4 NOT NULL,
+-- Mis info
+	firstname varchar(250),
+	lastname varchar(250),
+	address text,
+	zipcode varchar(16),
+	city varchar(250),
+	country varchar(250),
+	mail varchar(200),
+	gpg_key varchar(250),
+	note int4 DEFAULT 0,
+	language varchar(16),
+	theme varchar(250),
+-- Last date user logged in
+	lastloginpanel int8,
+-- IRC nick
+	ircnick varchar(16),
+-- Validated account (got a validated group or joined a group)
+	validated boolean NOT NULL DEFAULT false,
+	CONSTRAINT vhffs_users_pkey PRIMARY KEY (uid)
+) WITH (OIDS);
+
+SELECT setval('vhffs_users_uid_seq', @MINUID@) ;
+
+-- CVS repos on this platform
+CREATE TABLE vhffs_cvs (
+	cvs_id serial,
+-- repository path
+	cvsroot varchar NOT NULL,
+-- is it public or not?
+	public boolean NOT NULL,
+	object_id int4 NOT NULL,
+	CONSTRAINT vhffs_cvs_pkey PRIMARY KEY (cvs_id)
+) WITH (OIDS);
+
+-- DNS managed by this platform
+CREATE TABLE vhffs_dns (
+	dns_id serial,
+-- Domain name
+	domain varchar(255) NOT NULL,
+-- See myDNS docs
+	object_id int4 NOT NULL,
+	ns varchar(255) NOT NULL,
+	mbox varchar(255) NOT NULL,
+	serial INTEGER NOT NULL DEFAULT 1,
+	refresh INTEGER NOT NULL DEFAULT 28800,
+	retry INTEGER NOT NULL DEFAULT 7200,
+	expire INTEGER NOT NULL DEFAULT 604800,
+	minimum INTEGER NOT NULL DEFAULT 86400,
+	ttl INTEGER NOT NULL DEFAULT 86400,
+	CONSTRAINT vhffs_dns_pkey4 PRIMARY KEY (dns_id)
+) WITH (OIDS);
+
+-- Resource records for DNS on this platform
+CREATE TABLE vhffs_dns_rr (
+	id serial,
+-- Zone to which this record is linked
+	zone INTEGER NOT NULL,
+-- See myDNS manual for this fields' meaning,
+-- it can vary followin the type attribute.
+	name varchar(64) NOT NULL,
+	type VARCHAR(5) NOT NULL,
+	data varchar(512) NOT NULL,
+	aux INTEGER NOT NULL DEFAULT 0,
+	ttl INTEGER NOT NULL DEFAULT 86400,
+	CONSTRAINT vhffs_dns_rr_pkey PRIMARY KEY (id)
+) WITH (OIDS);	
+
+-- Webareas for this platform
+CREATE TABLE vhffs_httpd (
+	httpd_id serial,
+-- Servername (virtual host), will be hashed to get the directory
+	servername varchar(200) NOT NULL,
+	object_id int4 NOT NULL,
+	CONSTRAINT vhffs_httpd_pkey PRIMARY KEY (httpd_id)
+) WITH (OIDS);
+
+-- Download repositories
+CREATE TABLE vhffs_repository (
+	repository_id serial,
+-- Name of the repository
+	name varchar NOT NULL,
+-- Group quota for this repos (MB)
+	quota int4 NOT NULL,
+-- Used quota (MB)
+	quota_used int4 NOT NULL DEFAULT 0,
+	object_id int4 NOT NULL,
+	CONSTRAINT vhffs_repository_pkey PRIMARY KEY (repository_id)
+) WITH (OIDS);
+
+-- Mass mailing made to the platform users
+CREATE TABLE vhffs_mailings (
+	mailing_id serial,
+-- Subject of the mail
+	subject VARCHAR NOT NULL,
+-- Message sent
+	message TEXT NOT NULL,
+-- Date for the mailing
+	date int8,
+-- State of the mailing (waiting to be sent, sent, ...)
+	state int4 NOT NULL,
+	CONSTRAINT vhffs_mailings_pkey PRIMARY KEY (mailing_id)
+) WITH (OIDS);
+
+-- MySQL databases
+CREATE TABLE vhffs_mysql (
+	mysql_id serial,
+-- Name of the database
+	dbname varchar(200) NOT NULL,
+-- Username for the DB
+	dbuser varchar(200) NOT NULL,
+-- DB password, cleared on creation
+	dbpass VARCHAR(32) NOT NULL,
+	object_id int4 NOT NULL,
+	CONSTRAINT vhffs_mysql_pkey PRIMARY KEY (mysql_id)
+) WITH (OIDS);
+
+-- Objects' history
+CREATE TABLE vhffs_history (
+	history_id serial,
+	object_id int4 NOT NULL,
+-- Timestamp of the entry
+	date int8 NOT NULL,
+-- History message
+	message varchar(200),
+	source_uid int4 DEFAULT NULL,
+	CONSTRAINT vhffs_history_pkey PRIMARY KEY ( history_id )
+) WITH (OIDS);
+
+-- Link objects -> tags
+CREATE TABLE vhffs_object_tag (
+	object_id int4 NOT NULL,
+	tag_id int4 NOT NULL,
+	updated int8 NOT NULL,
+	updater_id int4,
+	CONSTRAINT vhffs_object_tag_pkey PRIMARY KEY ( object_id, tag_id )
+) WITH (OIDS);
+
+-- PostgreSQL databases on the platform
+CREATE TABLE vhffs_pgsql (
+	pgsql_id serial,
+-- Name of the database
+	dbname varchar(200) NOT NULL,
+-- Username to access this database
+	dbuser varchar(200) NOT NULL,
+-- Password for the database, cleared after creation
+	dbpass varchar(32) NOT NULL,
+	object_id int4 NOT NULL,
+	CONSTRAINT vhffs_pgsql_pkey PRIMARY KEY (pgsql_id)
+) WITH (OIDS);
+
+-- SVN repositories
+CREATE TABLE vhffs_svn (
+	svn_id SERIAL,
+-- Name (path) of the repo
+	reponame varchar NOT NULL,
+-- Is the repo public or not
+	public int4 NOT NULL,
+-- Mailing list to which send commit mails
+	ml_name varchar,
+-- Object representing this repository
+	object_id int4 NOT NULL,
+	CONSTRAINT vhffs_svn_pkey PRIMARY KEY( svn_id )
+) WITH (OIDS);
+
+-- Git repositories
+CREATE TABLE vhffs_git (
+	git_id SERIAL,
+-- Name of the repo
+	reponame varchar NOT NULL,
+-- Is the repo public or not
+	public int4 NOT NULL,
+-- Mailing list to which send commit mails
+	ml_name varchar,
+-- Object representing this Git repository
+	object_id int4 NOT NULL,
+	CONSTRAINT vhffs_git_pkey PRIMARY KEY( git_id )
+) WITH (OIDS);
+
+-- Mercurial repositories
+CREATE TABLE vhffs_mercurial (
+	mercurial_id SERIAL,
+-- Name of the repo
+	reponame varchar NOT NULL,
+-- Is the repo public or not
+	public int4 NOT NULL,
+-- Mailing list to which send commit mails
+	ml_name varchar,
+-- Object representing this Git repository
+	object_id int4 NOT NULL,
+	CONSTRAINT vhffs_mercurial_pkey PRIMARY KEY( mercurial_id )
+) WITH (OIDS);
+
+-- Bazaar repositories
+CREATE TABLE vhffs_bazaar (
+	bazaar_id SERIAL,
+-- Name of the repo
+	reponame varchar NOT NULL,
+-- Is the repo public or not
+	public int4 NOT NULL,
+-- Mailing list to which send commit mails
+	ml_name varchar,
+-- Object representing this Git repository
+	object_id int4 NOT NULL,
+	CONSTRAINT vhffs_bazaar_pkey PRIMARY KEY( bazaar_id )
+) WITH (OIDS);
+
+-- Cron tasks
+CREATE TABLE vhffs_cron (
+	cron_id SERIAL,
+-- Path to the cron script/binary
+	cronpath varchar NOT NULL,
+-- At which interval the cron should run
+	interval int4 NOT NULL,
+-- Where to send reports in case of error
+	reportmail varchar NOT NULL,
+-- When the cron has been started
+	lastrundate int8,
+-- Return code
+	lastrunreturncode int4,
+-- When the cron should be started
+	nextrundate int8,
+-- If this cron is running or not (also used to detect collision if multiple schedulers are running)
+	running int4,
+-- Object representing this Cron
+	object_id int4 NOT NULL,
+	CONSTRAINT vhffs_cron_pkey PRIMARY KEY( cron_id )
+) WITH (OIDS);
+
+-- Table containing all registered tags for this platform
+CREATE TABLE vhffs_tag (
+	tag_id SERIAL,
+-- Label for the tag in platform's default language
+	label VARCHAR(30) NOT NULL,
+	description TEXT NOT NULL,
+	updated int8 NOT NULL,
+-- This tag's creator id, null if user has been deleted
+	updater_id int4,
+	category_id int4 NOT NULL,
+	CONSTRAINT vhffs_tag_pkey PRIMARY KEY( tag_id )
+) WITH (OIDS);
+
+-- Table containing all tag categories for this platform
+-- See vhffs_tag for description...
+CREATE TABLE vhffs_tag_category (
+	tag_category_id SERIAL,
+	label VARCHAR(30) NOT NULL,
+	description TEXT NOT NULL,
+-- Access level of the category
+	visibility int4 NOT NULL DEFAULT 0,
+	updated int8 NOT NULL,
+	updater_id int4,
+	CONSTRAINT vhffs_tag_category_pkey PRIMARY KEY( tag_category_id )
+) WITH (OIDS);
+
+-- Tag categories' translations
+CREATE TABLE vhffs_tag_category_translation (
+	tag_category_id int4 NOT NULL,
+	lang VARCHAR(16) NOT NULL,
+	label VARCHAR(30) NOT NULL,
+	description TEXT NOT NULL,
+	updated int8 NOT NULL,
+	updater_id int4,
+	CONSTRAINT vhffs_tag_category_translation_pkey PRIMARY KEY( tag_category_id, lang )
+) WITH (OIDS);
+
+-- Tags requested by users
+CREATE TABLE vhffs_tag_request (
+	tag_request_id SERIAL,
+-- Label of the category. We could have a label
+-- and an id and fill in the correct field depending
+-- of the existence of the category
+	category_label VARCHAR(30) NOT NULL,
+	tag_label VARCHAR(30) NOT NULL,
+	created int8 NOT NULL,
+-- User who requested the tag
+	requester_id int4,
+-- For which object
+	tagged_id int4,
+	CONSTRAINT vhffs_tag_request_pkey PRIMARY KEY( tag_request_id )
+);
+
+-- Description & label translation for a tag
+CREATE TABLE vhffs_tag_translation (
+	tag_id int4 NOT NULL,
+	lang VARCHAR(16) NOT NULL,
+	label VARCHAR(30) NOT NULL,
+	description TEXT NOT NULL,
+	updated int8 NOT NULL,
+	updater_id int4,
+	CONSTRAINT vhffs_tag_translation_pkey PRIMARY KEY( tag_id, lang )
+) WITH (OIDS);
+
+-- Users of a group, groups of an user
+CREATE TABLE vhffs_user_group
+(
+	uid int4 NOT NULL,
+	gid int4 NOT NULL,
+	state int4 NOT NULL,
+	CONSTRAINT vhffs_user_group_pkey PRIMARY KEY (uid,gid)
+) WITH (OIDS);
+
+-- Mail domains
+CREATE TABLE vhffs_mx (
+	mx_id serial,
+-- Domain name
+	domain varchar NOT NULL,
+	object_id int4 NOT NULL,
+	CONSTRAINT vhffs_mx_pkey PRIMARY KEY (mx_id),
+	CONSTRAINT vhffs_mx_unique_domain UNIQUE (domain),
+	CONSTRAINT vhffs_mx_unique_object_id UNIQUE (object_id)
+) WITH (OIDS);
+
+-- Catchall boxes
+CREATE TABLE vhffs_mx_catchall (
+	catchall_id serial,
+-- Mail domain
+	mx_id int4 NOT NULL,
+-- Box
+	box_id int4 NOT NULL,
+	CONSTRAINT vhffs_mx_catchall_pkey PRIMARY KEY (catchall_id),
+	CONSTRAINT vhffs_mx_catchall_unique_domain_box UNIQUE (mx_id, box_id)
+) WITH (OIDS);
+
+-- Mail localparts
+CREATE TABLE vhffs_mx_localpart (
+	localpart_id serial,
+-- Mail domain
+	mx_id int4 NOT NULL,
+-- Local part of the address (part before @)
+	localpart varchar NOT NULL,
+-- Password (of the box and/or a future redirect administration)
+	password varchar,
+-- Is antispam activated ?
+	nospam boolean NOT NULL DEFAULT FALSE,
+-- Is antivirus activated ?
+	novirus boolean NOT NULL DEFAULT FALSE,
+	CONSTRAINT vhffs_mx_localpart_pkey PRIMARY KEY (localpart_id),
+	CONSTRAINT vhffs_mx_localpart_unique_domain_localpart UNIQUE (mx_id, localpart)
+) WITH (OIDS);
+
+-- Mail redirects
+CREATE TABLE vhffs_mx_redirect (
+	redirect_id serial,
+-- Local part
+	localpart_id int4 NOT NULL,
+-- Mail address to which mails are forwarded
+	redirect varchar NOT NULL,
+	CONSTRAINT vhffs_mx_redirect_pkey PRIMARY KEY (redirect_id),
+	CONSTRAINT vhffs_mx_redirect_unique_localpart_redirect UNIQUE (localpart_id, redirect)
+) WITH (OIDS);
+
+-- Mail boxes
+CREATE TABLE vhffs_mx_box (
+	box_id serial,
+-- Local part
+	localpart_id int4 NOT NULL,
+-- Allow pop login ?
+	allowpop boolean NOT NULL DEFAULT TRUE,
+-- Allow imap login ?
+	allowimap boolean NOT NULL DEFAULT TRUE,
+-- State of the box (we don't have object for this entity...)
+	state int4 NOT NULL,
+	CONSTRAINT vhffs_mx_box_pkey PRIMARY KEY (box_id),
+	CONSTRAINT vhffs_mx_box_unique_domain_localpart UNIQUE (localpart_id)
+) WITH (OIDS);
+-- state is used in vhffs_mx_box in where clauses
+CREATE INDEX idx_vhffs_mx_box_state ON vhffs_mx_box(state);
+
+-- Mailing lists
+CREATE TABLE vhffs_mx_ml (
+	ml_id serial,
+-- Local part
+	localpart_id int4 NOT NULL,
+-- Object
+	object_id int4 NOT NULL,
+-- Prefix prepended to all subjects
+	prefix varchar,
+-- How are subscriptions managed
+	sub_ctrl int4 NOT NULL,
+-- Posting policy
+	post_ctrl int4 NOT NULL,
+-- Add Reply-To header?
+	reply_to boolean NOT NULL DEFAULT FALSE,
+-- Do we keep open archives for this list?
+	open_archive boolean NOT NULL DEFAULT FALSE,
+-- Signature appended to all messages
+	signature text,
+	CONSTRAINT vhffs_mx_ml_pkey PRIMARY KEY (ml_id),
+	CONSTRAINT vhffs_mx_ml_unique_domain_localpart UNIQUE (localpart_id),
+	CONSTRAINT vhffs_mx_ml_unique_object_id UNIQUE (object_id)
+) WITH (OIDS);
+-- vhffs_mx_ml.open_archive may be used in where clause to select on public ml
+CREATE INDEX idx_vhffs_mx_ml_open_archive ON vhffs_mx_ml(open_archive);
+
+-- Subscribers of a mailing list
+CREATE TABLE vhffs_mx_ml_subscribers (
+	sub_id serial,
+-- Mailing list to which this address has subscribed
+	ml_id int4 NOT NULL,
+-- Email address of the subscriber
+	member varchar NOT NULL,
+-- Access level of this member
+	perm int4 NOT NULL,
+-- Hash for activation
+	hash varchar,
+-- Language of the subscriber
+	language varchar(16),
+	CONSTRAINT vhffs_mx_ml_subscribers_pkey PRIMARY KEY (sub_id),
+	CONSTRAINT vhffs_mx_ml_subscribers_member_list UNIQUE (ml_id, member)
+) WITH (OIDS);
+
+
+/****** Indexes and unique constraints *******/
+ALTER TABLE vhffs_users ADD CONSTRAINT vhffs_users_unique_username UNIQUE (username);
+ALTER TABLE vhffs_users ADD CONSTRAINT vhffs_users_unique_ircnick UNIQUE (ircnick);
+ALTER TABLE vhffs_groups ADD CONSTRAINT vhffs_groups_unique_groupname UNIQUE (groupname);
+ALTER TABLE vhffs_cvs ADD CONSTRAINT vhffs_cvs_unique_cvsroot UNIQUE (cvsroot);
+ALTER TABLE vhffs_httpd ADD CONSTRAINT vhffs_httpd_unique_servername UNIQUE (servername);
+ALTER TABLE vhffs_mysql ADD CONSTRAINT vhffs_mysql_unique_dbname UNIQUE (dbname);
+ALTER TABLE vhffs_mysql ADD CONSTRAINT vhffs_mysql_unique_dbuser UNIQUE (dbuser);
+ALTER TABLE vhffs_pgsql ADD CONSTRAINT vhffs_pgsql_unique_dbname UNIQUE (dbname);
+ALTER TABLE vhffs_pgsql ADD CONSTRAINT vhffs_pgsql_unique_dbuser UNIQUE (dbuser);
+ALTER TABLE vhffs_repository ADD CONSTRAINT vhffs_repository_unique_name UNIQUE (name);
+ALTER TABLE vhffs_svn ADD CONSTRAINT vhffs_svn_unique_reponame UNIQUE (reponame);
+ALTER TABLE vhffs_git ADD CONSTRAINT vhffs_git_unique_reponame UNIQUE (reponame);
+ALTER TABLE vhffs_mercurial ADD CONSTRAINT vhffs_mercurial_unique_reponame UNIQUE (reponame);
+ALTER TABLE vhffs_bazaar ADD CONSTRAINT vhffs_bazaar_unique_reponame UNIQUE (reponame);
+ALTER TABLE vhffs_dns ADD CONSTRAINT vhffs_dns_unique_domain UNIQUE (domain);
+ALTER TABLE vhffs_cron ADD CONSTRAINT vhffs_cron_unique_cronpath UNIQUE (cronpath);
+ALTER TABLE vhffs_tag_category ADD CONSTRAINT vhffs_tag_category_unique_label UNIQUE(label);
+ALTER TABLE vhffs_tag ADD CONSTRAINT vhffs_tag_unique_label_category UNIQUE(label , category_id);
+-- add uniqueness on service.object_id
+ALTER TABLE vhffs_cvs ADD CONSTRAINT vhffs_cvs_unique_object_id UNIQUE(object_id);
+ALTER TABLE vhffs_dns ADD CONSTRAINT vhffs_dns_unique_object_id UNIQUE(object_id);
+ALTER TABLE vhffs_groups ADD CONSTRAINT vhffs_groups_unique_object_id UNIQUE(object_id);
+ALTER TABLE vhffs_users ADD CONSTRAINT vhffs_users_unique_object_id UNIQUE(object_id);
+ALTER TABLE vhffs_httpd ADD CONSTRAINT vhffs_httpd_unique_object_id UNIQUE(object_id);
+ALTER TABLE vhffs_mysql ADD CONSTRAINT vhffs_mysql_unique_object_id UNIQUE(object_id);
+ALTER TABLE vhffs_pgsql ADD CONSTRAINT vhffs_pgsql_unique_object_id UNIQUE(object_id);
+ALTER TABLE vhffs_repository ADD CONSTRAINT vhffs_repository_unique_object_id UNIQUE(object_id);
+ALTER TABLE vhffs_svn ADD CONSTRAINT vhffs_svn_unique_object_id UNIQUE(object_id);
+ALTER TABLE vhffs_git ADD CONSTRAINT vhffs_git_unique_object_id UNIQUE(object_id);
+ALTER TABLE vhffs_mercurial ADD CONSTRAINT vhffs_mercurial_unique_object_id UNIQUE(object_id);
+ALTER TABLE vhffs_bazaar ADD CONSTRAINT vhffs_bazaar_unique_object_id UNIQUE(object_id);
+
+-- This index drastically improves performances on get_used_letters
+CREATE INDEX idx_vhffs_httpd_servername_firstletter ON vhffs_httpd(substr(servername, 1, 1));
+-- state is massively used in WHERE clause, this index improves overall performances
+CREATE INDEX idx_vhffs_object_state ON vhffs_object(state);
+-- state may be used in vhffs_mailing in where clause
+CREATE INDEX idx_vhffs_mailings_state ON vhffs_mailings(state);
+-- state is used in vhffs_user_group in where clauses
+CREATE INDEX idx_vhffs_user_group_state ON vhffs_user_group(state);
+-- vhffs_cvs.public may be used in where clause to display public cvs
+CREATE INDEX idx_vhffs_cvs_public ON vhffs_cvs(public);
+-- vhffs_svn.public may be used in where clause to display public svn
+CREATE INDEX idx_vhffs_svn_public ON vhffs_svn(public);
+-- vhffs_git.public may be used in where clause to display public git
+CREATE INDEX idx_vhffs_git_public ON vhffs_git(public);
+-- vhffs_mercurial.public may be used in where clause to display public mercurial
+CREATE INDEX idx_vhffs_mercurial_public ON vhffs_mercurial(public);
+-- vhffs_bazaar.public may be used in where clause to display public bazaar
+CREATE INDEX idx_vhffs_bazaar_public ON vhffs_bazaar(public);
+-- vhffs_object.owner_uid and owner_gid is used a lot in where clauses
+CREATE INDEX idx_vhffs_object_owner_uid ON vhffs_object(owner_uid);
+CREATE INDEX idx_vhffs_object_owner_gid ON vhffs_object(owner_gid);
+-- vhffs_object.type may be used in where clauses
+CREATE INDEX idx_vhffs_object_type ON vhffs_object(type);
+-- vhffs_users.gid may be used to find if a group is a workgroup group or a group associated to an user
+CREATE INDEX idx_vhffs_users_gid ON vhffs_users(gid);
+-- vhffs_users.admin may be used to display admin users
+CREATE INDEX idx_vhffs_users_admin ON vhffs_users(admin);
+-- vhffs_dns_rr needed indexes
+CREATE INDEX idx_vhffs_dns_rr_zone ON vhffs_dns_rr(zone);
+CREATE INDEX idx_vhffs_dns_rr_type ON vhffs_dns_rr(type);
+CREATE INDEX idx_vhffs_dns_rr_name ON vhffs_dns_rr(name);
+-- add indexes on service.object_id
+CREATE INDEX idx_vhffs_history_object_id ON vhffs_history(object_id);
+-- add index on dates, it is used to search old object, ...
+CREATE INDEX idx_vhffs_object_date_creation ON vhffs_object(date_creation);
+CREATE INDEX idx_vhffs_history_date ON vhffs_history(date);
+CREATE INDEX idx_vhffs_mailings_date ON vhffs_mailings(date);
+CREATE INDEX idx_vhffs_users_lastloginpanel ON vhffs_users(lastloginpanel);
+-- nextrundate is used to known which cron we should run
+CREATE INDEX idx_vhffs_cron_nextrun ON vhffs_cron(nextrundate);
+-- vhffs_tag_category.visibility may be used in where clauses
+CREATE INDEX idx_vhffs_tag_category_visibility ON vhffs_tag_category(visibility);
+
+/****** Non primary key constraints.
+	Defining foreign keys here allow to create tables in any order.
+*******/
+
+ALTER TABLE vhffs_acl ADD CONSTRAINT fk_vhffs_acl_vhffs_object_dst FOREIGN KEY (target_oid) REFERENCES vhffs_object(object_id) ON DELETE CASCADE;
+ALTER TABLE vhffs_acl ADD CONSTRAINT fk_vhffs_acl_vhffs_object_src FOREIGN KEY (granted_oid) REFERENCES vhffs_object(object_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_cvs ADD CONSTRAINT fk_vhffs_cvs_vhffs_object FOREIGN KEY (object_id) REFERENCES vhffs_object(object_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_dns ADD CONSTRAINT fk_vhffs_dns_vhffs_object FOREIGN KEY (object_id) REFERENCES vhffs_object(object_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_dns_rr ADD CONSTRAINT fk_vhffs_dns_rr_vhffs_dns FOREIGN KEY (zone) REFERENCES vhffs_dns(dns_id) ON DELETE CASCADE;
+ALTER TABLE vhffs_dns_rr ADD CONSTRAINT fk_vhffs_dns_rr_chk_type CHECK (type='A' OR type='AAAA' OR type='CNAME' OR type='HINFO' OR type='MX' OR type='NS' OR type='PTR' OR type='RP' OR type='SRV' OR type='TXT');
+
+ALTER TABLE vhffs_groups ADD CONSTRAINT fk_vhffs_group_vhffs_object FOREIGN KEY (object_id) REFERENCES vhffs_object(object_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_history ADD CONSTRAINT fk_vhffs_history_vhffs_object FOREIGN KEY (object_id) REFERENCES vhffs_object(object_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_history ADD CONSTRAINT fk_vhffs_history_vhffs_users FOREIGN KEY (source_uid) REFERENCES vhffs_users(uid) ON DELETE SET NULL;
+
+ALTER TABLE vhffs_httpd ADD CONSTRAINT fk_vhffs_httpd_vhffs_object FOREIGN KEY (object_id) REFERENCES vhffs_object(object_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_mysql ADD CONSTRAINT fk_vhffs_mysql_vhffs_object FOREIGN KEY (object_id) REFERENCES vhffs_object(object_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_object ADD CONSTRAINT fk_vhffs_object_vhffs_user FOREIGN KEY (owner_uid) REFERENCES vhffs_users(uid) ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE vhffs_object ADD CONSTRAINT fk_vhffs_object_vhffs_group FOREIGN KEY (owner_gid) REFERENCES vhffs_groups(gid) ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED;
+
+ALTER TABLE vhffs_pgsql ADD CONSTRAINT fk_vhffs_pgsql_vhffs_object FOREIGN KEY (object_id) REFERENCES vhffs_object(object_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_repository ADD CONSTRAINT fk_vhffs_vhffs_repository_vhffs_object FOREIGN KEY (object_id) REFERENCES vhffs_object(object_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_cron ADD CONSTRAINT fk_vhffs_vhffs_cron_vhffs_object FOREIGN KEY (object_id) REFERENCES vhffs_object(object_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_svn ADD CONSTRAINT fk_vhffs_svn_vhffs_object FOREIGN KEY (object_id) REFERENCES vhffs_object(object_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_git ADD CONSTRAINT fk_vhffs_git_vhffs_object FOREIGN KEY (object_id) REFERENCES vhffs_object(object_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_mercurial ADD CONSTRAINT fk_vhffs_mercurial_vhffs_object FOREIGN KEY (object_id) REFERENCES vhffs_object(object_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_bazaar ADD CONSTRAINT fk_vhffs_bazaar_vhffs_object FOREIGN KEY (object_id) REFERENCES vhffs_object(object_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_users ADD CONSTRAINT fk_vhffs_users_vhffs_object FOREIGN KEY (object_id) REFERENCES vhffs_object (object_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_user_group ADD CONSTRAINT fk_vhffs_user_group_vhffs_users FOREIGN KEY (uid) REFERENCES vhffs_users (uid) ON DELETE CASCADE;
+ALTER TABLE vhffs_user_group ADD CONSTRAINT fk_vhffs_user_group_vhffs_groups FOREIGN KEY (gid) REFERENCES vhffs_groups (gid) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_tag ADD CONSTRAINT fk_vhffs_tag_vhffs_users FOREIGN KEY (updater_id) REFERENCES vhffs_users(uid) ON DELETE SET NULL;
+ALTER TABLE vhffs_tag_category ADD CONSTRAINT fk_vhffs_tag_category_vhffs_users FOREIGN KEY (updater_id) REFERENCES vhffs_users(uid) ON DELETE SET NULL;
+ALTER TABLE vhffs_tag ADD CONSTRAINT fk_vhffs_tag_vhffs_tag_category FOREIGN KEY (category_id) REFERENCES vhffs_tag_category(tag_category_id) ON DELETE CASCADE;
+ALTER TABLE vhffs_tag_category_translation ADD CONSTRAINT fk_vhffs_tag_category_translation_vhffs_tag_category FOREIGN KEY ( tag_category_id ) REFERENCES vhffs_tag_category(tag_category_id) ON DELETE CASCADE;
+ALTER TABLE vhffs_tag_category_translation ADD CONSTRAINT fk_vhffs_tag_category_translation_vhffs_users FOREIGN KEY ( updater_id ) REFERENCES vhffs_users(uid) ON DELETE SET NULL;
+ALTER TABLE vhffs_tag_translation ADD CONSTRAINT fk_vhffs_tag_translation_vhffs_tag FOREIGN KEY( tag_id ) REFERENCES vhffs_tag( tag_id ) ON DELETE CASCADE;
+ALTER TABLE vhffs_tag_translation ADD CONSTRAINT fk_vhffs_tag_translation_vhffs_users FOREIGN KEY( updater_id ) REFERENCES vhffs_users( uid ) ON DELETE SET NULL;
+ALTER TABLE vhffs_object_tag ADD CONSTRAINT fk_vhffs_object_tag_vhffs_object FOREIGN KEY ( object_id ) REFERENCES vhffs_object( object_id ) ON DELETE CASCADE;
+ALTER TABLE vhffs_object_tag ADD CONSTRAINT fk_vhffs_object_tag_vhffs_tag FOREIGN KEY ( tag_id ) REFERENCES vhffs_tag( tag_id ) ON DELETE CASCADE;
+ALTER TABLE vhffs_object_tag ADD CONSTRAINT fk_vhffs_object_tag_vhffs_users FOREIGN KEY ( updater_id ) REFERENCES vhffs_users( uid ) ON DELETE SET NULL;
+ALTER TABLE vhffs_tag_request ADD CONSTRAINT fk_vhffs_tag_request_vhffs_user FOREIGN KEY ( requester_id ) REFERENCES vhffs_users( uid ) ON DELETE SET NULL;
+ALTER TABLE vhffs_tag_request ADD CONSTRAINT fk_vhffs_tag_request_vhffs_object FOREIGN KEY ( tagged_id ) REFERENCES vhffs_object( object_id ) ON DELETE SET NULL;
+
+ALTER TABLE vhffs_mx ADD CONSTRAINT fk_vhffs_mx_vhffs_object FOREIGN KEY (object_id) REFERENCES vhffs_object(object_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_mx_localpart ADD CONSTRAINT fk_vhffs_mx_localpart_vhffs_mx FOREIGN KEY (mx_id) REFERENCES vhffs_mx(mx_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_mx_catchall ADD CONSTRAINT fk_vhffs_mx_catchall_vhffs_mx FOREIGN KEY (mx_id) REFERENCES vhffs_mx(mx_id) ON DELETE CASCADE;
+ALTER TABLE vhffs_mx_catchall ADD CONSTRAINT fk_vhffs_mx_catchall_vhffs_mx_box FOREIGN KEY (box_id) REFERENCES vhffs_mx_box(box_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_mx_box ADD CONSTRAINT fk_vhffs_mx_box_vhffs_localpart FOREIGN KEY (localpart_id) REFERENCES vhffs_mx_localpart(localpart_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_mx_redirect ADD CONSTRAINT fk_vhffs_mx_redirect_vhffs_localpart FOREIGN KEY (localpart_id) REFERENCES vhffs_mx_localpart(localpart_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_mx_ml ADD CONSTRAINT fk_vhffs_mx_ml_vhffs_object FOREIGN KEY (object_id) REFERENCES vhffs_object(object_id) ON DELETE CASCADE;
+ALTER TABLE vhffs_mx_ml ADD CONSTRAINT fk_vhffs_mx_ml_vhffs_localpart FOREIGN KEY (localpart_id) REFERENCES vhffs_mx_localpart(localpart_id) ON DELETE CASCADE;
+
+ALTER TABLE vhffs_mx_ml_subscribers ADD CONSTRAINT fk_vhffs_mx_ml_subscribers_vhffs_mx_ml FOREIGN KEY (ml_id) REFERENCES vhffs_mx_ml(ml_id) ON DELETE CASCADE;
+
+
+-- VIEWS
+
+CREATE VIEW vhffs_passwd AS
+SELECT uid, gid, username, shell, '*'::character varying AS passwd, homedir
+FROM vhffs_users;
+
+CREATE VIEW vhffs_shadow AS
+SELECT uid, gid, username, shell, passwd, '0'::int4 as newtok , '0'::int4 as expired , homedir
+FROM vhffs_users;
+
+CREATE VIEW vhffs_forum AS
+SELECT users.username, users.passwd, users.firstname, users.lastname, users.mail, object.date_creation, object.state
+FROM vhffs_users users, vhffs_object object
+WHERE object.object_id=users.object_id;
+
+CREATE VIEW vhffs_dns_soa AS
+SELECT dns.dns_id AS id, dns.domain || '.' AS origin , dns.ns, dns.mbox, dns.serial, dns.refresh, dns.retry, dns.expire, dns.minimum, dns.ttl
+FROM vhffs_dns dns INNER JOIN vhffs_object o ON o.object_id=dns.object_id WHERE o.state = 6;
+

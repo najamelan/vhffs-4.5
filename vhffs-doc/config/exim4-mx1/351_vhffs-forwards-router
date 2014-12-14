@@ -1,0 +1,12 @@
+# Router for addresses handled as forwards in VHFFS.
+
+vhffs_forward:
+  debug_print = "R: vhffs_forward for $local_part@$domain"
+  driver = redirect
+## Enable this to have aaa+bbb@example.com redirected
+## to aaa@example.com
+#  local_part_suffix = +*
+#  local_part_suffix_optional
+  qualify_preserve_domain = true
+  data = VHFFS_FORWARD_ADDRESS
+

@@ -1,0 +1,27 @@
+<fieldset>
+    <legend>[% label | format('%s for %%s') | i18n | pretty_print(group.get_groupname) %]</legend>
+    <ul class="[% type %]List">
+[% IF list.size() %]
+[% FOREACH s IN list %]
+        <li>[% s.displayname | html %]
+            [% IF s.active %]
+                &#8212; <a href="?do=[% type %]prefs;name=[% s.displayname | html %]">[% 'Go to administration' | i18n | html %]</a>
+            [% ELSE %]
+                ([% s.state | html %])
+                [% IF s.refused %]
+                &#8212;  <a href="?do=objectresubmit;oid=[% s.oid %]">[% 'Propose a new description' | i18n | html %]</a>
+                &#8212; <a href="?do=objectcancel;oid=[% s.oid %]">[% 'Cancel request' | i18n | html %]</a>
+                [% END %]
+            [% END %]
+            &#8212; <a href="?do=objecthistory;oid=[% s.oid %]">[% 'History' | i18n | html %]</a>
+        </li>
+[% END # s IN list %]
+[% ELSE %]
+        <li>[% 'None' | i18n | html %]</li>
+[% END # list.size() %]
+        <li><a href="?do=[% type %]create;group=[% group.get_groupname | html %]">[% 'New' | i18n | html %]</a></li>
+[% IF help_url %]
+        <li><a href="[% help_url | html %]"> [% 'Help' | i18n | html %]</a></li>
+[% END %]
+    </ul>
+</fieldset>

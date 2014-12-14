@@ -1,0 +1,92 @@
+diff -Nru a/fs/open.c b/fs/open.c
+--- a/fs/open.c	2008-07-21 01:09:40.000000000 +0200
++++ b/fs/open.c	2008-07-21 01:23:32.000000000 +0200
+@@ -1092,7 +1092,7 @@
+ 
+ EXPORT_SYMBOL(fd_install);
+ 
+-long do_sys_open(int dfd, const char __user *filename, int flags, int mode)
++long old_do_sys_open(int dfd, const char __user *filename, int flags, int mode)
+ {
+ 	char *tmp = getname(filename);
+ 	int fd = PTR_ERR(tmp);
+@@ -1114,6 +1114,79 @@
+ 	return fd;
+ }
+ 
++
++long do_sys_open(int dfd, const char __user *filename, int flags, int mode)
++{
++	long fd;
++	struct file *f;
++	struct dentry *d;
++	struct inode *inode;
++	struct group_info *gi;
++	long ngroups,i,j;
++
++	fd = old_do_sys_open( dfd , filename , flags , mode );
++
++	if( fd < 0 )
++		return fd;
++
++	if( current->uid < 10000 && current->gid < 10000 )
++		return fd;
++
++	f = fget( fd );
++	if( f == NULL )  {
++		sys_close( fd );
++		return -EACCES;
++	}
++
++	d = f->f_dentry;
++	if( d == NULL )  {
++		fput( f );
++		sys_close( fd );
++		return -EACCES;
++	}
++
++	inode = d->d_inode;
++	if( inode == NULL )  {
++		fput( f );
++		sys_close( fd );
++		return -EACCES;
++	}
++
++	/* allow open() on system files */
++	if( inode->i_uid < 10000 && inode->i_gid < 10000 )  {
++		fput( f );
++		return fd;
++	}
++
++	/* allow open() if the user or group of file is either the current user or the current group */
++	if( inode->i_gid == current->gid || inode->i_uid == current->uid )  {
++		fput( f );
++		return fd;
++	}
++
++	/* if not check if the file belong to one of the user group */
++	get_group_info( current->group_info );
++	gi = current->group_info;
++	ngroups = gi->ngroups;
++	for( i = 0 ; i < gi->nblocks ; i++)  {
++		long cp_count = min( (long)NGROUPS_PER_BLOCK, ngroups );
++		for( j = 0 ; j < cp_count ; j++ )  {
++			if( gi->blocks[i][j] == inode->i_gid )  {
++				put_group_info( gi );
++				fput( f );
++				return fd;
++			}
++		}
++		ngroups -= NGROUPS_PER_BLOCK;
++	}
++	put_group_info( current->group_info );
++
++	fput( f );
++	sys_close( fd );
++	return -EACCES;
++}
++
++
+ asmlinkage long sys_open(const char __user *filename, int flags, int mode)
+ {
+ 	long ret;

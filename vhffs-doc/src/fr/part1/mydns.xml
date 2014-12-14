@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section id="chap-mydns">
+  <title id="title-mydns">myDNS (serveur DNS)</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>La configuration de myDNS est relativement simple. Deux cas peuvent
+    se pr&eacute;senter, soit vous utilisez directgement la vue
+    <literal><literal>vhffs_dns_soa</literal></literal> et la table
+    <literal>vhffs_dns_rr</literal>, soit vous les dupliquez sur un serveur
+    secondaire. Dans les deux cas, la configuration est la m&ecirc;me.</para>
+  </section>
+
+  <section>
+    <title>Configuration</title>
+
+    <section>
+      <title>Configuration commune</title>
+
+      <para>Comme nous l'avons vu, l'utilisation directe repose sur
+      l'exploitation de la vue vhffs_dns_soa et de la table vhffs_dns_rr. La
+      premi&egrave;re est une vue regroupant tous les domaines, il est
+      n&eacute;cessaire que myDNS ne prenne en compte que ceux &eacute;tant
+      activ&eacute;s. Vous trouverez ci-dessous les options les plus
+      significatives, laissez les autres &agrave; leurs valeurs par
+      d&eacute;faut&nbsp;:</para>
+    </section>
+
+    <section>
+      <title>R&eacute;plication</title>
+
+      <para>Sch&eacute;ma de la base de donn&eacute;es</para>
+    </section>
+  </section>
+</section>

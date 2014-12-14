@@ -1,0 +1,8 @@
+<h1>[% 'Search results' | i18n %]</h1>
+[% INCLUDE common/pager.tt pager=u_pager %]
+
+[% FOREACH u = users %]
+[% INCLUDE 'parts/user-general.tt' %]
+[% END %]
+
+[% INCLUDE common/pager.tt  pager=u_pager%]

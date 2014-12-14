@@ -1,0 +1,26 @@
+[smtp]
+host=localhost
+
+[hooks]
+# send one email per group of changes
+changegroup.notify = python:hgext.notify.hook
+
+[email]
+from = MY_FROMADDRESS
+
+[notify]
+# really send email
+test = false
+# send mail for any kind of source
+sources = serve push pull bundle
+# repos live in /data/mercurial/ on server, so strip 3 "/" chars
+strip = 3
+# don't include diff
+maxdiff = 0
+template =
+  Changeset: {node|short}
+  Author: {author}
+  Description: {desc|tabindent|strip}\n
+
+[reposubs]
+* = MY_MLADDRESS

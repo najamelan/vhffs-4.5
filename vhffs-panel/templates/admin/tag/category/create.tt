@@ -1,0 +1,16 @@
+<form class="table-like" name="createTagCategory" accept-charset="utf-8" method="post">
+<p><label for="label">[% 'Label:' | i18n | html %]</label>
+	<input type="text" name="label" id="label" value="[% label | html %]"/></p>
+<p><label for="description">[% 'Description:' | i18n | html %]</label>
+	<textarea name="description" id="description">[% description | html %]</textarea></p>
+<p><label for="visibility">[% 'Visibility:' | i18n | html %]</label>
+<select name="visibility" id="visibility">
+[% FOREACH v IN visibilities %]
+<option value="[% v.code %]"[% ' selected="selected"' IF v.code == visibility %]>[% v.label | html %]</option>
+[% END %]
+</select>
+</p>
+<p class="button">
+	<input type="submit" name="create_tag_category_submit" value="[% 'Create' | i18n | html %]"/>
+</p> 
+</form>

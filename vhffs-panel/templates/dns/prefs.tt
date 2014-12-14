@@ -1,0 +1,312 @@
+<h2>[% 'A records (name -> IPv4)' | i18n | html %]</h2>
+<h3>[% 'Existing A records' | i18n | html %]</h3>
+
+<p class="help">[% '@ represents the ORIGIN (%s).' | i18n | pretty_print(dns.get_domain) | html %]</p>
+
+[% UNLESS sorted_a.size() %]
+<p class="info">[% 'No registered A records for this domain.' | i18n | html %]</p>
+[% END %]
+
+[% FOREACH a IN sorted_a %]
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+    <p>
+        <label for="data_[% a.id %]">[% a.name | html %]-&#62;</label>
+        <input type="text" name="data" id="data_[% a.id %]" value="[% a.data | html %]" />
+        <input type="hidden" name="name" value="[% dns.get_domain | html %]" />
+        <input type="hidden" name="rr_id" value="[% a.id %]" />
+        <input type="hidden" name="action" value="manage_a"/>
+        <input type="submit" value="[% 'Update' | i18n | html %]" class="autowidth" name="modify_a_submit" />
+        <input type="submit" value="[% 'Delete' | i18n | html %]" name="delete_a_submit" class="autowidth"/>
+    </p>
+</form>
+[% END # a In sorted_a %]
+
+<h3>[% 'Add a A record' | i18n | html %]</h3>
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+    <p class="help">[% 'Use @ for ORIGIN (%s)' | i18n| pretty_print(dns.get_domain) | html %]</p>
+	<p>
+		<label for="add_a_prefix">[% 'Name for the record:' | i18n | html %]</label>
+		<input type="text" name="namerr" id="add_a_prefix" /><strong>.[% dns.get_domain | html %]</strong>
+	</p>
+	<p>[% 'Use our servers as destination IP for this A record?' | i18n | html %]
+		<input type="radio" name="redirect" id="redirect_true" value="true" checked="checked"
+            onclick="document.getElementById('add_a_ip').style.display='none'"/>
+        <label for="redirect_true" style="display:inline;float:none">[% 'Yes' | i18n | html %]</label>
+        <input type="radio" name="redirect" value="false" id="redirect_false"
+            onclick="document.getElementById('add_a_ip').style.display='block'"/>
+        <label for="redirect_false" style="display:inline;float:none">[% 'No' | i18n | html %]</label>
+    </p>
+	<p id="add_a_ip" style="display:none">
+		<label for="add_a_data">[% 'IPv4 address:' | i18n | html %]</label>
+		<input type="text" name="data" id="add_a_data" />
+	</p>
+	<p class="button">
+		<input type="hidden" name="name" value="[% dns.get_domain | html %]" />
+        <input type="hidden" name="action" value="add_a"/>
+		<input type="submit" value="[% 'Add record' | i18n | html %]" />
+	</p>
+</form>
+
+<h2>[% 'AAAA records (name -> IPv6)' | i18n | html %]</h2>
+<h3>[% 'Existing AAAA records' | i18n | html %]</h3>
+
+<p class="help">[% '@ represents the ORIGIN (%s).' | i18n | pretty_print(dns.get_domain) | html %]</p>
+
+[% UNLESS sorted_aaaa.size() %]
+<p class="info">[% 'No registered AAAA records for this domain.' | i18n | html %]</p>
+[% END %]
+
+[% FOREACH aaaa IN sorted_aaaa %]
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+    <p>
+    <label for="data_[% aaaa.id %]">[% aaaa.name | html %]-&#62;</label>
+        <input type="text" name="data" id="data_[% aaaa.id %]" value="[% aaaa.data | html %]" />
+        <input type="hidden" name="name" value="[% dns.get_domain | html %]"/>
+        <input type="hidden" name="rr_id" value="[% aaaa.id %]"/>
+        <input type="hidden" name="action" value="manage_aaaa"/>
+        <input type="submit" value="[% 'Update' | i18n | html %]" class="autowidth" name="modify_aaaa_submit" />
+        <input type="submit" value="[% 'Delete' | i18n | html %]" name="delete_aaaa_submit" class="autowidth"/>
+    </p>
+</form>
+[% END # aaaa IN sorted_aaaa %]
+
+<h3>[% 'Add a AAAA record' | i18n | html %]</h3>
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+    <p class="help">[% 'Use @ for ORIGIN (%s)' | i18n| pretty_print(dns.get_domain) | html %]</p>
+	<p>
+		<label for="add_aaaa_prefix">[% 'Name for the record:' | i18n | html %]</label>
+		<input type="text" name="namerr" id="add_aaaa_prefix" /><strong>.[% dns.get_domain | html %]</strong>
+	</p>
+	<p>[% 'Use our servers as destination IP for this AAAA record?' | i18n | html %]
+		<input type="radio" name="redirect" id="redirect_aaaa_true" value="true" checked="checked"
+            onclick="document.getElementById('add_aaaa_ip').style.display='none'"/>
+        <label for="redirect_aaaa_true" style="display:inline;float:none">[% 'Yes' | i18n | html %]</label>
+        <input type="radio" name="redirect" value="false" id="redirect_aaaa_false"
+            onclick="document.getElementById('add_aaaa_ip').style.display='block'"/>
+        <label for="redirect_aaaa_false" style="display:inline;float:none">[% 'No' | i18n | html %]</label>
+    </p>
+	<p id="add_aaaa_ip" style="display:none">
+		<label for="add_aaaa_data">[% 'IPv6 address:' | i18n | html %]</label>
+		<input type="text" name="data" id="add_aaaa_data" />
+	</p>
+	<p class="button">
+		<input type="hidden" name="name" value="[% dns.get_domain | html %]" />
+        <input type="hidden" name="action" value="add_aaaa"/>
+		<input type="submit" value="[% 'Add record' | i18n | html %]" />
+	</p>
+</form>
+
+
+<h2>[% 'MX records (mail servers)' | i18n | html %]</h2>
+<h3>[% 'Existing MX records for this domain' | i18n | html %]</h3>
+
+[% UNLESS sorted_mx.size() %]
+<p>[% 'No MX record for this domain' | i18n | html %]</p>
+[% END %]
+
+[% FOREACH mx IN sorted_mx %]
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+<p><label for="data_[% mx.id %]">
+    [% mx.name | html %] ([% 'Priority:' | i18n | html %] [% mx.aux | html %])-&#62;
+</label>
+    <input type="text" name="data"  id="data_[% mx.id %]" value="[% mx.data | html %]" />
+    <input type="hidden" name="name" value="[% dns.get_domain | html %]" />
+    <input type="hidden" name="rr_id" value="[% mx.id %]" />
+    <input type="hidden" name="action" value="manage_mx" />
+    <input type="submit" value="[% 'Update' | i18n | html %]" name="modify_mx_submit" class="autowidth"/>
+    <input type="submit" value="[% 'Delete' | i18n | html %]" name="delete_mx_submit" class="autowidth"/>
+</p>
+</form>
+[% END %]
+
+<h3>[% 'Add a MX record' | i18n | html %]</h3>
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+    <p class="help">[% 'Use @ for ORIGIN (%s)' | i18n| pretty_print(dns.get_domain) | html %]</p>
+	<p>
+		<label for="add_mx_prefix">[% 'Name of the record:' | i18n | html %]</label>
+		<input type="text" name="namerr" id="add_mx_prefix" value="@"/><strong>.[% dns.get_domain | html %]</strong>
+	</p>
+	<p>
+		<label for="add_mx_data">[% 'MX name:' | i18n | html %]</label>
+		<input type="text" name="data" id="add_mx_data" />
+	</p>
+	<p>
+		<label for="add_mx_aux">[% 'MX priority:' | i18n | html %]</label>
+		<input type="text" name="aux" id="add_mx_aux" />
+	</p>
+	<p class="button">
+        <input type="hidden" name="action" value="add_mx" />
+		<input type="hidden" name="name" value="[% dns.get_domain | html %]" />
+		<input type="submit" value="[% 'Add record' | i18n | html %]" />
+	</p>
+</form>
+
+
+<h2>[% 'CNAME records (aliases)' | i18n | html %]</h2>
+<h3>[% 'Existing CNAMEs for this domain' | html %]</h3>
+
+[% UNLESS sorted_cname.size() %]
+<p>[% 'No CNAME record for this domain.' | i18n | html %]</p>
+[% END %]
+
+[% FOREACH cname IN sorted_cname %]
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p>
+		<label for="data_[% cname.id %]">[% cname.name | html %]-&#62;</label>
+		<input type="text" name="data" id="data_[% cname.id %]" value="[% cname.data | html %]" />
+        <input type="hidden" name="action" value="manage_cname" />
+        <input type="hidden" name="rr_id" value="[% cname.id %]"/>
+		<input type="hidden" name="name" value="[% dns.get_domain | html %]" />
+		<input type="submit" name="modify_cname_submit" value="[% 'Update' | i18n | html %]" class="autowidth" />
+		<input type="submit" name="delete_cname_submit" value="[% 'Delete' | i18n | html %]" class="autowidth" />
+	</p>
+</form>
+[% END %]
+
+<h3>[% 'Add a CNAME record' | i18n | html %]</h3>
+
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p>
+		<label for="add_cname_name">[% 'Subdomain name:' | i18n | html %]</label>
+		<input type="text" name="namerr" id="add_cname_name" /><strong>.[% dns.get_domain | html %]</strong>
+	</p>
+	<p>
+		<label for="add_cname_data">[% 'Destination:' | i18n | html %]</label>
+        <input type="text" name="data" id="add_cname_data" />
+	</p>
+	<p class="button">
+        <input type="hidden" name="action" value="add_cname" />
+		<input type="hidden" name="name" value="[% dns.get_domain | html %]" />
+		<input type="submit" value="[% 'Add record' | i18n | html %]" />
+	</p>
+</form>
+
+<h2>[% 'NS records for this domain (nameservers)' | i18n | html %]</h2>
+<p class="warning">[% 'Modifying NS records configuration could lead to serious problem. Proceed with caution.' | i18n | html %]</p>
+<h3>[% 'Existing NS records' %]</h3>
+
+[% UNLESS sorted_ns.size() %]
+<p>[% 'No NS record for this domain (do not expect anything to work).' | i18n | html %]</p>
+[% END %]
+
+[% FOREACH ns IN sorted_ns %]
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+<p>
+    <label>[% ns.name | html %] -&#62; [% ns.data | html %]</label>
+    <input type="hidden" name="action" value="manage_ns" />
+    <input type="hidden" name="rr_id" value="[% ns.id %]" />
+    <input type="hidden" name="name" value="[% dns.domain | html %]" />
+    <input type="submit" name="delete_ns_submit" value="[% 'Delete' | i18n | html %]" class="autowidth"/>
+</p>
+</form>
+[% END %]
+
+<h3>[% 'Add a NS record' | i18n | html %]</h3>
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+    <p><label for="add_ns_prefix">[% 'Name of the record:' | i18n | html %]</label>
+    <input type="text" name="namerr" id="add_ns_prefix"/><strong>.[% dns.get_domain | html %]</strong></p>
+    <p><label for="add_ns_data">[% 'Host of your name server:' | i18n | html %]</label>
+    <input type="text" name="data" id="add_ns_data"/></p>
+    <input type="hidden" name="action" value="add_ns"/>
+    <input type="hidden" name="name" value="[% dns.get_domain | html %]"/>
+    <input type="submit" value="[% 'Add record' | i18n | html %]" class="autowidth"/>
+</form>
+
+<h2>[% 'SRV records (servers)' | i18n | html %]</h2>
+<h3>[% 'Existing SRV records for this domain' | i18n | html %]</h3>
+
+[% UNLESS sorted_srv.size() %]
+<p>[% 'No SRV records for this domain.' | i18n | html %]</p>
+[% END %]
+
+[% FOREACH srv IN sorted_srv %]
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+    <p>
+    <label>[% srv.name | html %] -&#62;</label>
+    <input type="text" name="host" id="host_[% srv.id %]" value="[% srv.host | html %]" title="[% 'Host' | i18n | html %]"/>
+    <input type="text" name="port" id="port_[% srv.id %]" value="[% srv.port %]" maxlength="5" size="5" style="width:auto" title="[% 'Port' | i18n | html %]"/>
+    <input type="text" name="aux" id="aux_[% srv.id %]" value="[% srv.aux %]" maxlength="5" size="5" style="width:auto" title="[% 'Priority' | i18n | html %]"/>
+    <input type="text" name="weight" id="weight_[% srv.id %]" value="[% srv.weight %]" maxlength="5" size="5" style="width:auto" title="[% 'Weight' | i18n | html %]"/>
+        <input type="hidden" name="name" value="[% dns.get_domain %]"/>
+        <input type="hidden" name="rr_id" value="[% srv.id %]" />
+        <input type="hidden" name="action" value="manage_srv"/>
+        <input type="submit" value="[% 'Update' | i18n | html %]" class="autowidth" name="modify_srv_submit" />
+        <input type="submit" value="[% 'Delete' | i18n | html %]" name="delete_srv_submit" class="autowidth"/>
+    </p>
+</form>
+[% END %]
+<h3>[% 'Add a SRV record' | i18n | html %]</h3>
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+    <p class="help">[% 'Use @ for ORIGIN (%s)' | i18n| pretty_print(dns.get_domain) | html %]</p>
+    <p><label for="add_srv_name">[% 'Record name:' | i18n | html %]</label>
+        <input type="text" name="namerr" id="add_srv_name" /><strong>.[% dns.get_domain | html %]</strong></p>
+    <p><label for="add_srv_protocol">[% 'Protocol:' | i18n | html %]</label>
+        <input type="text" name="protocol" id="add_srv_protocol"/></p>
+    <p><label for="add_srv_service">[% 'Service:' | i18n | html %]</label>
+        <input type="text" name="service" id="add_srv_service"/></p>
+   <p><label for="add_srv_data">[% 'Host:' | i18n | html %]</label>
+        <input type="text" name="host" id="add_srv_data"/></p>
+    <p><label for="add_srv_port">[% 'Port:' | i18n | html %]</label>
+        <input type="text" name="port" id="add_srv_port" size="5" maxlength="5"/></p>
+    <p><label for="add_srv_priority">[% 'Priority:' | i18n | html %]</label>
+        <input type="text" name="aux" id="add_srv_priority" size="5" maxlength="5"/></p>
+    <p><label for="add_srv_weight">[% 'Weight:' | i18n | html %]</label>
+        <input type="text" name="weight" id="add_srv_weight" size="5" maxlength="5"/></p>
+    <p class="button">
+        <input type="hidden" name="action" value="add_srv" />
+        <input type="hidden" name="name" value="[% dns.get_domain | html %]" />
+        <input type="submit" value="[% 'Add record' | i18n | html %]" />
+    </p>
+</form>
+
+<h2>[% 'TXT records for this domain (textual information)' | i18n | html %]</h2>
+<h3>[% 'Existing TXT records' | i18n | html %] </h3>
+
+[% UNLESS sorted_txt.size() %]
+<p>[% 'No TXT records for this domain.' | i18n | html %]</p>
+[% END %]
+
+[% FOREACH txt IN sorted_txt %]
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+    <p>
+        <label for="data_[% txt.id %]">[% txt.name | html %]</label>
+        <input type="text" name="data" id="data_[% txt.id %]" value="[% txt.data | html %]" />
+        <input type="hidden" name="name" value="[% dns.get_domain | html %]" />
+        <input type="hidden" name="rr_id" value="[% txt.id %]" />
+        <input type="hidden" name="action" value="manage_txt"/>
+        <input type="submit" value="[% 'Update' | i18n | html %]" class="autowidth" name="modify_txt_submit" />
+        <input type="submit" value="[% 'Delete' | i18n | html %]" name="delete_txt_submit" class="autowidth"/>
+    </p>
+</form>
+[% END %]
+
+<h3>[% 'Add a TXT record' | i18n | html %]</h3>
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+    <p class="help">[% 'Use @ for ORIGIN (%s)' | i18n| pretty_print(dns.get_domain) | html %]</p>
+	<p>
+		<label for="add_txt_prefix">[% 'Record name:' | i18n | html %]</label>
+		<input type="text" name="namerr"  id="add_txt_prefix" /><strong>.[% dns.get_domain | html %]</strong>
+	</p>
+	<p>
+		<label for="add_txt_data">[% 'Textual information:' | i18n | html %]</label>
+		<textarea name="data" id="add_txt_data"></textarea>
+	</p>
+	<p class="button">
+		<input type="hidden" name="name" value="[% dns.get_domain | html %]" />
+        <input type="hidden" name="action" value="add_txt"/>
+		<input type="submit" value="[% 'Add record' | i18n | html %]" />
+	</p>
+</form>
+
+[% INCLUDE 'acl/form.tt' 
+    object = dns %]
+
+[% INCLUDE 'object/delete.tt'
+    type = 'dns'
+    oid = dns.get_oid %]
+
+[% IF current_user.is_admin %]
+    [% INCLUDE 'admin/object/edit.tt' 
+        object = dns %]
+[% END %]
+

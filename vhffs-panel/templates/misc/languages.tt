@@ -1,0 +1,5 @@
+<div class="navflag">
+[% FOREACH l IN languages %]
+    <a href="?[% query_string | html %];lang=[% l | html %]"><img src="/themes/[% theme %]/img/[% l | html %].png" alt="[% l %]"/></a>
+[% END %]
+</div>

@@ -1,0 +1,12 @@
+# Use vhffs_local transport if current mail
+# is handled by a VHFFS box.
+
+vhffs_local:
+  debug_print = "R: vhffs_local for $local_part@$domain"
+  driver = accept
+## Enable this if you want to have aaa+anything+here@example.com
+## to be delivered to aaa@example.com
+#  local_part_suffix = +*
+#  local_part_suffix_optional
+  domains = VHFFS_VIRTUAL_LOCAL_DOMAINS
+  transport = vhffs_local

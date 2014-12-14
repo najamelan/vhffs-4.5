@@ -1,0 +1,15 @@
+if INSTALL_FSSYNC
+
+vhffsfssync_masterdir=@TOOLSDIR@
+vhffsfssync_master_SOURCES=vhffsfssync_master.c
+vhffsfssync_master_PROGRAMS=vhffsfssync_master
+vhffsfssync_master_CPPFLAGS=@GLIB2_CFLAGS@
+vhffsfssync_master_LDADD=@GLIB2_LIBS@
+
+vhffsfssync_slavedir=@TOOLSDIR@
+vhffsfssync_slave_SOURCES=vhffsfssync_slave.c
+vhffsfssync_slave_PROGRAMS=vhffsfssync_slave
+vhffsfssync_slave_CPPFLAGS=@GLIB2_CFLAGS@
+vhffsfssync_slave_LDADD=@GLIB2_LIBS@
+
+endif

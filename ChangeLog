@@ -1,0 +1,387 @@
+VHFFS 4.5.0
+	- new VHFFS mail management, with a new, clear, almost perfect database
+	  schema
+	- Now using Data Source Name (DSN) instead of separate fields for host,
+	  port, and database for MySQL and PostgreSQL configuration
+	- all password field changed from crypted-md5 or DES to crypted-SHA-512
+	- updated MySQL patch for Mysql 5.1.73 and MySQL 5.5.40 (Debian Wheezy)
+	- added a patch to add support for dynamic document_root per request in
+	  mod-vhost-hash-alias which is now possible in Apache 2.4
+	- ported TuxFamily kernel patch to Linux 3.2.45
+	- bugfix: don't delete users which are not yet free of groups
+	- API: added get_config() method to easily fetch related object
+	  configuration
+	- updated awstats patches against awstats 6.95 and 7.1
+	- added VHFFS syslogger!, a tool to redirect standard input to syslog
+	- new pure-ftpd patch, altlog to syslog feature added
+	- log_apachectl and log_apachelocal configuration directives are now
+	  replaced to log_postrotate
+	- user hashed passwords and mail hashed passwords are now using the
+	  same hash algorithm, don't ask anymore the user password when
+	  creating the user mailbox and just copy the hash
+	- reload vhffs configuration file if changed while using FastCGI
+	- added a patch to fix a memory leak in suPHP
+	- Improved the way we managed users created by robots. User who succeed
+	  having a validated group or being adding added to an active group are
+	  switched to a validated state which prevent them to be automatically
+	  removed.
+	- sanitize mercurial description data to match .hgrc requirements
+	- bugfix: fixed duplicate backups of group data for group that were not
+	  empty when asked to be deleted
+	- now sending mail to users when objects are successfully created
+	- web and repositories stats (awstats) are now using geoip module
+	  instead of reverse DNS, which is faster and gives better results
+	- now allowing dot '.' char in mailinglist local part.
+	- fixed MediaWiki VHFFS auth plugin, call-time pass-by-reference
+	  has been removed in PHP 4.4
+	- updated patches for pure-ftpd 1.0.36
+	- fixed exim4 example config for PostgreSQL 9.x,
+	  standard_conforming_strings compliance
+	- force scalar context on $cgi->param() where it is necessary to
+	  prevent list context abuse
+	- fixed bug #276, XSS issue with "msg" param
+	- updated apache and courier configurations for Debian Wheezy
+
+VHFFS 4.4.1
+	- Fixed a blocking bug on group creation
+	- Updated some panel strings
+	- ported MySQL patch to 5.1.61
+	- updated ViewVC configuration files for ViewVC 1.1
+	- added missing dependencies in Debian packages
+	- improved history display order on panel
+
+VHFFS 4.4.0
+	- Replaced HTML::Template by Template::Toolkit (which is actually a
+	  mutiple months work)
+	- new panel theme
+	- ported pure-ftpd patch to 1.0.32
+	- added vhffs_webstats tool
+	- fixed listengine mail signature
+	- panel is now FastCGI compliant
+	- archives on all services deletion
+	- cleaned API
+	- cleaned Panel
+	- cleaned Robots
+	- actually cleaned everything (which is also a multiple months work)
+	- updated French translation
+	- and lots of bugs fixed
+
+VHFFS 4.3.1
+	- Fixed PunBB patch so that registered users can post new topics
+	  and removed warning upon account creation
+	- Fixed delete boxes, File::Path::rmtree now checks if it tries to
+	  remove the CWD and aborts
+	- Impoved MySQL patch, now also modify MySQL upgrade and init process
+	  so that you don't need to repair the mysql database after each
+	  upgrade
+	- Public part: don't display anymore a link to archives of a
+	  mailing-list if the mailing-list does not have archives enabled
+	- Fixed mail autoreply patch format
+	- Ensure that vhffs.cong is read using UTF8
+	- Fixed the git robot to use git config instead of git-config
+	- There is a bug about Config::General and the '#' character. We only
+	  need it for the IRC bot, added a workaround to clear the '\' escape
+	  character in the IRC bot
+
+VHFFS 4.3.0
+	- Added information in history about wich user generated which entry
+	- fixed modobot perl 4 syntax
+	- ajaxified the public part
+	- private scm repositories removed from public part display
+	- awstats 6.95 support added
+	- awstats 7.0 support added
+	- modobot backend reconnection support
+	- fixed lang and theme cookies/internal so that user doesn't need to
+	  double refresh to get accurate information
+	- fixed tag request stuff
+	- email contact list display for admins suitable for a cut'n'past in
+	  mutt
+	- added compile time option "-DCHECK" for vhffsfsssync_slave so that
+	  you can run to check if your slave copy is up to date
+	- added mtime support to vhffsfssync
+	- fixed a bug in vhffsfssync when a directory is replaced to a regular
+	  file
+	- using fflush() before futimes() in vhffsfssync to get accurate
+	  results
+	- fixed some replication issues with vhffsfssync
+	- vhffsfsync slave option to preserve owners, groups and permissions
+	- ported lighttpd patchs for 1.4.28
+	- ported pure-ftpd patchs to 1.0.30
+	- ported VFS Linux kernel patch to 2.6.33.*, 2.6.36.*
+	- ported phppgadmin patch to 4.2.3
+	- ported MySQL patch to 5.1.49
+	- ported suPHP patchs to 0.7.1
+	- ported PunBB patchs to 1.3.5
+	- fixed perl 4 syntax in cron_scheduler
+	- reworked a bit cron_scheduler 
+	- rewrote Robots::Mysql
+	- added mercurial support to VHFFS
+	- started bazaar support
+	- removed panel useless stuff, improved a bit the panel CSS
+	- added vhffs-fs clearing mode options
+	- new default permissions for homedir (700) and groupdir (770)
+	- vhffs-fs now does its own permission checking instead of relying on
+	  the buggy fuse default_permission flag
+	- fixed autokill and vhffsfsync for filesystems that do not support
+	  the dirent d_type field
+	- and bugfixes here and here...
+
+VHFFS 4.2.1
+	- Fixed failed release (wrong naming scheme, Constants.pm not updated)
+	- Added compat SQL script to fix a design failure in VHFFS database
+	  (from-4.2.0-to-4.2.1.sql)
+
+VHFFS 4.2.0
+	Again, most of changes have been forgot, there was about 300 commits
+	since 4.1.0
+
+	Here are the most important changes:
+
+	- show waiting time before each object on IRC
+	- statistic data (mainly logs) cannot be read by other projects anymore
+	- new Cron module allowing per project periodical tasks (not fully
+	  tested)
+	- new newsletter module (mail sent to all opted-in hosted people)
+	- projects can now be tagged, by users, moderator or admins (tag level
+	  access control availabel)
+	- new public UI (http://projects.vhffs.org), using ajax but with full
+	  support under non javascript enabled browsers
+	- fixed a bunch of bugs (see bugs.vhffs.org)
+	- added some command line tools (need help to finish them!)
+	- download repositories synchronization tools over network, to dispach
+	  uploaded content to download-servers, optimizing QoS (transparent,
+	  POSIX-compliant, small-files optimized)
+	- media wiki auth plugin using VHFFS users database
+	- global mailing list (for important announces)
+	- GPG support in mails sent from the platform (moderation mail can be
+	  signed)
+	- update of patches for software used by VHFFS (suphp, mysql, etc)
+	- PostgreSQL 8.1 compatibility
+	- Debian packaging
+	- Possibility of captcha
+
+VHFFS 4.1.0
+	Almost everything has been rewritten
+
+	The visibles changements are the new panel interface and the
+	  management of Git repositories
+
+	VHFFS has been autotoolized (Now we regret having done that)
+
+	And so on...
+
+	This release is featuring (in order of appearance): Sébastien Le Ray,
+	  Sylvain Rochet, Samel Lesueur, Bruno Marmier,  Sylvain Vrignaud,
+	  Florent Bayle, Julien Danjou
+
+2008-01-09  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* Makefile.am (SUBDIRS): Add po.
+	(ACLOCAL_AMFLAGS): New variable.
+	(EXTRA_DIST): Add config.rpath, m4/ChangeLog.
+	* configure.ac (AC_CONFIG_FILES): Add po/Makefile.in.
+
+VHFFS 4.0.0
+	Sylvain Rochet
+		- A lot of bugs fixed
+		- Improved listengine archives (using mhonarc)
+		- Improved webstats (history)
+		- Added download repositories
+		- Jabber gateway between vhffsdb and jabberd2
+
+	Sebastien Le Ray
+		- Some bugs and security issues discovered while working 
+		  on vhffs 4.1
+
+	Samuel Lesueur
+		- Proud help on jabber gateway
+		- Added gateway between vhffsdb and punbb
+
+	Sylvain Vrignaud
+		- Some improvements on vhffs-irc
+		- DNS serial conform to YYYYMMDDSS
+		- One of the only user of VHFFS, we call him "bug finder"
+
+	Mickey Mouse
+		- Helped to fan the brains with its ears
+
+	 ... and so on... we forgot a lot of things during these last months :)
+
+
+VHFFS 4.0-pre1
+	Julien:
+	 	- New installer, use now a Makefile
+		- Fix some bugs
+		- Fix a BIG security problem around listengine
+		- checkpackages is fixed
+		- print an error when adatabase connection is not sane
+		- print error when the panel has a problem
+		- svn help use customisable in the vhffs.conf file
+		
+	Christophe Benz:
+		- Fix svn/create/pl string
+		- Fix alert.pl string
+		- Fix intl
+
+
+VHFFS RC10
+	Julien:
+		- Add nospam and novirus directive
+		- Support for anti-spam and anti-virus ( /!\ data definition changes )
+		- Improve build script
+		- Add some tools in vhffs-tools
+		- Modify MailUser to support nospam and novirus directive
+		- Fix bots bugs
+		- Bots uses now lockfiles
+		- Bots now logs error on /var/log/vhffs.log
+		- Begin to release Jabber driver for VHFFS
+		- Add vhffs-modobot (an IRC bot that refuse/accept request on platform
+		  on IRC with chat messages)
+		- Bugfixes on API
+		- Bugfixes on Panel
+		- Bugfixes on bot
+		- Fix MAJOR bug on ACL
+		- Fix bug in parse_httplog robot
+		- Add language support in archives for listengine
+		- Fix bug in postgres/dns admin menu
+		- Add preferences for largefile
+		- Can now view largefile preferences
+		- Can now delete a largefile in the panel
+		- ACL for largefile now works
+		- Admin for largefile works now
+		- Largefile search now works
+		- Moderators can list largefile objects
+		- Add perldoc documentation
+		- Robots uses lockfile only if use_logging are set to "yes" in config
+		  file and lockfile is defined.
+		- Robots use log only if use_logging is set to "yes" in config file
+		  and logfile is defined
+		- Improve install script : vhffs should work on all *nix which runs
+		  perl
+		- Add largefile logo
+		- Update some logos and images for panel
+		- Users and groups can upload avatar (stored in DATADIR/avatar)
+		- Rewrite some public templates
+		- Modify the css file for default
+		- Rewrite the design of the default theme
+		- Create Vhffs::Panel::Avatar perl-module to handle avatars
+		- getavatar.pl page to get avatar for a given object-id
+		- Add show/hide on panel for some menus
+		- In admin, groups for a user is now in a list context, more clean
+		  than lines with <br/> (more standard-compliant)
+		- Admin can now delete avatars for an object (in object admin)
+		- Add use_avatar directive in config file
+		- Add the open directive in the config file
+		- The panel can be closed properly to perform maintainance operations
+		- Add icons for largefile admin menu
+		- Add a robot which collect the used quota
+		- Add a new graphic image which prints the quota for the group
+		- Add perldoc documentation for Vhffs::Panel::Avatar
+		- Add perldoc documentation for Vhffs::Note
+		- Rewrite a part of vhffs-robots, lock and log only if ask in
+		  vhffs.conf
+		- Mailing robot does not send utf-8 messages to hosted
+
+
+
+
+VHFFS RC3
+	Julien:
+	    - add blanked passwords for MySQL (adding security)
+		- add support to change password for mysql
+		- print if a mysql database is under modification in the panel
+		- fix a owner_uid bug in User.pm
+		- cant create now a database which contains the '-' car
+		- add ACL support form Mail Object in the panel
+		- admin can change password of a user now
+		- add delete for mail
+		- enlarge textbox for description in groups
+		- Add support for is_empty in group ( if( $group->is_empty == 1 ) )
+		- Add support for removing union user_group
+		- Fix some MySQL robots in some case
+		- change MySQL passwords. Accept only alphanumeric caracters
+		- fix password for mail, don't use any clear passwd now
+		- finish treat_refused robot
+		- add robot to delete all group
+		- a group must be empty to be delete
+		- send now a mail when an object is moderated
+		- fix barbie theme
+		- fix britney theme
+		- fix Postgres service
+		- add modify_pgsql robot
+		- clean acl code
+		- clean some User code
+		- fix web deletion
+		- begin debian packaging
+		- add description in public area for groups
+		- fix for langages. Now, langages are stored in the preferences of each user in the database
+		- update SVN, fix password, use now encrypted passwd
+		- Sort mail boxes now in mail preferences
+		- Add group in list mail admin
+		- Add list admin
+		- Made phpmyadmin, phppgadmin and stats links not static
+		- Fix a STUPID BUG in admin/user which deny users update
+
+VHFFS RC-2
+	Julien:
+		- add listengine support in panel
+		- fix some robots
+		- fix bug in Object.pm, deny commit when a strange description is set
+		- add functinnality : add admin for dns object 
+		- add some fonctionnalities in stats (dns, cvs, svn, mysql, pgsql  and mail)
+		- Add admin part for subversion
+		- fix some templates calls. Use now
+		  $vhffs->get_config->get_templatedir to get the template directory
+		  according to the configuration file
+		- add admin part for objects (general admin for all objects of Vhffs)
+		- add subversion repository search
+		- add object search in admin part
+		- add admin parts (can commit) for object
+		- add a history link in the menu
+		- add a history menu in the admin object part
+		- add Barbie Theme
+		- add Britney Theme
+		- add support for new Service MailUser which allow a user to manage a
+		  main hosted by directly by VHFFS
+		- add support for MailUser and popboxes
+		- add support for MailUser and forward
+		- add option to delete a User
+		- fix bugs in Vhffs::Panel::Main : a user cannot log in or browse
+		  panel when he is not activated or being deleted
+		- add script to package a cleany full distro of vhffs
+		- add public user profile (
+		  http://panel.vhffs.org/public/user.pl?name=soda )
+		- add public group infos( 
+		   http://panel.vhffs.org/public/group.pl?name=prout )
+		- add public last users and last groups
+		- add RSS files to communicate with others website
+		- change create_group.sql to be compliant with libnss-pgsql
+		- modify Group.pm to be compliant with libnss-pgsql
+		- modify the database to be compliant with myDNS
+		- make myDNS configurations
+		- rewrite 45% of Panel::DNS Services::DNS and Robots::DNS to be
+		  compliant with the new database
+		- add support for NS type for DNS in the Panel
+		- secure remove and adding for DNS in the API
+		- add defaults adding in the DNS. The hoster can define defaults
+		  parameters for hosted domain
+	
+	Sylvain:
+		- implements themes and language
+
+	Florent:
+		- Add some gettext support
+		- Fix a bug like buffer overflow when login
+		- Making create_failed template and changing subscribe_complete.pl to
+		use it (closing bug #0000006)
+		- fix a lot of templates calls
+		- update logo.png on crystal and dark themes
+		- create tuxfamily theme
+		- fix a bug on mysql, pgsql and svn password-length check ("<= 3" instead of "< 3")
+
+	Alexandre
+		- Convert all templates to XHTML (see bug 67 to view avancement...)
+---------
+
+VHFFS RC-1
+	- Initial Release

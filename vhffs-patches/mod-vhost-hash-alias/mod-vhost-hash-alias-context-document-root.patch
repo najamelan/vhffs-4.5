@@ -1,0 +1,38 @@
+diff -Nru a/mod_vhost_hash_alias.c b/mod_vhost_hash_alias.c
+--- a/mod_vhost_hash_alias.c	2005-09-18 12:45:09.000000000 +0000
++++ b/mod_vhost_hash_alias.c	2012-03-10 01:25:36.441968835 +0000
+@@ -39,6 +39,7 @@
+ #endif
+ 
+ #include "httpd.h"
++#include "ap_release.h"
+ #include "http_config.h"
+ #include "http_core.h"
+ #include "http_log.h"
+@@ -810,6 +811,10 @@
+   /* export the virtual document root */
+   apr_table_setn(r->subprocess_env, "SITE_ROOT_HASH", siteroot); 
+   apr_table_setn(r->subprocess_env, "DOCUMENT_ROOT_HASH", docroot); 
++#if ( AP_SERVER_MAJORVERSION_NUMBER > 2 ) || ( AP_SERVER_MAJORVERSION_NUMBER == 2 && AP_SERVER_MINORVERSION_NUMBER > 4 ) || ( AP_SERVER_MAJORVERSION_NUMBER == 2 && AP_SERVER_MINORVERSION_NUMBER == 4 && AP_SERVER_PATCHLEVEL_NUMBER >= 1 )
++  ap_set_context_info(r, NULL, docroot);
++  ap_set_document_root(r, docroot);
++#endif
+ 
+   if (hash_alias_config->debug > 0) {
+     ap_log_rerror(APLOG_MARK, APLOG_NOERRNO|APLOG_NOTICE, 0, r,
+diff -Nru a/TODO b/TODO
+--- a/TODO	2005-09-20 20:21:01.000000000 +0000
++++ b/TODO	2012-03-10 01:24:21.070838753 +0000
+@@ -13,12 +13,6 @@
+ Verify the environnement variables and logs to be sure
+ it support virtualhost like Apache virtual host.
+ 
+-Patch Apache to support dynamic document_root: having a document_root
+-per request will really help to have hash virtual host behave like
+-traditionnal virtual host (with no need to export exotic environment
+-variables). This would also help the plain old mod_vhost_alias which 
+-have the same limitation.
+-
+ Support the same useful option than mod_vhost_alias.
+ 
+ Rewrote mod_rewrite (See you in next episode).

@@ -1,0 +1,19 @@
+<ul>
+<li><a href="?do=admin">[% 'General' | i18n | html %]</a></li>
+<li><a href="?do=adminuserindex">[% 'Users' | i18n | html %]</a></li>
+<li><a href="?do=admingroupindex">[% 'Groups' | i18n | html %]</a></li>
+[% IF panel_header.available_services.web %]<li><a href="?do=adminwebindex">[% 'Web' | i18n | html %]</a></li>[% END %]
+[% IF panel_header.available_services.mysql %]<li><a href="?do=adminmysqlindex">[% 'MySQL' | i18n | html %]</a></li>[% END %]
+[% IF panel_header.available_services.pgsql %]<li><a href="?do=adminpgsqlindex">[% 'PgSQL' | i18n | html %]</a></li>[% END %]
+[% IF panel_header.available_services.cvs %]<li><a href="?do=admincvsindex">[% 'CVS' | i18n | html %]</a></li>[% END %]
+[% IF panel_header.available_services.svn %]<li><a href="?do=adminsvnindex">[% 'SVN' | i18n | html %]</a></li>[% END %]
+[% IF panel_header.available_services.git %]<li><a href="?do=admingitindex">[% 'Git' | i18n | html %]</a></li>[% END %]
+[% IF panel_header.available_services.mercurial %]<li><a href="?do=adminmercurialindex">[% 'Mercurial' | i18n | html %]</a></li>[% END %]
+[% IF panel_header.available_services.bazaar %]<li><a href="?do=adminbazaarindex">[% 'Bazaar' | i18n | html %]</a></li>[% END %]
+[% IF panel_header.available_services.dns %]<li><a href="?do=admindnsindex">[% 'DNS' | i18n | html %]</a></li>[% END %]
+[% IF panel_header.available_services.repository %]<li><a href="?do=adminrepositoryindex">[% 'Dl repos' | i18n | html %]</a></li>[% END %]
+[% IF panel_header.available_services.mail %]<li><a href="?do=adminmailindex">[% 'Mail' | i18n | html %]</a></li>[% END %]
+[% IF panel_header.available_services.mailinglist %]<li><a href="?do=adminmailinglistindex">[% 'ML' | i18n | html %]</a></li>[% END %]
+[% IF panel_header.available_services.cron %]<li><a href="?do=admincronindex">[% 'Crons' | i18n | html %]</a></li>[% END %]
+<li><a href="?do=admintagindex">[% 'Tags' | i18n | html %]</a></li>
+</ul>

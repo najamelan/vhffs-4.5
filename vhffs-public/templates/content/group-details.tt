@@ -1,0 +1,115 @@
+[% title_str = 'Details for group %s' | i18n %]
+<div class="group-details">
+<h1 class="groupname">[% group.realname | html | format(title_str) %]</h1>
+<h2>[% 'General information' | i18n %]</h2>
+[% IF groups_avatar %]
+<img class="group-avatar" src="?do=avatar;oid=[% group.object_id %]"/>
+[% END %]
+<ul>
+<li>[% 'Groupname' | i18n %]: [% group.groupname | html %]</li>
+<li>[% 'Users' | i18n %]:
+[% FOREACH u = group.get_users() %]
+<a href="?do=user;name=[% u.username %]" class="ajax">[% u.username %]</a>[% UNLESS loop.last() %], [% END %]
+[% END %]
+
+</li>
+<li>[% 'Description' | i18n %]:[% group.description | html | html_para %]</li>
+</ul>
+<div class="tags">
+<h2>[% 'Tags' | i18n %]</h2>
+[% IF (tag_categories.size) %]
+<ul class="tags-list">
+[% FOREACH cat = tag_categories %]
+	<li>[% cat.label %]:
+[% FOREACH t = cat.tags %]
+	<a class="ajax" href="?do=tags;search=[% cat.label | uri %]::[% t.label | uri %]">[% t.label %]</a>[% ',' UNLESS loop.last %]
+[% END %]
+	</li>
+[% END %]
+</ul>
+[% ELSE %]
+<p class="info">[% 'No tag for this group' | i18n %]</p>
+[% END %]
+</div>
+<div class="services">
+<h2>[% 'Services' | i18n %]</h2>
+
+[% IF websites.size %]
+<h3>[% 'Websites' | i18n %]</h3>
+<ul class="webareas-info">
+[% FOREACH w = websites %]
+<li>
+<p><a class="webarea-link" href="http://[% w.servername %]">[% w.servername | idn_to_unicode %]</a></p>
+<p>[% w.description | html | html_para %]</p>
+</li>
+[% END %]
+</ul>
+[% END %]
+
+[% IF cvs && cvs.repositories.size %]
+<h3>[% 'CVS Repositories' | i18n %]</h3>
+<ul class="cvs-info">
+[% FOREACH c = cvs.repositories %]
+<li>
+<p><a class="webcvs-link" href="[% cvs.cvs_web_url %]/[% c.cvsroot %]">[% c.cvsroot %]</a></p>
+<p>[% c.description | html | html_para %]</p>
+</li>
+[% END %]
+</ul>
+[% END %]
+
+[% IF svn && svn.repositories.size %]
+<h3>[% 'SVN Repositories' | i18n %]</h3>
+<ul class="svn-info">
+[% FOREACH s = svn.repositories %]
+<li>
+<p><a class="websvn-link" href="[% svn.svn_web_url %]/[% s.reponame %]">[% s.reponame %]</a></p>
+<p>[% s.description | html | html_para %]</p>
+</li>
+[% END %]
+</ul>
+[% END %]
+
+[% IF git && git.repositories.size %]
+<h3>[% 'GIT Repositories' | i18n %]</h3>
+<ul class="git-info">
+[% FOREACH g = git.repositories %]
+<li>
+<p><a class="webgit-link" href="[% git.git_web_url %]/[% g.reponame %]">[% g.reponame %]</a></p>
+<p>[% g.description | html | html_para %]</p>
+</li>
+[% END %]
+</ul>
+[% END %]
+
+[% IF mercurial && mercurial.repositories.size %]
+<h3>[% 'Mercurial Repositories' | i18n %]</h3>
+<ul class="mercurial-info">
+[% FOREACH m = mercurial.repositories %]
+<li>
+<p><a class="webmercurial-link" href="[% mercurial.mercurial_web_url %]/[% m.reponame %]">[% m.reponame %]</a></p>
+<p>[% m.description | html | html_para %]</p>
+</li>
+[% END %]
+</ul>
+[% END %]
+
+[% IF ml && ml.lists.size %]
+<h3>[% 'Mailing Lists' | i18n %]</h3>
+<ul class="ml-info">
+[% FOREACH list = ml.lists %]
+<li>
+[% IF list.open_archive %]
+<p><a class="list-archives-link" href="[% ml.archives_url %]/[% list.domain %]/[% list.localpart %]">
+	[% list.listname | mail %]</a></p>
+[% ELSE %]
+<p>[% list.listname | mail %]</p>
+[% END %]
+<p>[% list.description | html | html_para %]</p>
+</li>
+[% END %]
+</ul>
+[% END %]
+
+</div>
+</div>

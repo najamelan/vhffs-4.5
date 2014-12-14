@@ -1,0 +1,63 @@
+#!%PERL%
+
+use strict;
+use lib '%VHFFS_LIB_DIR%';
+use Vhffs::User;
+use Vhffs;
+use Vhffs::Constants;
+use Term::ReadPassword;
+use Vhffs::Functions;
+my $vhffs = new Vhffs;
+
+my ($username, $password, $conf_password, $access_level, $mail, $firstname, $lastname, $city, $zipcode, $country, $address);
+
+print 'Username: ';
+chomp($username = <STDIN>);
+while(1) {
+	$password = read_password('Password: ');
+	$conf_password = read_password('Password (confirm): ');
+	if($password ne $conf_password) {
+		print "Password mismatch\n";
+		redo;
+	}
+	last;
+}
+
+while(1) {
+	print 'Is this user an [A]dministrator/[M]oderator/[R]egular user ? ';
+	my $answer;
+	chomp($answer = <STDIN>);
+	$access_level = Vhffs::Constants::USER_NORMAL if($answer eq 'R');
+	$access_level = Vhffs::Constants::USER_MODERATOR if($answer eq 'M');
+	$access_level = Vhffs::Constants::USER_ADMIN if($answer eq 'A');
+	unless(defined $access_level) {
+		print "Invalid access level\n";
+		redo;
+	}
+	last;
+}
+
+print 'Email address: ';
+chomp($mail = <STDIN>);
+print 'Firstname: ';
+chomp($firstname = <STDIN>);
+print 'Lastname: ';
+chomp($lastname = <STDIN>);
+print 'City: ';
+chomp($city = <STDIN>);
+print 'Zipcode: ';
+chomp($zipcode = <STDIN>);
+print 'Country: ';
+chomp($country = <STDIN>);
+print 'Address: ';
+chomp($address = <STDIN>);
+
+my $user = Vhffs::User::create( $vhffs, $username, $password, $access_level, $mail, $firstname, $lastname, $city, $zipcode, $country, $address, undef, undef);
+
+
+if(defined $user) {
+	print "User successfully created, setting default ACL\n";
+} else {
+	print "Unable to create user (duplicate ?)\n";
+}
+

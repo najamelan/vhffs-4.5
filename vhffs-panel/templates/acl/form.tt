@@ -1,0 +1,10 @@
+<h2>[% 'Access rights management for this object' | i18n | html %]</h2>
+
+<form method="post" action="?do=acl;oid=[% object.get_oid %]" accept-charset="utf-8">
+	<p>[% 'You can adjust rights on this group for each user in the VHFFS database. Please read help before manage it.' | i18n | html %]</p>
+	<input type="hidden" name="oid" value="[% object.get_oid %]" />
+	<p class="button" id="buttonAclAdmin">
+		<input type="submit" value="[% 'OK, go to ACL management' | i18n | html %]" />
+	</p>
+</form>
+

@@ -1,0 +1,5 @@
+<ul>
+<li><a href="?do=stats">[% 'Get statistics' | i18n | html %]</a></li>
+<li><a href="?do=moderation">[% 'Moderation' | i18n | html %]</a></li>
+<li><a href="?do=admintagindex">[% 'Tags' | i18n | html %]</a></li>
+</ul>

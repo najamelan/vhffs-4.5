@@ -1,0 +1,23 @@
+<VirtualHost *:80>
+	ServerAdmin adm@domain.tld
+	ServerName panel.your.host
+	DocumentRoot /usr/share/vhffs/panel/
+	DirectoryIndex index.pl
+
+	<Directory /usr/share/vhffs/panel/>
+		AllowOverride None
+		Options ExecCGI
+		Order allow,deny
+		Allow from all
+		AddHandler cgi-script .pl
+	</Directory>
+
+	ErrorLog /var/log/apache2/panel-error.log
+
+	# Possible values include: 
+	#   debug, info, notice, warn, error, crit, alert, emerg
+	LogLevel warn
+
+	CustomLog /var/log/apache2/panel-access.log combined
+	ServerSignature On
+</VirtualHost>

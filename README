@@ -1,0 +1,41 @@
+VHFFS README
+-----------
+
+Installation Guide
+
+http://www.vhffs.org/doc:installationguide
+
+
+Upgrade Guide from VHFFS 4.4.x
+
+http://www.vhffs.org/doc:installationguide:upgrade-from-4.4
+
+
+Please also read content in vhffs-doc/ directory. It contains useful 
+documentation and configuration templates to install or admin VHFFS.
+
+
+Need help ?
+
+* Mailing list: vhffs@vhffs.org 
+  - You have to subcribe to the mailing list by sending a message with 
+    the subject "subscribe" to vhffs-request@vhffs.org
+  - Then you can post a message to the mailing by sending a mail to
+    vhffs@vhffs.org
+  - Archives are available on:
+    http://listengine.tuxfamily.org/vhffs.org/vhffs/
+
+* IRC: server irc.tuxfamily.org, #vhffs channel
+
+
+Want to contribute ?
+
+* Mailing list: vhffs-dev@vhffs.org 
+  - You have to subcribe to the mailing list by sending a message with 
+    the subject "subscribe" to vhffs-dev-request@vhffs.org
+  - Then you can post a message to the mailing by sending a mail to
+    vhffs-dev@vhffs.org
+  - Archives are available on:
+    http://listengine.tuxfamily.org/vhffs.org/vhffs-dev/
+
+* IRC: server irc.tuxfamily.org, #vhffs channel

@@ -1,0 +1,25 @@
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p>
+		<label>[% 'Object type:' | i18n | html %]</label>
+            [% object.get_type | stringify_type | html %]
+	</p>
+	<p>
+		<label>[% 'Object name:' | i18n | html %]</label>
+            [% object.get_label | html %]
+	</p>
+	<p>
+		<label>[% 'Reason of refusal:' | i18n | html %]</label>
+            [% object.get_refuse_reason | html %]
+	</p>
+	<p>
+		<label for="description">[% 'New description:' | i18n | html %]</label>
+		<textarea name="description" id="description" cols="45" rows="7">[% object.get_description | html %]</textarea>
+	</p>
+[% IF has_public_area %]
+	<p>[% 'Please consider that this description is going to be displayed in the public area. So you have to write it in impersonal form. You should take care to write it with correct grammar and tenses. Take all the time you need to fill it with the best content you are able to do.' | i18n | html %]</p>
+[% END %]
+	<input type="hidden" name="oid" value="[% object.get_oid %]" />
+	<p class="button" id="buttonSend">
+		<input type="submit" value="[% 'Update' | i18n | html %]" name="submitted" />
+	</p>
+</form>

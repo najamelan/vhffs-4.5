@@ -1,0 +1,3 @@
+etc/vhffs/vhffs.conf.dist
+etc/vhffs/vhffs.conf
+usr/share/vhffs/backend/initdb.sql

@@ -1,0 +1,23 @@
+<!-- HEADER -->
+
+    <!-- Sitename -->
+	<div class="site-name">
+
+        <img src="/themes/[% theme %]/img/vhffs.png" alt="Virtual Hosting For Free Software"/>
+    </div>
+
+ 	<!-- Flag navigations -->
+    <div class="navflag">
+[% FOREACH l IN languages %]
+        <a href="/?lang=[% l | html %]"><img src="/themes/[% theme %]/img/[% l | html %].png" alt="[% l %]"/></a>
+[% END %]
+    </div>			
+
+    <!-- Navigation Level 1 -->
+
+    <div class="nav1">
+        <a href="http://bugs.vhffs.org/">[% 'Report a bug' | i18n %]</a>
+        <a href="[% help_url %]">[% 'Help' | i18n %]</a>
+        <a href="[% panel_url %]">[% 'Log in' | i18n %]</a>
+    </div>			
+

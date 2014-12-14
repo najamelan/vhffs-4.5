@@ -1,0 +1,12 @@
+<div id="top-menu">
+[% IF panel_header.admin_menu %]
+    [% IF current_user.is_admin() %]
+        [% INCLUDE 'menu/admin.tt' %]
+    [% ELSIF current_user.is_moderator() %]
+        [% INCLUDE 'menu/moderator.tt' %]
+    [% END %]
+[% ELSIF current_group %]
+    [% INCLUDE 'menu/group.tt' %]
+[% END %]
+  <div class="clear"></div>
+</div>
