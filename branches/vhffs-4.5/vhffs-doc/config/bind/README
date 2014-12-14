@@ -1,0 +1,2 @@
+For this config to work, you have to compile bind with
+--with-dlz-postgres=yes

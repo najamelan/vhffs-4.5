@@ -1,0 +1,30 @@
+<form method="post" action="#" class="shortLabel" accept-charset="utf-8">
+	<p>
+		<label>[% 'Group owning this cron job:' | i18n | html %]</label>
+		[% group.get_groupname | html %]
+	</p>
+	<p>
+		<label for="cron_path">[% 'Path:' | i18n | html %]</label>
+		/home/[% group.get_groupname | html %]/<input type="text" name="cronpath" id="cronpath" value="[% cronpath | html %]"/>
+		[% 'Absolute path of the command to run' | i18n | html %]
+	</p>
+	<p>
+		<label for="cron_interval">[% 'Interval:' | i18n | html %]</label>
+		<input type="text" name="interval" id="interval" value="[% interval | html %]"/>
+		[% 'In minutes, at which interval this cron should be started, the minimum interval is set to %d minutes' | i18n | pretty_print(default_interval) | html %]
+	</p>
+	<p>
+		<label for="cron_reportmail">[% 'Mail to:' | i18n | html %]</label>
+		<input type="text" name="reportmail" id="reportmail" value="[% reportmail | html %]"/>
+		[% 'Email to which send a report if something goes wrong' | i18n | html %]
+	</p>
+	<p>
+		<label for="description">[% 'Description:' | i18n | html %]
+		</label>
+		<textarea name="description" id="description" cols="45" rows="7">[% description | html %]</textarea>
+	</p>
+	<p class="button" id="buttonSend">
+		<input type="hidden" name="group" value="[% group.get_groupname %]" />
+		<input type="submit" value="[% 'Send' | i18n | html %]" name="cron_submit"/>
+	</p>
+</form>

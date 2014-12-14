@@ -1,0 +1,13 @@
+vhffs_list:
+	driver = pipe
+	command = VHFFS_LISTENGINE_SCRIPT bounce ${lc:$local_part} ${lc:$domain}
+	current_directory = VHFFS_LISTENGINE_HOME
+	user = VHFFS_LISTENGINE_UID
+
+vhffs_list_request:
+	driver = pipe
+	command = VHFFS_LISTENGINE_SCRIPT request ${lc:$local_part} ${lc:$domain}
+	current_directory = VHFFS_LISTENGINE_HOME
+	home_directory = VHFFS_LISTENGINE_HOME
+	user = VHFFS_LISTENGINE_UID
+	group = VHFFS_LISTENGINE_GID

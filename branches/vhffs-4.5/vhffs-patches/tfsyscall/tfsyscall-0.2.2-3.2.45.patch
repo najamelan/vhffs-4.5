@@ -1,0 +1,142 @@
+diff -Nru a/fs/namei.c b/fs/namei.c
+--- a/fs/namei.c	2013-05-16 21:35:38.454024430 +0000
++++ b/fs/namei.c	2013-05-16 21:36:02.745659506 +0000
+@@ -2029,6 +2029,13 @@
+ 		return -EACCES;	/* shouldn't it be ENOSYS? */
+ 	mode &= S_IALLUGO;
+ 	mode |= S_IFREG;
++	// TF PATCH: forces 00400, clear 07002
++	if( current_uid() >= 10000 && current_gid() >= 10000 ) {
++		mode &= ~07002;
++		mode |= 00400;
++	}
++	// TF PATCH: END
++
+ 	error = security_inode_create(dir, dentry, mode);
+ 	if (error)
+ 		return error;
+@@ -2701,6 +2708,13 @@
+ 		return -EPERM;
+ 
+ 	mode &= (S_IRWXUGO|S_ISVTX);
++	// TF PATCH: forces 02700, clear 05002
++	if( current_uid() >= 10000 && current_gid() >= 10000 ) {
++		mode &= ~05002;
++		mode |= 02700;
++	}
++	// TF PATCH: END
++
+ 	error = security_inode_mkdir(dir, dentry, mode);
+ 	if (error)
+ 		return error;
+diff -Nru a/fs/open.c b/fs/open.c
+--- a/fs/open.c	2013-05-16 21:35:38.470024189 +0000
++++ b/fs/open.c	2013-05-16 21:36:02.753659385 +0000
+@@ -493,6 +493,19 @@
+ 	error = security_path_chmod(path->dentry, path->mnt, mode);
+ 	if (error)
+ 		goto out_unlock;
++
++	// TF PATCH: forces 02700 on dir, 00400 on files, remove 05002 on dir, remove 07002 on files
++	if( inode->i_uid >= 10000 && inode->i_gid >= 10000 ) {
++		if( S_ISREG(inode->i_mode) ) {
++			mode &= ~07002;
++			mode |= 00400;
++		} else if ( S_ISDIR(inode->i_mode) ) {
++			mode &= ~05002;
++			mode |= 02700;
++		}
++	}
++	// TF PATCH: end
++
+ 	newattrs.ia_mode = (mode & S_IALLUGO) | (inode->i_mode & ~S_IALLUGO);
+ 	newattrs.ia_valid = ATTR_MODE | ATTR_CTIME;
+ 	error = notify_change(path->dentry, &newattrs);
+@@ -1008,7 +1021,7 @@
+ }
+ EXPORT_SYMBOL(file_open_root);
+ 
+-long do_sys_open(int dfd, const char __user *filename, int flags, int mode)
++long old_do_sys_open(int dfd, const char __user *filename, int flags, int mode)
+ {
+ 	struct open_flags op;
+ 	int lookup = build_open_flags(flags, mode, &op);
+@@ -1033,6 +1046,78 @@
+ 	return fd;
+ }
+ 
++long do_sys_open(int dfd, const char __user *filename, int flags, int mode)
++{
++	long fd;
++	struct file *f;
++	struct dentry *d;
++	struct inode *inode;
++	struct group_info *gi;
++	long ngroups,i,j;
++
++	fd = old_do_sys_open( dfd , filename , flags , mode );
++
++// TF PATCH: enforce group permission, disallow groups to open files of other groups
++	if( fd < 0 )
++		return fd;
++
++	if( current_uid() < 10000 && current_gid() < 10000 )
++		return fd;
++
++	f = fget( fd );
++	if( f == NULL )  {
++		sys_close( fd );
++		return -EACCES;
++	}
++
++	d = f->f_dentry;
++	if( d == NULL )  {
++		fput( f );
++		sys_close( fd );
++		return -EACCES;
++	}
++
++	inode = d->d_inode;
++	if( inode == NULL )  {
++		fput( f );
++		sys_close( fd );
++		return -EACCES;
++	}
++
++	/* allow open() on system files */
++	if( inode->i_uid < 10000 && inode->i_gid < 10000 )  {
++		fput( f );
++		return fd;
++	}
++
++	/* allow open() if the user or group of file is either the current user or the current group */
++	if( inode->i_gid == current_gid() || inode->i_uid == current_uid() )  {
++		fput( f );
++		return fd;
++	}
++
++	/* if not check if the file belong to one of the user group */
++	gi = get_current_groups();
++	ngroups = gi->ngroups;
++	for( i = 0 ; i < gi->nblocks ; i++)  {
++		long cp_count = min( (long)NGROUPS_PER_BLOCK, ngroups );
++		for( j = 0 ; j < cp_count ; j++ )  {
++			if( gi->blocks[i][j] == inode->i_gid )  {
++				put_group_info( gi );
++				fput( f );
++				return fd;
++			}
++		}
++		ngroups -= NGROUPS_PER_BLOCK;
++	}
++	put_group_info( gi );
++
++	fput( f );
++	sys_close( fd );
++	return -EACCES;
++// TF PATCH: end
++}
++
+ SYSCALL_DEFINE3(open, const char __user *, filename, int, flags, int, mode)
+ {
+ 	long ret;

@@ -1,0 +1,9 @@
+    <div class="logo">
+    </div>
+
+    <div class="misc" id="misc">
+        <h1>[% 'Platform temporary closed' | i18n | html %]</h1>
+    </div>
+    <div class="explain">
+        [% 'This platform is temporary closed. Administrators are performing some maintenances tasks or system encountered database error. Please come back in a few minutes to log in.' | i18n | html %]
+    </div>

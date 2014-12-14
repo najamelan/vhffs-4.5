@@ -1,0 +1,31 @@
+#!%PERL% -w
+# Adds boxes in command line (for batch imports)
+# Takes domain name, local part and clear text password
+# as arguments.
+# Die if something goes wrong.
+# Dedicated to Samuel Lesueur :-)
+
+use strict;
+
+use lib '%VHFFS_LIB_DIR%';
+
+use Vhffs;
+use Vhffs::Functions;
+use Vhffs::Group;
+use Vhffs::Services::Mail;
+use Vhffs::User;
+
+my $vhffs = new Vhffs;
+
+die("Usage $0 maildomain localpart password\n") unless(@ARGV == 3);
+
+my $domain = Vhffs::Services::Mail::get_by_mxdomain( $vhffs, $ARGV[0] );
+die 'Invalid domain specified ('.$ARGV[0].')' unless(defined $domain);
+
+my $rval = $domain->add_box($ARGV[1], $ARGV[2]);
+die( 'Invalid address' )	 if($rval == -1);
+die( 'Address already exists' )  if( $rval == -2 );
+die( 'Error while adding box' )  if( $rval == -3 );
+
+print "$ARGV[1]\@$ARGV[2] added. Do not forget to launch mail_createboxes.pl\n";
+

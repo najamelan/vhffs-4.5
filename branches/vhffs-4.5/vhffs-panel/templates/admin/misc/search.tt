@@ -1,0 +1,4 @@
+<h1>[% search_title | html %]</h1>
+<form method="post" action="?do=[% type %]search" accept-charset="utf-8">
+    <p><input type="text" name="name"/><input type="submit" value="[% 'Search' | i18n | html %]"/></p>
+</form>

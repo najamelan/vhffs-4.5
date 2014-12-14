@@ -1,0 +1,38 @@
+diff -Nru a/src/ftpd.c b/src/ftpd.c
+--- a/src/ftpd.c	2012-03-16 01:01:37.000000000 +0000
++++ b/src/ftpd.c	2014-07-06 20:20:03.431859686 +0000
+@@ -2588,9 +2588,20 @@
+ # endif
+     if (st2.st_ino == root_st_ino && st2.st_dev == root_st_dev) {
+         mode |= 0700;
+-    } else if (be_customer_proof != 0) {
+-        mode |= (S_ISDIR(st2.st_mode) ? 0700 : 0600);
+     }
++
++// TF PATCH: forces 02700 on dir, 00400 on files, remove 05002 on dir, remove 07002 on files
++    else if (be_customer_proof != 0) {
++	if( S_ISDIR(st2.st_mode) ) {
++		mode &= 02775;
++	        mode |= 02700;
++	} else {
++		mode &= 00775;
++	        mode |= 00400;
++	}
++    }
++// TF PATCH: end
++
+     if (fchmod(fd, mode) < 0 && chmod(name, mode) < 0) {
+         failure:
+         if (fd != -1) {
+@@ -3492,6 +3503,11 @@
+ #endif
+         error(550, MSG_MKD_FAILURE);
+     } else {
++
++	// TF PATCH: force SGID upon creation of directories
++	chmod(name, (mode_t) (02777 & ~u_mask_d) );
++	// TF PATCH: end
++
+         addreply(257, "\"%s\" : " MSG_MKD_SUCCESS, name);
+ #ifndef MINIMAL
+         cwd_failures = 0UL;

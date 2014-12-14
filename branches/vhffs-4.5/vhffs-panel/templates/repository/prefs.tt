@@ -1,0 +1,30 @@
+<h2>[% repository.get_name | html %]</h2>
+
+<div class="info_quota">
+	<p>[% 'Quota (used/total): %d/%dMB' | i18n | pretty_print(repository.get_quota_used, repository.get_quota) | html %] &#8212;
+        <span class="quota">
+            <span class="quota-used" style="width:[% (repository.get_quota_used / repository.get_quota * 100) | format('%d') %]%" title="[% (repository.get_quota_used / repository.get_quota * 100) | format('%.2f') %]%"></span>
+        </span>
+	</p>
+</div>
+
+[% INCLUDE 'acl/form.tt' 
+    object = repository %]
+
+[% INCLUDE 'object/delete.tt'
+    type = 'repository'
+    oid = repository.get_oid %]
+
+[% IF current_user.is_admin %]
+    [% INCLUDE 'admin/object/edit.tt' 
+        object = repository %]
+
+    <h2>[% 'Repository quota' | i18n | html %]</h2>
+    <form class="table-like" method="post" action="#">
+        <input type="hidden" name="name" value="[% repository.get_name | html %]"/>
+        <p><label>[% 'Space used:' | i18n | html %]</label>[% repository.get_quota_used %]/[% repository.get_quota %]&#160;[% 'MB' | i18n | html %]</p>
+        <p><label for="new_quota">[% 'New quota:' | i18n | html %]</label>
+            <input type="text" name="new_quota" id="new_quota" value="[% repository.get_quota %]"/>&#160;[% 'MB' | i18n | html %]</p>
+        <p><input type="submit" name="update_quota_submit" value="[% 'Update quota' | i18n | html %]"/></p>
+    </form>
+[% END %]

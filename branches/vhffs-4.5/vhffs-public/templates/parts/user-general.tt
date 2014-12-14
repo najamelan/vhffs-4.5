@@ -1,0 +1,15 @@
+<h2 class="username">[% u.username | html%]</h2>
+<div class="user-info">
+[% IF users_avatar %]
+<img class="user-avatar" src="?do=avatar;oid=[% u.object_id %]"/>
+[% END %]
+<ul>
+<li>[% 'First name' | i18n %]: [% u.firstname | html %]</li>
+<li>[% 'Last name' | i18n %]: [% u.lastname | html %]</li>
+<li>[% 'Groups' | i18n %]: 
+[% FOREACH ug = u.groups %]
+<a href="?do=group;name=[% ug | html %]" class="ajax">[% ug | html %]</a>[% ', ' UNLESS loop.last() %]
+[% END %]
+</li>
+</ul>
+</div>

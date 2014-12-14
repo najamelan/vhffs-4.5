@@ -1,0 +1,39 @@
+// This will enable bind DLZ to serve VHFFS handled domains
+
+// Queries are:
+//   - check if we handle a domain
+//   - get info for non NS/SOA records
+//   - get info for NS/SOA records
+//   - get info for all records
+//   - check if a client is allowed to do transfers (not handled by VHFFS).
+
+dlz "postgres zone" {
+   database "postgres 2
+   {host=sql port=5432 dbname=vhffs user=fillme password=fillme}
+   {select dns.domain from vhffs_dns dns inner join vhffs_object o on(o.object_id = dns.object_id) where dns.domain = '%zone%' and o.state = 6 }
+   {select rr.ttl, rr.type, case
+     when rr.type='TXT' then E'\"' || replace(replace(rr.data, E'\\', E'\\\\'), E'\"', E'\\\"') || E'\"'
+     when rr.type='MX' OR rr.type='SRV' then rr.aux || ' ' || rr.data
+     else rr.data
+     end from vhffs_dns_rr rr inner join vhffs_dns dns on (dns.dns_id = rr.zone)
+        where dns.domain = '%zone%' and name = case when '%record%'='@' then '' else '%record%' end
+        and type != 'NS'}
+   {(select dns.ttl, 'SOA', dns.ns || ' ' || dns.mbox || ' ' || dns.serial || ' ' || dns.refresh ||
+        ' ' || dns.retry || ' ' || dns.expire || ' ' ||  dns.minimum::text
+        from vhffs_dns dns where domain = '%zone%')
+    union
+    (select rr.ttl, rr.type, rr.data from vhffs_dns_rr rr inner join vhffs_dns dns on (dns.dns_id = rr.zone)
+        where dns.domain = '%zone%' AND type = 'NS')}
+   {(select dns.ttl, 'SOA', '%zone%' || '.' , dns.ns || ' ' || dns.mbox || ' ' || dns.serial || ' ' || dns.refresh ||
+        ' ' || dns.retry || ' ' || dns.expire || ' ' ||  dns.minimum::text
+        from vhffs_dns dns where domain = '%zone%')
+    union
+    (select rr.ttl, rr.type, rr.name || case
+        when rr.name='' then '' else '.' end || '%zone%' || '.', case
+     when rr.type='TXT' then E'\"' || replace(replace(rr.data, E'\\', E'\\\\'), E'\"', E'\\\"') || E'\"'
+     when rr.type='MX' OR rr.type='SRV' then rr.aux || ' ' || rr.data
+     else rr.data
+     end from vhffs_dns_rr rr inner join vhffs_dns dns on (dns.dns_id = rr.zone)
+        where dns.domain = '%zone%')}
+   {select '%zone%' where '%client%' IN ('IPs', 'of', 'slaves')}";
+};

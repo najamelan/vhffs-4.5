@@ -1,0 +1,38 @@
+[% USE date %]
+<h1>[% 'Mailings to hosted people' | i18n | html %]</h1>
+
+[% IF mailings.size() %]
+<table>
+<thead>
+    <tr>
+        <th>[% 'Date' | i18n | html %]</th>
+        <th>[% 'Subject' | i18n | html %]</th>
+        <th>[% 'Body' | i18n | html %]</th>
+        <th>[% 'State' | i18n | html %]</th>
+        <th>[% 'Action' | i18n | html %]</th>
+    </tr>
+</thead>
+<tbody>
+[% FOREACH m IN mailings %]
+<tr>
+	<td>[% date.format(m.date, '%x') %]</td>
+	<td>[% m.subject | html %]</td>
+    <td class="mainColumn">[% m.body | truncate(200) | html_para %]</td>
+	<td>[% m.state %]</td>
+	<td>
+		<form method="post" action="?do=broadcastdelete;mid=[% m.id %]" accept-charset="utf-8">
+			<p><input type="hidden" name="mid" value="[% m.id %]" />
+			<input type="submit" value="[% 'Delete' | i18n | html %]" /></p>
+		</form>
+		<form method="post" action="?do=broadcastview;mid=[% m.id %]" accept-charset="utf-8">
+			<p><input type="hidden" name="mid" value="[% m.id %]" />
+			<input type="submit" value="[% 'View' | i18n | html %]" /></p>
+		</form>
+	</td>
+</tr>
+[% END %]
+</tbody>
+</table>
+[% ELSE %]
+<p>[% 'No mailing recorded.' | i18n | html %]</p>
+[% END %]

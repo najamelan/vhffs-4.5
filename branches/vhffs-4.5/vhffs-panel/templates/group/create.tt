@@ -1,0 +1,43 @@
+<form class="table-like" method="post" action="?do=groupcreate" accept-charset="utf-8">
+	<p>
+		<label>[% 'Owner:' | i18n | html %]
+		</label>
+        [% owner | i18n | html %]
+	</p>
+	<p>
+		<label for="project_name">[% 'Project name:' | i18n | html %]</label>
+		<input type="text" size="12" maxlength="12" name="project_name" id="project_name" value="[% groupname | html %]"/>
+		[% 'only lowercase alphanumerical letters, no space, from 3 to 12 characters' | i18n | html %]
+	</p>
+	<p>
+		<label for="realname">[% 'Project full name:' | i18n | html %]</label>
+		<input type="text" size="30" maxlength="100" name="realname" id="realname" value="[% realname | html %]"/>
+	</p>
+	<p>
+		<label for="description">[% 'Description:' | i18n | html %]</label>
+		<textarea name="description" id="description" cols="45" rows="7">[% description | html %]</textarea>
+	</p>
+[% IF public_part_available %]
+	<p>
+        [% 'Please consider that this description is going to be displayed in the public area. So you have to write it in impersonal form. You should take care to write it with correct grammar and tenses. Take all the time you need to fill it with the best content you are able to do.' | i18n | html %]
+	</p>
+[% END %]
+[% IF tag_categories.size() %]
+	<p class="info">
+        [% 'You can chose some tags to be applied to your group right now. More tags will be available in your project\'s preferences once it is created.' | i18n %]
+	</p>
+	<ul>
+    [% FOREACH c IN tag_categories %]
+		<li>[% c.label %]:
+        [% FOREACH t IN c.tags %]
+			<input type="checkbox" name="tags" value="[% t.tag_id %]" id="tag_[% t.tag_id %]"/>&#160;<label class="checkbox" for="tag_[% t.tag_id %]">[% t.label | html %]</label>[% ', ' UNLESS loop.last() %]
+        [% END %]
+        [% loop.last() ? '.' : ';' %]
+		</li>
+    [% END %]
+	</ul>
+[% END %]
+	<p class="button"  id="buttonSend">
+		<input type="submit" value="[% 'Send' | i18n %]" name="project_submit"/>
+	</p>
+</form>

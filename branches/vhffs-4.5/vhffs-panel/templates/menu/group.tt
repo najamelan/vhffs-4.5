@@ -1,0 +1,90 @@
+<ul>
+<li><a href="#">[% 'Project' | i18n | html %]</a>
+  <ul>
+    <li><a href="?do=groupview;group=[% current_group.get_groupname %]">[% 'Home' | i18n | html %]</a></li>
+    <li><a href="?do=groupprefs;group=[% current_group.get_groupname %]">[% 'Preferences' | i18n | html %]</a></li>
+  </ul>
+</li>
+<li><a href="#">[% 'Services' | i18n | html %]</a>
+  <ul>
+    [% IF panel_header.available_services.web %]<li><a href="?do=webindex;group=[% current_group.get_groupname %]">[% 'Web' | i18n | html %]</a>
+      <ul>
+        <li><a href="?do=webindex;group=[% current_group.get_groupname %]">[% 'List' | i18n | html %]</a></li>
+        <li><a href="?do=webcreate;group=[% current_group.get_groupname %]">[% 'Create' | i18n | html %]</a></li>
+      </ul>
+    </li>[% END %]
+    [% IF panel_header.available_services.mysql %]<li><a href="?do=mysqlindex;group=[% current_group.get_groupname %]">[% 'MySQL' | i18n | html %]</a>
+      <ul>
+        <li><a href="?do=mysqlindex;group=[% current_group.get_groupname %]">[% 'List' | i18n | html %]</a></li>
+        <li><a href="?do=mysqlcreate;group=[% current_group.get_groupname %]">[% 'Create' | i18n | html %]</a></li>
+      </ul>
+    </li>[% END %]
+    [% IF panel_header.available_services.pgsql %]<li><a href="?do=pgsqlindex;group=[% current_group.get_groupname %]">[% 'PgSQL' | i18n | html %]</a>
+      <ul>
+        <li><a href="?do=pgsqlindex;group=[% current_group.get_groupname %]">[% 'List' | i18n | html %]</a></li>
+        <li><a href="?do=pgsqlcreate;group=[% current_group.get_groupname %]">[% 'Create' | i18n | html %]</a></li>
+      </ul>
+    </li>[% END %]
+    [% IF panel_header.available_services.cvs %]<li><a href="?do=cvsindex;group=[% current_group.get_groupname %]">[% 'CVS' | i18n | html %]</a>
+      <ul>
+        <li><a href="?do=cvsindex;group=[% current_group.get_groupname %]">[% 'List' | i18n | html %]</a></li>
+        <li><a href="?do=cvscreate;group=[% current_group.get_groupname %]">[% 'Create' | i18n | html %]</a></li>
+      </ul>
+    </li>[% END %]
+    [% IF panel_header.available_services.svn %]<li><a href="?do=svnindex;group=[% current_group.get_groupname %]">[% 'SVN' | i18n | html %]</a>
+      <ul>
+        <li><a href="?do=svnindex;group=[% current_group.get_groupname %]">[% 'List' | i18n | html %]</a></li>
+        <li><a href="?do=svncreate;group=[% current_group.get_groupname %]">[% 'Create' | i18n | html %]</a></li>
+      </ul>
+    </li>[% END %]
+    [% IF panel_header.available_services.git %]<li><a href="?do=gitindex;group=[% current_group.get_groupname %]">[% 'Git' | i18n | html %]</a>
+      <ul>
+        <li><a href="?do=gitindex;group=[% current_group.get_groupname %]">[% 'List' | i18n | html %]</a></li>
+        <li><a href="?do=gitcreate;group=[% current_group.get_groupname %]">[% 'Create' | i18n | html %]</a></li>
+      </ul>
+    </li>[% END %]
+    [% IF panel_header.available_services.mercurial %]<li><a href="?do=mercurialindex;group=[% current_group.get_groupname %]">[% 'Mercurial' | i18n | html %]</a>
+      <ul>
+        <li><a href="?do=mercurialindex;group=[% current_group.get_groupname %]">[% 'List' | i18n | html %]</a></li>
+        <li><a href="?do=mercurialcreate;group=[% current_group.get_groupname %]">[% 'Create' | i18n | html %]</a></li>
+      </ul>
+    </li>[% END %]
+    [% IF panel_header.available_services.bazaar %]<li><a href="?do=bazaarindex;group=[% current_group.get_groupname %]">[% 'Bazaar' | i18n | html %]</a>
+      <ul>
+        <li><a href="?do=bazaarindex;group=[% current_group.get_groupname %]">[% 'List' | i18n | html %]</a></li>
+        <li><a href="?do=bazaarcreate;group=[% current_group.get_groupname %]">[% 'Create' | i18n | html %]</a></li>
+      </ul>
+    </li>[% END %]
+    [% IF panel_header.available_services.dns %]<li><a href="?do=dnsindex;group=[% current_group.get_groupname %]">[% 'DNS' | i18n | html %]</a>
+      <ul>
+        <li><a href="?do=dnsindex;group=[% current_group.get_groupname %]">[% 'List' | i18n | html %]</a></li>
+        <li><a href="?do=dnscreate;group=[% current_group.get_groupname %]">[% 'Create' | i18n | html %]</a></li>
+      </ul>
+    </li>[% END %]
+    [% IF panel_header.available_services.repository %]<li><a href="?do=repositoryindex;group=[% current_group.get_groupname %]">[% 'Dl repos' | i18n | html %]</a>
+      <ul>
+        <li><a href="?do=repositoryindex;group=[% current_group.get_groupname %]">[% 'List' | i18n | html %]</a></li>
+        <li><a href="?do=repositorycreate;group=[% current_group.get_groupname %]">[% 'Create' | i18n | html %]</a></li>
+      </ul>
+    </li>[% END %]
+    [% IF panel_header.available_services.mail %]<li><a href="?do=mailindex;group=[% current_group.get_groupname %]">[% 'Mail' | i18n | html %]</a>
+      <ul>
+        <li><a href="?do=mailindex;group=[% current_group.get_groupname %]">[% 'List' | i18n | html %]</a></li>
+        <li><a href="?do=mailcreate;group=[% current_group.get_groupname %]">[% 'Create' | i18n | html %]</a></li>
+      </ul>
+    </li>[% END %]
+    [% IF panel_header.available_services.mailinglist %]<li><a href="?do=mailinglistindex;group=[% current_group.get_groupname %]">[% 'ML' | i18n | html %]</a>
+      <ul>
+        <li><a href="?do=mailinglistindex;group=[% current_group.get_groupname %]">[% 'List' | i18n | html %]</a></li>
+        <li><a href="?do=mailinglistcreate;group=[% current_group.get_groupname %]">[% 'Create' | i18n | html %]</a></li>
+      </ul>
+    </li>[% END %]
+    [% IF panel_header.available_services.cron %]<li><a href="?do=cronindex;group=[% current_group.get_groupname %]">[% 'Crons' | i18n | html %]</a>
+      <ul>
+        <li><a href="?do=cronindex;group=[% current_group.get_groupname %]">[% 'List' | i18n | html %]</a></li>
+        <li><a href="?do=croncreate;group=[% current_group.get_groupname %]">[% 'Create' | i18n | html %]</a></li>
+      </ul>
+    </li>[% END %]
+  </ul>
+</li>
+</ul>

@@ -1,0 +1,59 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 10_TuxFamily-suphp-0.7.1-3-directorygroupcheck.dpatch 
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: TuxFamily patch to relax the parent directory check on group instead
+##     of user
+
+@DPATCH@
+diff -Nru a/src/Application.cpp b/src/Application.cpp
+--- a/src/Application.cpp	2009-08-03 14:38:38.000000000 +0000
++++ b/src/Application.cpp	2011-04-17 10:12:01.000000000 +0000
+@@ -314,8 +314,8 @@
+     }
+ 
+     // Check directory ownership and permissions
+-    checkParentDirectories(realScriptFile, targetUser, config);
+-    checkParentDirectories(scriptFile, targetUser, config);
++    checkParentDirectories(realScriptFile, targetUser, targetGroup, config);
++    checkParentDirectories(scriptFile, targetUser, targetGroup, config);
+ }
+ 
+ void suPHP::Application::checkProcessPermissions(
+@@ -540,17 +540,19 @@
+ 
+ 
+ void suPHP::Application::checkParentDirectories(const File& file,
+-                                               const UserInfo& owner,
++                                               const UserInfo& user,
++                                               const GroupInfo& group,
+                                                const Configuration& config) const throw (SoftException) {
+     File directory = file;
+     Logger& logger = API_Helper::getSystemAPI().getSystemLogger();
+     do {
+         directory = directory.getParentDirectory();
+ 
+-        UserInfo directoryOwner = directory.getUser();
+-        if (directoryOwner != owner && !directoryOwner.isSuperUser()) {
++        UserInfo directoryUser = directory.getUser();
++        GroupInfo directoryGroup = directory.getGroup();
++        if (directoryGroup != group && !directoryUser.isSuperUser()) {
+             std::string error = "Directory " + directory.getPath()
+-                + " is not owned by " + owner.getUsername();
++                + " is not owned by group " + group.getGroupname();
+             logger.logWarning(error);
+             throw SoftException(error, __FILE__, __LINE__);
+         }
+diff -Nru a/src/Application.hpp b/src/Application.hpp
+--- a/src/Application.hpp	2009-08-03 14:38:38.000000000 +0000
++++ b/src/Application.hpp	2011-04-17 10:13:22.000000000 +0000
+@@ -136,7 +136,8 @@
+          * Checks ownership and permissions for parent directories
+          */
+         void checkParentDirectories(const File& file,
+-                                    const UserInfo& owner,
++                                    const UserInfo& user,
++                                    const GroupInfo& group,
+                                     const Configuration& config) const
+             throw (SoftException);
+ 

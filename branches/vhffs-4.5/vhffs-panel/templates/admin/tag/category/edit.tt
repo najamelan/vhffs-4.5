@@ -1,0 +1,18 @@
+<form class="table-like" name="updateTagCategory" accept-charset="utf-8" method="post" action="#">
+<p><label for="label">[% 'Label:' | i18n | html %]</label>
+	<input type="text" name="label" id="label" value="[% category.label | html %]"/></p>
+<p><label for="description">[% 'Description:' | i18n | html %]</label>
+	<textarea name="description" id="description">[% category.description | html %]</textarea></p>
+<p><label for="visibility">[% 'Visibility:' | i18n | html %]</label>
+<select name="visibility" id="visibility">
+[% FOREACH v IN visibilities %]
+<option value="[% v.code %]"[% ' selected="selected"' IF v.code == category.visibility %]>
+    [% v.label | html %]</option>
+[% END %]
+</select>
+</p>
+<p class="button">
+	<input type="hidden" name="category_id" value="[% category.category_id %]"/>
+	<input type="submit" name="update_tag_category_submit" value="[% 'Update' | i18n | html %]"/>
+</p> 
+</form>

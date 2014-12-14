@@ -1,0 +1,61 @@
+diff -Nru release/conf/config.inc.php new/conf/config.inc.php
+--- release/conf/config.inc.php	2008-12-18 21:13:34.000000000 +0100
++++ new/conf/config.inc.php	2009-05-21 00:51:39.000000000 +0200
+@@ -11,11 +11,11 @@
+ 	// indexed from zero upwards.
+ 
+ 	// Display name for the server on the login screen
+-	$conf['servers'][0]['desc'] = 'PostgreSQL';
++	$conf['servers'][0]['desc'] = 'sql';
+ 
+ 	// Hostname or IP address for server.  Use '' for UNIX domain socket.
+ 	// use 'localhost' for TCP/IP connection on this computer
+-	$conf['servers'][0]['host'] = '';
++	$conf['servers'][0]['host'] = 'sql';
+ 
+ 	// Database port on server (5432 is the PostgreSQL default)
+ 	$conf['servers'][0]['port'] = 5432;
+@@ -24,11 +24,11 @@
+ 	// Possible options: disable, allow, prefer, require
+ 	// To require SSL on older servers use option: legacy
+ 	// To ignore the SSL mode, use option: unspecified
+-	$conf['servers'][0]['sslmode'] = 'allow';
++	$conf['servers'][0]['sslmode'] = 'disable';
+ 
+ 	// Change the default database only if you cannot connect to template1.
+ 	// For a PostgreSQL 8.1+ server, you can set this to 'postgres'.
+-	$conf['servers'][0]['defaultdb'] = 'template1';
++	$conf['servers'][0]['defaultdb'] = '';
+ 
+ 	// Specify the path to the database dump utilities for this server.
+ 	// You can set these to '' if no dumper is available.
+@@ -76,7 +76,7 @@
+ 	// Note: This will simply hide other databases in the list - this does
+ 	// not in any way prevent your users from seeing other database by
+ 	// other means. (e.g. Run 'SELECT * FROM pg_database' in the SQL area.)
+-	$conf['owned_only'] = false;
++	$conf['owned_only'] = true;
+ 
+ 	// Display comments on objects?  Comments are a good way of documenting
+ 	// a database, but they do take up space in the interface.
+@@ -93,7 +93,7 @@
+ 
+ 	// Display reports feature?  For this feature to work, you must
+ 	// install the reports database as explained in the INSTALL file.
+-	$conf['show_reports'] = true;
++	$conf['show_reports'] = false;
+ 
+ 	// Database and table for reports
+ 	$conf['reports_db'] = 'phppgadmin';
+diff -Nru release/libraries/lib.inc.php new/libraries/lib.inc.php
+--- release/libraries/lib.inc.php	2008-12-18 06:28:57.000000000 +0100
++++ new/libraries/lib.inc.php	2009-05-21 00:48:13.000000000 +0200
+@@ -170,7 +170,7 @@
+ 		if (isset($_REQUEST['database']))
+ 			$_curr_db = $_REQUEST['database'];
+ 		else
+-			$_curr_db = $_server_info['defaultdb'];
++			$_curr_db = $_server_info['username'];
+ 
+ 		include_once('./classes/database/Connection.php');
+ 

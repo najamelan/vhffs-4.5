@@ -1,0 +1,18 @@
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p>
+		<label>[% 'Group owning this mail domain:' | i18n | html %]</label>
+        [% group.get_groupname | html %]
+	</p>
+	<p>
+		<label for="domain">[% 'Domain:' | i18n | html %]</label>	
+		<input type="text" name="domain" id="domain" value="[% domain | html %]"/>
+	</p>
+	<p>
+		<label for="description">[% 'Tell us for what purpose you want to create this mail domain:' | i18n | html %]</label>
+		<textarea name="description" id="description" cols="45" rows="7">[% description | html %]</textarea>
+	</p>
+	<p class="button" id="buttonSend">
+		<input type="hidden" name="group" value="[% group.get_groupname | html %]" />
+		<input type="submit" value="[% 'Send' | i18n | html %]" name="mail_submit"/>
+	</p>
+</form>

@@ -1,0 +1,80 @@
+Release Notes for 4.0:
+**********************
+* Of course, those notes are not so complete, and it is recommended
+  to have a look at http://www.vhffs.org
+* Now, moderation is an option. If you don't put moderation = yes in
+  the vhffs.conf, the objects will automatically be waiting for creation
+
+
+***************************************************************
+***************************************************************
+***************************************************************
+
+Release Notes for 4.0.0
+***********************
+
+Enjoy !
+
+
+Release Notes for RC11:
+***********************
+ * New installer. You don't have to use vhffs-install.sh script
+   use now make install. To get help on this installer, please
+   type make help
+ * The vhffs-initdb script should work now
+
+
+
+***************************************************************
+***************************************************************
+***************************************************************
+
+Release Notes for RC9:
+**********************
+
+* Language can now be chosen from the auth.pl page for panel.
+* Only one theme is now available on the panel
+
+
+NEW DIRECTIVES IN vhffs.conf
+---------------
+Robots can now logging actions and use lockfile. If you want to use lockfile, 
+specify it in your config file. See in vhffs-backend/conf the new config file
+and see the new <robots/> section (end of file)
+
+New directives use_nospam and use_novirus. Please see the config file 
+(vhffs-backend/conf/vhffs.conf) for informations.
+
+The directive use_largefile and the <largefile/> section appears now. Please see the
+config file in vhffs-backend.
+
+
+AVATAR SUPPORT
+------------
+VHFFS now supports avatar. So, you have to specify if you use avatar
+in you /etc/vhffs/vhffs.conf
+In the <global><panel></panel></global> section, add
+use_avatar = yes
+to enable it. So, after that, avatar will be created in /data/avatar/
+Be careful, your web server (that runs the panel), will write in this
+directory, so you have to change the permission to allow it to write.
+
+
+
+DATABASE SCHEMA
+---------------
+With nospam and novirus directives, the schema of vhffs-boxes changed. So,
+if you install a new vhffs platform, this is not a problem. If you upgrade
+from previous version, please update the schema. You have to append a nospam column
+and a novirus column. So, the vhffs_boxes schema should seems to :
+vhffs_boxes( domain , local_part , domain_hash , password_hash , mbox_name , password , nospam, novirus)
+The new columns have a boolean type. You can add this columns with those PostgreSQL commands:
+ALTER TABLE vhffs_boxes ADD COLUMN nospam boolean;
+ALTER TABLE vhffs_boxes ADD COLUMN novirus boolean;
+
+
+NEW ROBOTS
+-----------
+Be careful if you use cron to run robots (high probability), a new
+bot is available, it updates the quota used for each group.
+The file is called update_quota_used.pl in /usr/lib/vhffs/bots

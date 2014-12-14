@@ -1,0 +1,26 @@
+[%# TODO Use a pager name using include parameter ? (INCLUDE pager.tt pager_name="pager1") %]
+[% IF (pager.size) %]
+<div class="pager">
+[% IF (pager.current_page != 1) %]
+<a class="first-page ajax" href="[% pager.url %]?[% pager.query_string %];page=1">&#60;&#60;</a>
+<a class="previous-page ajax" href="[% pager.url %]?[% pager.query_string %];page=[% pager.current_page - 1 %]">&#60;</a>
+[% FOR p IN pager.previous_pages %]
+<a class="previous-page-number ajax" href="[% pager.url %]?[% pager.query_string %];page=[% p %]">[% p %]</a>
+[% END %]
+[% ELSE %]
+<span class="first-page-disabled">&#60;&#60;</span>
+<span class="previous-page-disabled">&#60;</span>
+[% END %]
+<span class="current-page">[% pager.current_page %]</span>
+[% IF (pager.current_page != pager.last_page) %]
+[% FOR p IN pager.next_pages %]
+<a class="next-page-number ajax" href="[% pager.url %]?[% pager.query_string %];page=[% p %]">[% p %]</a>
+[% END %]
+<a class="next-page ajax" href="[% pager.url %]?[% pager.query_string %];page=[% pager.current_page + 1 %]">&#62;</a>
+<a class="last-page ajax" href="[% pager.url %]?[% pager.query_string %];page=[% pager.last_page %]">&#62;&#62;</a>
+[% ELSE %]
+<span class="next-page-disabled">&#62;</span>
+<span class="last-page-disabled">&#62;&#62;</span>
+[% END %]
+</div>
+[% END %]

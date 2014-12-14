@@ -1,0 +1,18 @@
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p>
+		<label>[% 'Group owning this repository:' | i18n | html %]</label>
+		[% group.get_groupname | html %]
+	</p>
+	<p>
+		<label for="REPOSITORY_NAME">[% 'Repository name:' | i18n | html %]</label>
+		[% group.get_groupname | html %]
+	</p>
+	<p>
+		<label for="description">[% 'Description:' | i18n | html %]</label>	
+		<textarea name="description" id="description" cols="45" rows="7">[% description | html %]</textarea>
+	</p>
+	<p class="button" id="buttonSend">
+		<input type="hidden" name="group" value="[% group.get_groupname | html %]" />
+		<input type="submit" value="[% 'Create' %]" name="repo_submit"/>
+	</p>
+</form>

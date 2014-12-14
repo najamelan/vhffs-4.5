@@ -1,0 +1,24 @@
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p>[% 'Group owning this mailing list:' | i18n | html %]
+        [% group.get_groupname | html %]
+    </p>
+	<p>
+		<label for="localpart">[% 'Mail for the list:' | i18n | html %]</label>
+    </p>
+    <div class="clear"></div>
+    <p>
+		<input type="text" name="localpart" id="localpart" value="[% localpart | html %]"/>@<select name="domain">
+[% FOREACH d IN domains %]
+            <option value="[% d.domain | html %]"[% ' selected="selected"' IF d.domain == domain %]>[% d.domain | html %]</option>
+[% END %]
+        </select>
+	</p>
+	<p>
+		<label for="description">[% 'Tell us what the use of this mailing list will be:' | i18n | html %]</label>
+		<textarea name="description" id="description" cols="45" rows="7">[% description | html %]</textarea>
+	</p>
+	<p class="button" id="buttonSend">
+		<input type="hidden" name="group" value="[% group.get_groupname %]" />
+		<input type="submit" value="[% 'Send' | i18n | html %]" name="mailing_submit"/>
+	</p>
+</form>

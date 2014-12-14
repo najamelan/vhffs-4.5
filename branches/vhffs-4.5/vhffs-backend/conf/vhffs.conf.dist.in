@@ -1,0 +1,666 @@
+######
+# This is the default configuration file for VHFFS
+# Please ask vhffs@vhffs.org for questions
+# Visit http://www.vhffs.org
+#####################################################
+
+
+######
+# GLOBAL
+################################
+<global>
+	# This is the name of your hosting service
+	host_name		=	My Hosting service
+
+	# This is the URL of the website of the hoster,
+	# if unset, no link will be added to hoster website
+	host_website		=	http://vhffs.org/
+
+	# The directory where you store ALL data
+	datadir			=	/data
+
+	# Directory which contains templates
+	templatedir		=	@TEMPLATESDIR@
+
+	# Available languages on this platform
+	available_languages = en_US fr_FR es_ES
+
+	# The default language
+	default_language	=	en_US
+
+	# Mails sent to hosted people have From: vhffs_master
+	vhffs_master 		=	VHFFS Admin <admin@localhost>
+
+	# Mails sent to hosted people about moderations have From: vhffs_moderator
+	vhffs_moderator 	=	VHFFS Admin <moderator@localhost>
+
+	# Tag inserted in the subject of each sent mail
+	mailtag 		=	[VHFFS]
+
+	# Allow subscribing to the platform
+	allow_subscribe		=	yes
+
+	# The mail where alert are sent
+	alert_mail		=	root@localhost
+
+	# Are the requests moderated or not
+	moderation		=	yes
+
+	# Whether to use vhffsfs or not. vhffsfs allows you to provide a
+	# virtual home directory depending on the uid of the running process
+	# in order to avoid using of a virtual chroot to provide ftp, sftp, or a shell
+	use_vhffsfs		=	no
+</global>
+
+
+######
+# PANEL
+#################################################	
+<panel>
+	# Is the panel open or not ?
+	open			=	yes
+
+	# URL of the panel
+	url			=	http://your.panel.url
+
+	# Use the public section of VHFFS
+	use_public		=	yes
+
+	# The URL to the public part
+	url_public		=	http://projects.vhffs.org/
+
+	# Directory which contains themes
+	themesdir		=	@PANELDIR@/themes
+
+	# The default theme
+	default_theme		=	light-grey
+
+	# Use captcha? You'll have to subscribe to
+	# Google reCAPTCHA service to get public/private key
+	use_captcha		=	no
+
+	# reCAPTCHA 40 chars public key
+	captcha_pubkey  =   ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmn
+	captcha_privkey =   ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmn
+
+	# Obfuscation technique for emails (none, swap, simple, entities or javascript)
+	mail_obfuscation	=	swap
+
+	# This is the URL display for the "Help" link in the panel
+	url_help		=	http://help.hoster
+
+	# Use avatar or not ? If yes, you must create a /data/avatar and change owner/permissions
+	#  so that the webserver can write into this directory
+	users_avatars		=	yes
+	groups_avatars		=	yes
+
+	# Print statistics in the main page of VHFFS ?
+	stats_on_home		=	yes
+
+	# Use RSS for users and groups ?
+	rss_users		=	yes
+	rss_groups		=	yes
+</panel>
+
+
+######
+# GPG
+#################################################
+<gpg>
+	# Path to the gpg binary
+	gpg_bin		=	/usr/bin/gpg
+
+	# Mails accounts
+	# 
+	# This is a generic backend, if the From: match one of
+	# the next entries then the mail will be signed with gpg
+
+	# Admin mail account
+	<admin@localhost>
+		gnupghome = /etc/vhffs/gpg_adm
+		secretkey = 0x12345678
+		passphrase = secret
+	</admin@localhost>
+
+	# Moderator mail account
+	<moderator@localhost>
+		gnupghome = /etc/vhffs/gpg_modo
+		secretkey = 0x12345678
+		passphrase = secret
+	</moderator@localhost>
+
+	# Another dummy example
+	<any-mail-account-specified-@-this-configuration>
+		gnupghome = /etc/vhffs/gpg_otheraccount
+		secretkey = 0x12345678
+		passphrase = secret
+	</any-mail-account-specified-@-this-configuration>
+</gpg>
+
+
+######
+# DATABASE
+#################################################
+<database>
+	# Driver to use, however only PostgresSQL is supported at the moment
+	driver		=	pg
+
+	# Database to use (DBI data source name)
+	datasource	=	database=vhffs;host=localhost;port=5432
+
+	# Username used to access the database server
+	username	=	vhffs
+
+	# Password
+	password	=	vhffs
+</database>
+
+
+######
+# USERS AND GROUPS
+################################################
+
+# Configuration for users
+<users>
+	# This is a file which contain all refused users, one name per line
+	# fill it with the content of your /etc/passwd
+	bad_username_file	=	@CONFDIR@/bl_username
+
+	# Default quota for users (home directory)
+	default_quota		=	10
+
+	# Shell configuration, use /bin/false in both to disable any shell account
+	available_shells	=	/bin/bash /bin/tcsh /bin/zsh /bin/false
+	default_shell		=	/bin/false
+
+	# Notation is useful to handle aggressive users
+	#  When a request of this user is accepted, the note is increased,
+	#  if the request is refused the note is decreased
+	use_notation		=	yes
+
+	# URL to the documentation (optional)
+	url_doc			=	http://help.myhoster.net/user
+</users>
+
+# Configuration for groups
+<groups>
+	# This is a file which contain all refused groups, one name per line
+	# fill it with the content of your /etc/group content
+	bad_groupname_file	=	@CONFDIR@/bl_groupname
+
+	# Default quota for groups
+	default_quota		=	100
+
+	# URL to the documentation (optional)
+	url_doc			=	http://help.myhoster.net/group
+</groups>
+
+
+######
+# SERVICES
+#####################################
+<services>
+
+	# Configuration for web service
+	<web>
+		# This is a file containing all refused webareas, one domain per line.
+		# Refused webareas include the domain and its sub-domains.
+		bad_webarea_file	=	@CONFDIR@/bl_webarea
+
+		# Use this module or not
+		activate		=	yes
+
+		#default domain of website
+		default_domain		= 	vhffs.org
+
+		# Where to find log from webserver, each webserver should be in a separate directory, example :
+		# - /data/logs/web/incoming/webserver0
+		# - /data/logs/web/incoming/webserver1
+		# - ...
+		log_incoming_root	=	/data/logs/web/incoming
+
+		# The number of maximum rotations, a rotation is made each time the robots to create stats is ran
+		log_incoming_rotations	=	7
+
+		# Should I compress rotated logs ?
+		log_incoming_compress	=	yes
+
+		# Where to put parsed logfile from each website, it uses the same hash model of web storage,
+		# consider using the same tree for both so user have access to its logs in its ftp account.
+		log_parsed_root		=	/data/web
+
+		# Same as incoming
+		log_parsed_rotation	=	7
+		log_parsed_compress	=	yes
+
+		# Where to find the awstat sample file ?
+		log_awstats_sample	=	/usr/lib/vhffs/bots/misc/awstats.sample
+
+		# Where to find awstat (caution, you must apply the vhffs patch on)
+		log_awstats		=	/data/logs/web/awstats.pl
+
+		# Command to run just after log rotation. The command is not interpreted by sh.
+		#
+		#   Examples:
+		#     apache: /usr/sbin/apache2ctl graceful
+		#     rsyslog: /usr/sbin/invoke-rc.d rsyslog reload
+		log_postrotate		=	/usr/sbin/apache2ctl graceful
+
+		# URL to the documentation (optional)
+		url_doc			=	http://help.myhoster.net/web
+
+		# URL to the statistics
+		url_stats		=	http://stats.hoster
+	</web>
+
+	# Configuration for mysql
+	<mysql>
+		# Use this module or not
+		activate	=	yes
+
+		# Parameters used to connect to MySQL server as admin
+		datasource	=	database=mysql;host=localhost;port=3306
+		username	=	root
+		password	=	mysecret
+
+		# Complete path to mysqldump binary
+		mysqldump_path	=	/usr/bin/mysqldump
+
+		# URL to phpmyadmin
+		url_phpmyadmin	=	http://phpmyadmin.hoster
+
+		# URL to the documentation (optional)
+		url_doc		=	http://help.myhoster.net/mysql
+	</mysql>
+
+	# Configuration for pgsql
+	<pgsql>
+		# Use this module or not
+		activate	=	no
+
+		# Parameters used to connect to PostgresSQL server as admin
+		datasource	=	database=postgres;host=localhost;port=5432
+		username	=	vhffs
+		password	=	mysecret
+
+		# Complete path to the pgdump binary
+		pgdump_path	=	/usr/bin/pg_dump
+
+		# URL to phppgadmin
+		url_phppgadmin	=	http://phppgadmin.hoster
+
+		# URL to the documentation (optional)
+		url_doc		=	http://help.myhoster.net/pgsql
+	</pgsql>
+
+	# DNS configuration
+	<dns>
+		# Use this module or not
+		activate	=	no
+
+		# Default configuration for new records
+		default_a	=	1.2.3.4
+		default_aaaa	=	FEDC::1
+
+		# Initial configuration of new domains names
+		<init>
+			<soa>
+				ns = ns1.hoster.org.
+				mbox = hostmaster.hoster.org.
+				refresh = 28800
+				retry = 7200
+				expire = 604800
+				minimum = 86400
+				ttl = 86400
+			</soa>
+			<a>
+				@	=	10.0.0.1
+				www	=	80.0.0.1
+			</a>
+			<mx>
+				10	=	mx1.hoster.org.
+				20	=	mx2.hoster.org.
+			</mx>
+			<ns>
+				ns1.hoster.org.
+				ns2.hoster.org.
+			</ns>
+		</init>
+
+		# URL to the documentation (optional)
+		url_doc		=	http://help.myhoster.net/dns
+	</dns>
+
+	# Configuration for cvs
+	<cvs>
+		# Use this module or not
+		activate	=	no
+
+		# URL of the cvsweb
+		# the url scheme is svnweb_url/cvs_$group_$svnname/ , change the code or modify the software used
+		cvsweb_url	=	"http://cvsweb.hoster"	
+
+		# URL to the documentation (optional)
+		url_doc		=	http://help.myhoster.net/cvs
+	</cvs>
+
+	# Configuration for svn
+	<svn>
+		# Use this module or not
+		activate	=	no
+
+		# URL to the svnweb
+		# the url scheme is svnweb_url/svn_$group_$svnname/ , change the code or modify the software used
+		svnweb_url	=	"http://svnweb.hoster"
+
+		# From: of emails sent by svn commit notifier
+		notify_from	=	subversion@vhffs.org
+
+		# URL to the documentation (optional)
+		url_doc		=	http://help.myhoster.net/svn
+	</svn>
+
+	# Configuration for git
+	<git>
+		# Use this module or not
+		activate	=	no
+
+		# URL to the gitweb
+		# the url scheme is gitweb_url/git_$group_$gitname/ , change the code or modify the software used
+		gitweb_url	=	"http://gitweb.hoster"
+
+		# From: of emails sent by svn commit notifier
+		notify_from	=	git@vhffs.org
+
+		# URL to the documentation (optional)
+		url_doc		=	http://help.myhoster.net/git
+	</git>
+
+	# Configuration for mercurial
+	<mercurial>
+		# Use this module or not
+		activate	=	no
+
+		# URL to the gitweb
+		# the url scheme is mercurialweb_url/mercurial_$group_$mercurialname/ , change the code or modify the software used
+		mercurialweb_url	=	"http://mercurialweb.hoster"
+
+		# From: of emails sent by mercurial commit notifier
+		notify_from	=	mercurial@vhffs.org
+
+		# URL to the documentation (optional)
+		url_doc		=	http://help.myhoster.net/mercurial
+	</mercurial>
+
+	# Configuration for bazaar
+	<bazaar>
+		# Use this module or not
+		activate	=	no
+
+		# URL to the gitweb
+		# the url scheme is bazaarweb_url/bazaar_$group_$bazaarname/ , change the code or modify the software used
+		bazaarweb_url	=	"http://bazaarweb.hoster"
+
+		# From: of emails sent by bazaar commit notifier
+		notify_from	=	bazaar@vhffs.org
+
+		# URL to the documentation (optional)
+		url_doc		=	http://help.myhoster.net/bazaar
+	</bazaar>
+
+	# Configuration for mail service
+	<mail>
+		# Use this module or not
+		activate	=	no
+
+		# Add checkboxs for spam filter and anti-virus
+		use_nospam	=	yes
+		use_novirus	=	yes
+
+		# URL to the documentation (optional)
+		url_doc		=	http://help.myhoster.net/mail
+
+		# kind of catchall addresses allowed (none|domain|open)
+		# none: no catchall allowed
+		# domain: only on the concerned domain
+		# open: any address
+		allowed_catchall = domain
+
+		# UID and GID of boxes
+		boxes_uid 	=	102
+		boxes_gid	=	102
+	</mail>
+
+	# The mailuser service allows a user to get a mail account on a default domain
+	<mailuser>
+		# Use this module or not
+		activate	=	no
+
+		# The used domain, mails will be $user@domain, it MUST exist in vhffs database
+		domain		=	users.myhost.org
+
+		# If set to yes, the user must be in at least one group to create his mail account
+		groupneeded	=	yes
+
+		# URL to the documentation (optional)
+		url_doc		=	http://help.myhoster.net/mailuser
+	</mailuser>
+
+	# The mailgroup service allows a group to get a mail account on a default domain
+	<mailgroup>
+		# Use this module or not
+		activate	=	no
+
+		# The used domain, mails will be $group@domain, it MUST exist in vhffs database
+		domain		=	projects.myhost.org
+
+		# URL to the documentation (optional)
+		url_doc		=	http://help.myhoster.net/mailgroup
+	</mailgroup>
+
+	# Configuration for mailing lists
+	<mailinglist>
+		# Use this module or not
+		activate	=	no
+
+		# Default domain is always available, it may be used by users without mail domain
+		# You have to create the corresponding mail domain
+		default_domain	=	lists.vhffs.org
+
+		# URL to public archives
+		url_archives    =       http://localhost/listengine
+
+		# URL to the documentation (optional)
+		url_doc		=	http://help.myhoster.net/ml
+	</mailinglist>
+
+	# The newsletter service allows a user to subscribe or unsubscribe to a global users mailing
+	# list at subscription to the service and after that in the users preferences
+	<newsletter>
+		# Use this module or not
+		activate	=	no
+
+		# How the subscription to the newsletter is done when the user registers to the service
+		#  active_optin    : The user have to voluntarily check a box to allow receiving mails,
+		#                    this is the default.
+		#  passive_optin   : Same as active_optin, but the box is checked by default.
+		#  active_optout   : The user have to voluntarily check a box to *deny* receiving mails.
+		#  passive_optout  : The user is subscribed to the newsletter at subscription, but
+		#                    he is allowed to change that in user preferences.
+		#  permanent       : The user is permanently subscribed to the newsletter.
+		collectmode	=	active_optin
+
+		# The name of the used mailinglist, it MUST exist in vhffs database
+		mailinglist	=	newsletter@lists.myhost
+
+		# URL to the documentation (optional)
+		url_doc		=	http://help.myhoster.net/mailuser
+	</newsletter>
+
+	# Configuration of download repositories
+	<repository>
+		# Use this module or not
+		activate		=	no
+
+		# URL to the repositories server
+		repository_url		=	"http://download.vhffs.org/"
+
+		# The initial quota of repositories
+		default_quota		=	1024
+
+		# Where to find log from webserver, each webserver should be in a separate directory, example :
+		# - /data/logs/repository/incoming/webserver0
+		# - /data/logs/repository/incoming/webserver1
+		# - ...
+		log_incoming_root	=	/data/logs/repository/incoming
+
+		# The number of maximum rotations, a rotation is made each time the robots to create stats is ran
+		log_incoming_rotations	=	7
+
+		# Should I compress rotated logs ?
+		log_incoming_compress	=	yes
+
+		# Where to put parsed logfile from each repository
+		log_parsed_root		=	/data/logs/repository/parsed
+
+		# Same as incoming
+		log_parsed_rotation	=	7
+		log_parsed_compress	=	yes
+
+		# Where to find the awstat sample file ?
+		log_awstats_sample	=	/usr/lib/vhffs/bots/misc/repository.awstats.sample
+
+		# Where to find awstat (caution, you must apply the vhffs patch on)
+		log_awstats		=	/data/logs/repository/awstats.pl
+
+		# Command to run just after log rotation. The command is not interpreted by sh.
+		#
+		#   Examples:
+		#     apache: /usr/sbin/apache2ctl graceful
+		#     rsyslog: /usr/sbin/invoke-rc.d rsyslog reload
+		log_postrotate		=	/usr/sbin/apache2ctl graceful
+
+		# URL to the documentation (optional)
+		url_doc			=	http://help.myhoster.net/repository
+
+		# URL to the statistics
+		url_stats		=	http://stats.downloads.hoster
+	</repository>
+
+	# Configuration for cron jobs
+	<cron>
+		# Use this module or not
+		activate	=	no
+
+		# Minimum allowed interval between cron starts (in minutes)
+		minimum_interval	=	15
+
+		# URL to the documentation (optional)
+		url_doc		=	http://help.myhoster.net/cron
+
+		# Path to chroot() to before executing scripts
+		chroot		=	/
+
+		# From: of emails sent by the cron scheduler
+		mail_from	=	cron@vhffs.org
+
+		# Maximum execution time (in seconds)
+		max_execution_time	=	7200
+
+		# Run processes at a nice level ?
+		nice		=	19
+
+		# System limits
+		<limits>
+			# Default configuration is for Linux 2.6
+			# You can use the following command to fetch the available limits on your system
+			# $ perl -e 'use BSD::Resource; print join( "\n" , keys %{get_rlimits()} )."\n"';
+			#
+			# resource = soft hard
+			RLIMIT_CPU = 3600 3600
+			RLIMIT_FSIZE = RLIM_INFINITY RLIM_INFINITY
+			RLIMIT_DATA = 104857600 104857600
+			RLIMIT_STACK = 8388608 8388608
+			RLIMIT_RSS = 104857600 104857600
+			RLIMIT_CORE = 0 0
+			RLIMIT_MEMLOCK = 0 0
+			RLIMIT_NPROC = 100 100
+			RLIMIT_NOFILE = 1024 1024
+			RLIMIT_LOCKS = 1024 1024
+			RLIMIT_AS = 268435456 268435456
+		</limits>
+	</cron>
+
+</services>
+
+
+######
+# LISTENGINE
+#################################
+<listengine>
+	# Where we store listengine data
+	datadir		=	"/data/listengine"
+
+	# Email of listmaster
+	listmaster	=	"listmaster@hoster.org"
+
+	# The domain is used when listengine bounces mails to SMTP server
+	# Listengine will send HELO domain to the SMTP sever
+	domain		=	"myhost.tld"
+
+	# You have to use only one of these options, comment the unused one
+	#   You can set a SMTP server to bounce mails (not recommended)
+	#smtp_server	=	"localhost"
+	#   or a path to a batched smtp tool ( ex, "/usr/sbin/exim4 -bS", "/usr/sbin/sendmail -bs" )
+	sendmail_path	=	"/usr/sbin/exim4 -bS"
+</listengine>
+
+
+######
+# ROBOTS
+#################################
+<robots>
+	# Robots should log or not ?
+	use_logging	=	yes
+	logfile		=	/var/log/vhffs.log
+
+	# Robots should use lock file ?
+	# One lock will be created per robot, you can still run robots simultaneously
+	use_lock	=	yes
+	lockfile	=	/var/lock/vhffs
+
+	# Where to store temporary files, like mysql of postgresql dumps.
+	# This is better if this is on your main storage block, this way move of generated
+	# files to final directory will be costless.
+	# You have to create this directory yourself, root:root, mode 700
+	tmpdir		=	/data/tmp
+
+	# Should we archive (.tar.gz and/or .dump.gz) deleted services ?
+	# This way, user mistakes can be handled easily
+	archive_deleted		= yes
+
+	# Complete path to archive directory.
+	# Archives will be put into $archive_path/$unixtimestamp_groupname_servicetype_servicename.(tar|dump).gz
+	# You have to create this directory yourself, root:root, mode 700
+	archive_deleted_path	= /data/archives
+
+	# How long should we keep archives of deleted objects,
+	# value in days, set this to 0 to never delete archives
+	archive_deleted_ttl	= 0
+</robots>
+
+
+######
+# IRC
+#################################
+<irc>
+	# Where modobot should connect ?
+	modobot_server	=	irc.mynetwork
+	modobot_port	=	6667
+
+	# On which channel it should join ?
+	modobot_channel	=	\#adm-myservice
+
+	# Which is its name ?
+	modobot_name	=	modobot
+</irc>

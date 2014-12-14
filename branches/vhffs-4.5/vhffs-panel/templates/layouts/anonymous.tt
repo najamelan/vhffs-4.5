@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>[% title | html %]</title>
+	<link rel="stylesheet" type="text/css" href="/js/dijit/themes/tundra/tundra.css"/>
+	<link rel="stylesheet" type="text/css" href="/themes/[% theme %]/main.css"/>
+	<meta http-equiv="Content-type" content="application/xhtml+xml; charset=utf-8"/>
+	<meta name="theme" content="[% theme %]"/>
+    <script language="javascript" type="text/javascript" charset="utf-8" src="/js/dojo/dojo.js"></script>
+</head>
+<body class="tundra">
+<div id="background-container">
+  <div class="page-container-panel-anonymous">
+    <div id="loading" style="display:none">
+      <img src="/themes/[% theme %]/img/loading.gif" alt="Loading..."/>
+    </div>
+    <div class="navflag">
+      [% INCLUDE 'misc/languages.tt' %]
+    </div>
+    <div class="logo">
+      <a href="/"><img src="/themes/[% theme %]/img/vhffs-big.png" alt="Virtual hosting for free software"/></a>
+    </div>
+    <div id="top-menu">
+                        <ul>
+[% IF(subscribe) %]
+        <li><a href="?do=subscribe" class="ajax">[% 'Subscribe' | i18n %]</a></li>
+[% END %]
+        <li><a href="?do=lost" class="ajax">[% 'Lost password' | i18n %]</a></li>
+[% IF public_url.defined() %]
+        <li><a href="[% public_url | html %]">[% 'Public area' | i18n %]</a></li>
+[% END %]
+                  </ul>
+    </div>
+    <div class="content-panel-anonymous">
+[% PROCESS $template %]
+    </div>
+    <div id="footer">
+      [% INCLUDE layouts/footer.tt %]
+    </div>
+  </div>
+</div>
+</body>
+</html>

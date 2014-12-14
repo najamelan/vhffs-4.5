@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<book lang="fr">
+  <title>Documentation de VHFFS</title>
+
+  <bookinfo>
+    <date>Juillet 2007</date>
+
+    <authorgroup>
+      <corpauthor>&Eacute;quipe VHFFS</corpauthor>
+
+      <author>
+        <surname>Le Ray</surname>
+
+        <firstname>S&eacute;bastien</firstname>
+
+        <contrib>Cr&eacute;ation du document</contrib>
+      </author>
+    </authorgroup>
+  </bookinfo>
+
+  <part id="part-admin">
+    <title>Pour l'administrateur</title>
+
+    <xi:include href="part1/services.xml"
+                xmlns:xi="http://www.w3.org/2003/XInclude" />
+
+    <xi:include href="part1/applis.xml"
+                xmlns:xi="http://www.w3.org/2003/XInclude" />
+
+    <xi:include href="part1/mirror.xml"
+                xmlns:xi="http://www.w3.org/2003/XInclude" />
+  </part>
+
+  <part>
+    <title>Pour le d&eacute;veloppeur</title>
+
+    <chapter>
+      <title>Concepts g&eacute;n&eacute;raux</title>
+
+      <para>&nbsp;</para>
+    </chapter>
+  </part>
+</book>

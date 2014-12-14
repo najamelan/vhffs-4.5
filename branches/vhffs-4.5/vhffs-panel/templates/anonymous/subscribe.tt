@@ -1,0 +1,81 @@
+<div id="subscribe">		
+		<div id="content">
+			<h1>[% 'Subscription' | i18n | html %]</h1>
+                <p class="info">[% 'Please fill in all fields, you\'ll be sent a mail containing your password' | i18n | html %]</p>
+                <div class="subscribe">
+                <form id="subscribe-form" class="table-like" method="post" action="?do=subscribe" accept-charset="utf-8">
+                [% INCLUDE 'misc/errors.tt' %]
+				<p>
+					<label for="subscribe-username">[% 'Username:' | i18n | html %]</label>
+					<input type="text" class="validation-identifier" name="username" id="subscribe-username" maxlength="12" value="[% username | html %]"/>
+                </p>
+				<p>
+					<label for="subscribe-email">[% 'Email:' | i18n | html %]</label>
+					<input type="text" class="validation-email" name="mail" id="subscribe-email" maxlength="200" value="[% mail | html %]"/>
+				</p>
+				<p>
+					<label for="subscribe-firstname">[% 'Firstname:' | i18n | html %]</label>
+                    <input type="text" class="validation-string" name="firstname" id="subscribe-firstname" maxlength="256" value="[% firstname | html %]"/>
+				</p>
+				<p>
+					<label for="subscribe-lastname">[% 'Lastname: ' | i18n | html %]</label>
+                    <input type="text" class="validation-string" name="lastname" id="subscribe-lastname" maxlength="256" value="[% lastname | html %]"/>
+				</p>
+				<p>
+					<label for="subscribe-address">[% 'Address:' | i18n | html %]</label>
+                    <input type="text" class="validation-string" name="address" id="subscribe-address" maxlength="512" value="[% address | html %]"/>
+				</p>
+				<p>
+					<label for="subscribe-city">[% 'City:' | i18n | html %]</label>
+                    <input type="text" class="validation-string" name="city" id="subscribe-city" maxlength="64" value="[% city | html %]"/>
+				</p>
+				<p>
+					<label for="subscribe-country">[% 'Country:' | i18n | html %]</label>
+                    <input type="text" class="validation-string" name="country" id="subscribe-country" maxlength="32" value="[% country | html %]"/>
+				</p>
+				<p>
+					<label for="subscribe-zipcode">[% 'Zipcode' | i18n | html %]</label>
+					<input type="text" class="validation-zipcode" name="zipcode" id="subscribe-zipcode" maxlength="16" value="[% zipcode | html %]"/>
+				</p>
+[% IF newsletter %]
+				<p>
+					<label for="newsletter">
+                        [% newsletter.prompt | html %]
+					</label>
+					<span><input type="checkbox" name="newsletter" id="newsletter"[% ' checked="checked"' IF newsletter_checked %]/></span>
+				</p>
+[% END %]
+[% IF captcha_pubkey %]
+				<p style="float:left"><label>[% 'Captcha:' | i18n | html %]</label></p>
+                <script type="text/javascript">
+                    var RecaptchaOptions = {
+                        theme: 'white',
+                        lang: '[% language.substr(0, 2) | html %]'
+                    };
+                </script>
+                <div id="recaptcha-field" style="float:left;"></div>
+                <noscript>
+                    <div id="no_js_recaptcha">
+                    <object type="text/html" data="http://www.google.com/recaptcha/api/noscript?k=[% captcha_pubkey | html %]" height="300" width="500"></object><br/>
+                    <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+                    <input type="hidden" name="recaptcha_response_field" value="manual_challenge"/>
+                    <!--[if IE]><iframe src="http://www.google.com/recaptcha/api/noscript?k=[% captcha_pubkey | html %]" height="300" width="500" frameborder="0"></iframe>< ![endif]-->
+                    </div>
+                </noscript>
+                <script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+                <script type="text/javascript">
+                    Recaptcha.create("[% captcha_pubkey | html %]", "recaptcha-field", {
+                        theme: "white",
+                        lang: '[% language.substr(0, 2) | html %]'
+                    });
+                </script>
+[% END %]
+				<p class="button" style="clear:both">
+					<input type="submit" value="[% 'Subscribe' | i18n | html %]" name="create_submit"/>
+				</p>
+			</form>
+			</div>
+		    <p class="home"><a href="?do=login">[% 'Back to login' %]</a></p>
+		</div>
+        <script type="text/javascript" charset="utf-8" src="/js/vhffs/anonymous/subscribe.js"></script>
+</div>

@@ -1,0 +1,46 @@
+<VirtualHost *:80>
+	ServerAdmin adm@domain.tld
+	ServerName projects.your.host
+	DocumentRoot /usr/share/vhffs/public
+	DirectoryIndex index.pl
+
+	<Directory /usr/share/vhffs/public/>
+		AllowOverride None
+		Order allow,deny
+		Allow from all
+	</Directory>
+
+	SuExecUserGroup www-data www-data
+	FcgidMaxProcessesPerClass 5
+	<Files "index.pl">
+		SetHandler fcgid-script
+		Options +ExecCGI
+	</Files>
+
+	# Allows to have /tags/Pouet
+#	<IfModule mod_rewrite.c>
+#		RewriteEngine On
+#		# This is the only way we found to handle
+#		# tags with a plus in their label
+#		RewriteCond %{THE_REQUEST} ^(?:GET|POST)\ /tags/([^/?]+)(?:\?(\S+))?\ HTTP/\d\.\d$
+#		RewriteRule . /tagsearch.pl?search=%1&%2 [NE,L]
+#	</IfModule>
+
+	# Enable tag search through /tags/foo
+	<IfModule mod_rewrite.c>
+		RewriteEngine On
+		# The Vhffs public panel does not appear to work very well when its
+		# URL-path is changed, hence the 302 redirect. B escapes the matched part,
+		# NE avoids escaping the semi-colon.
+		RewriteRule ^/+tags/+(.+)$ /index.pl?do=tags;search=$1 [B,NE,L,R=302]
+	</IfModule>
+
+	ErrorLog /var/log/apache2/projects-error.log
+
+	# Possible values include:
+	#   debug, info, notice, warn, error, crit, alert, emerg
+	LogLevel warn
+
+	CustomLog /var/log/apache2/projects-access.log combined
+	ServerSignature On
+</VirtualHost>

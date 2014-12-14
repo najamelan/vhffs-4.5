@@ -1,0 +1,1716 @@
+diff -Nru a/config.php b/config.php
+--- a/config.php	2011-04-17 17:35:24.000000000 +0200
++++ b/config.php	2011-04-17 22:13:17.000000000 +0200
+@@ -16,3 +16,14 @@
+ $cookie_secure = 0;
+ 
+ define('FORUM', 1);
++
++// VHFFS config
++$vhffs_db_host = '127.0.0.1';
++$vhffs_db_name = 'vhffs';
++$vhffs_db_username = 'vhffs';
++$vhffs_db_password = 'vhffs';
++$vhffs_p_connect = false;
++$vhffs_team = 'My Service Name';
++$vhffs_panel_url = 'https://panel.yourhost';
++$vhffs_hoster_url = 'http://yourhost';
++
+diff -Nru a/footer.php b/footer.php
+--- a/footer.php	2009-05-20 11:09:23.000000000 +0200
++++ b/footer.php	2011-04-17 17:44:20.000000000 +0200
+@@ -38,7 +38,7 @@
+ ($hook = get_hook('ft_about_pre_copyright')) ? eval($hook) : null;
+ 
+ ?>
+-	<p id="copyright"><?php echo sprintf($lang_common['Powered by'], '<a href="http://punbb.informer.com/">PunBB</a>'.($forum_config['o_show_version'] == '1' ? ' '.$forum_config['o_cur_version'] : ''), '<a href="http://www.informer.com/">Informer Technologies, Inc</a>') ?></p>
++	<p id="copyright"><?php echo sprintf($lang_common['Powered by'], '<a href="http://punbb.informer.com/">PunBB</a>'.($forum_config['o_show_version'] == '1' ? ' '.$forum_config['o_cur_version'] : ''), '<a href="http://www.vhffs.org/">VHFFS</a>') ?></p>
+ <?php
+ 
+ ($hook = get_hook('ft_about_end')) ? eval($hook) : null;
+diff -Nru a/include/dblayer/vhffs.php b/include/dblayer/vhffs.php
+--- a/include/dblayer/vhffs.php	1970-01-01 01:00:00.000000000 +0100
++++ b/include/dblayer/vhffs.php	2011-04-17 20:06:47.000000000 +0200
+@@ -0,0 +1,201 @@
++<?php
++/**
++ * A database layer class to access VHFFS database that relies on the PostgreSQL PHP extension.
++ *
++ * @copyright (C) 2008-2009 PunBB, partially based on code (C) 2008-2009 FluxBB.org
++ * @license http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
++ * @package PunBB
++ *
++ * VHFFS patch by
++ *   Samuel Lesueur <crafty@tuxfamily.org>
++ *   Sylvain Rochet <gradator@gradator.net>
++ *
++ * Based on PunBB pgsql.php database layer class.
++ *
++ */
++
++
++// Make sure we have built in support for PostgreSQL
++if (!function_exists('pg_connect'))
++	exit('This PHP environment doesn\'t have PostgreSQL support built in. PostgreSQL support is required if you want to use a PostgreSQL database to run this forum. Consult the PHP documentation for further assistance.');
++
++
++class vhffs_DBLayer
++{
++	var $prefix;
++	var $link_id;
++	var $query_result;
++	var $last_query_text = array();
++
++	var $saved_queries = array();
++	var $num_queries = 0;
++
++	var $error_no = false;
++	var $error_msg = 'Unknown';
++
++	function vhffs_DBLayer($db_host, $db_username, $db_password, $db_name, $p_connect)
++	{
++		if ($db_host)
++		{
++			if (strpos($db_host, ':') !== false)
++			{
++				list($db_host, $dbport) = explode(':', $db_host);
++				$connect_str[] = 'host='.$db_host.' port='.$dbport;
++			}
++			else
++				$connect_str[] = 'host='.$db_host;
++		}
++
++		if ($db_name)
++			$connect_str[] = 'dbname='.$db_name;
++
++		if ($db_username)
++			$connect_str[] = 'user='.$db_username;
++
++		if ($db_password)
++			$connect_str[] = 'password='.$db_password;
++
++		if ($p_connect)
++			$this->link_id = @pg_pconnect(implode(' ', $connect_str));
++		else
++			$this->link_id = @pg_connect(implode(' ', $connect_str));
++
++		if (!$this->link_id)
++			error('Unable to connect to PostgreSQL server.', __FILE__, __LINE__);
++
++		// Setup the client-server character set (UTF-8)
++		$this->query('SET CLIENT ENCODING \'UTF-8\'');
++
++		return $this->link_id;
++	}
++
++
++	function query($sql, $unbuffered = false)	// $unbuffered is ignored since there is no pgsql_unbuffered_query()
++	{
++		if (strlen($sql) > 140000)
++			exit('Insane query. Aborting.');
++
++		if (strrpos($sql, 'LIMIT') !== false)
++			$sql = preg_replace('#LIMIT ([0-9]+),([ 0-9]+)#', 'LIMIT \\2 OFFSET \\1', $sql);
++
++		if (defined('FORUM_SHOW_QUERIES'))
++			$q_start = get_microtime();
++
++		@pg_send_query($this->link_id, $sql);
++		$this->query_result = @pg_get_result($this->link_id);
++
++		if (pg_result_status($this->query_result) != PGSQL_FATAL_ERROR)
++		{
++			if (defined('FORUM_SHOW_QUERIES'))
++				$this->saved_queries[] = array($sql, sprintf('%.5f', get_microtime() - $q_start));
++
++			++$this->num_queries;
++
++			$this->last_query_text[$this->query_result] = $sql;
++
++			return $this->query_result;
++		}
++		else
++		{
++			if (defined('FORUM_SHOW_QUERIES'))
++				$this->saved_queries[] = array($sql, 0);
++
++			$this->error_msg = @pg_result_error($this->query_result);
++
++			return false;
++		}
++	}
++
++	function result($query_id = 0, $row = 0, $col = 0)
++	{
++		return ($query_id) ? @pg_fetch_result($query_id, $row, $col) : false;
++	}
++
++
++	function fetch_assoc($query_id = 0)
++	{
++		return ($query_id) ? @pg_fetch_assoc($query_id) : false;
++	}
++
++
++	function fetch_row($query_id = 0)
++	{
++		return ($query_id) ? @pg_fetch_row($query_id) : false;
++	}
++
++
++	function num_rows($query_id = 0)
++	{
++		return ($query_id) ? @pg_num_rows($query_id) : false;
++	}
++
++
++	function get_num_queries()
++	{
++		return $this->num_queries;
++	}
++
++
++	function get_saved_queries()
++	{
++		return $this->saved_queries;
++	}
++
++
++	function free_result($query_id = false)
++	{
++		if (!$query_id)
++			$query_id = $this->query_result;
++
++		return ($query_id) ? @pg_free_result($query_id) : false;
++	}
++
++
++	function escape($str)
++	{
++		return is_array($str) ? '' : pg_escape_string($str);
++	}
++
++
++	function error()
++	{
++		$result['error_sql'] = @current(@end($this->saved_queries));
++		$result['error_no'] = false;
++		$result['error_msg'] = $this->error_msg;
++
++		return $result;
++	}
++
++
++	function close()
++	{
++		if ($this->link_id)
++		{
++			if ($this->in_transaction)
++			{
++				if (defined('FORUM_SHOW_QUERIES'))
++					$this->saved_queries[] = array('COMMIT', 0);
++
++				@pg_query($this->link_id, 'COMMIT');
++			}
++
++			if ($this->query_result)
++				@pg_free_result($this->query_result);
++
++			return @pg_close($this->link_id);
++		}
++		else
++			return false;
++	}
++
++
++	function get_version()
++	{
++		$result = $this->query('SELECT VERSION()');
++
++		return array(
++			'name'		=> 'PostgreSQL',
++			'version'	=> preg_replace('/^[^0-9]+([^\s,-]+).*$/', '\\1', $this->result($result))
++		);
++	}
++}
+diff -Nru a/lang/English/common.php b/lang/English/common.php
+--- a/lang/English/common.php	2011-03-16 09:43:12.000000000 +0100
++++ b/lang/English/common.php	2011-04-17 17:43:25.000000000 +0200
+@@ -85,7 +85,7 @@
+ 'Item info single'			=>	'%s [ %s ]',
+ 'Item info plural'			=>	'%s [ %s to %s of %s ]', // e.g. Topics [ 10 to 20 of 30 ]
+ 'Info separator'			=>	' ', // e.g. 1 Page | 10 Topics
+-'Powered by'				=>	'Powered by <strong>%s</strong>, supported by <strong>%s</strong>.',
++'Powered by'				=>	'Powered by <strong>%s</strong> and <strong>%s</strong>.',
+ 'Maintenance'				=>	'Maintenance',
+ 'Installed extension'		=>	'The %s official extension is installed. Copyright &copy; 2003&ndash;2011 <a href="http://punbb.informer.com/">PunBB</a>.',
+ 'Installed extensions'		=>	'Currently installed <span id="extensions-used" title="%s">%s official extensions</span>. Copyright &copy; 2003&ndash;2011 <a href="http://punbb.informer.com/">PunBB</a>.',
+diff -Nru a/lang/English/post.php b/lang/English/post.php
+--- a/lang/English/post.php	2008-11-26 13:46:21.000000000 +0100
++++ b/lang/English/post.php	2011-04-17 22:04:15.000000000 +0200
+@@ -55,6 +55,11 @@
+ 'Silent edit'			=>	'Silent edit (don\'t display "Last edited by…" in topic view for this edit).',
+ 'Preview edited topic'	=>	'Preview of your edited topic',
+ 'Preview edited reply'	=>	'Preview of your edited reply',
+-'Edit redirect'			=>	'Post updated. Redirecting…'
++'Edit redirect'			=>	'Post updated. Redirecting…',
++
++// antibot
++'Bot message'			=>	'Please write here the what you see in the image in order to verify that you are not one of those stupid spamming bots...',
++'Bot warning'			=>	'(notice that there are only capitals and numbers)',
++'Captcha failed'		=>	'Captcha verification failed'
+ 
+ );
+diff -Nru a/login.php b/login.php
+--- a/login.php	2011-03-04 17:41:48.000000000 +0100
++++ b/login.php	2011-04-17 21:59:19.000000000 +0200
+@@ -5,6 +5,10 @@
+  * @copyright (C) 2008-2009 PunBB, partially based on code (C) 2008-2009 FluxBB.org
+  * @license http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
+  * @package PunBB
++ *
++ * VHFFS patch by
++ *   Samuel Lesueur <crafty@tuxfamily.org>
++ *   Sylvain Rochet <gradator@gradator.net>
+  */
+ 
+ 
+@@ -20,6 +24,9 @@
+ // Load the login.php language file
+ require FORUM_ROOT.'lang/'.$forum_user['language'].'/login.php';
+ 
++// VHFFS MODIFICATION : Load the VHFFS database class
++require FORUM_ROOT.'include/dblayer/vhffs.php';
++
+ 
+ $action = isset($_GET['action']) ? $_GET['action'] : null;
+ $errors = array();
+@@ -44,43 +51,47 @@
+ 	else
+ 		$query['WHERE'] = 'LOWER(username)=LOWER(\''.$forum_db->escape($form_username).'\')';
+ 
++	// VHFFS MODIFICATION : New login system, using VHFFS's database for auth and copy personal data to forum database
++
++	//looking for the user in the forum database
+ 	($hook = get_hook('li_login_qr_get_login_data')) ? eval($hook) : null;
+ 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+ 	list($user_id, $group_id, $db_password_hash, $salt) = $forum_db->fetch_row($result);
+ 
+-	$authorized = false;
+-	if (!empty($db_password_hash))
+-	{
+-		$sha1_in_db = (strlen($db_password_hash) == 40) ? true : false;
+-		$form_password_hash = forum_hash($form_password, $salt);
+-
+-		if ($sha1_in_db && $db_password_hash == $form_password_hash)
+-			$authorized = true;
+-		else if ((!$sha1_in_db && $db_password_hash == md5($form_password)) || ($sha1_in_db && $db_password_hash == sha1($form_password)))
+-		{
+-			$authorized = true;
+-
+-			$salt = random_key(12);
+-			$form_password_hash = forum_hash($form_password, $salt);
+-
+-			// There's an old MD5 hash or an unsalted SHA1 hash in the database, so we replace it
+-			// with a randomly generated salt and a new, salted SHA1 hash
+-			$query = array(
+-				'UPDATE'	=> 'users',
+-				'SET'		=> 'password=\''.$form_password_hash.'\', salt=\''.$forum_db->escape($salt).'\'',
+-				'WHERE'		=> 'id='.$user_id
+-			);
++	//looking for the user in the VHFFS database
++	$vhffs_db = new vhffs_DBLayer($vhffs_db_host, $vhffs_db_username, $vhffs_db_password, $vhffs_db_name, $vhffs_p_connect);
++	$vhffs_result = $vhffs_db->query('SELECT passwd, firstname, lastname, mail, date_creation, state FROM vhffs_forum WHERE username=\''.$vhffs_db->escape($form_username).'\'');
++	list($vhffs_db_password_hash, $vhffs_user_firstname, $vhffs_user_lastname, $vhffs_user_mail, $vhffs_inscription_date, $vhffs_user_status) = $vhffs_db->fetch_row($vhffs_result);
++
++	if( !$vhffs_result ) {
++		$dberr = $vhffs_db->error();
++		$errors[] = 'Unable to fetch user info in '.$vhffs_team.' database. Error: '.$dberr['error_sql'].' : '.$dberr['error_msg'];
++	}
++	else if( empty($vhffs_db_password_hash) )  {
++		$errors[] = 'User doesn\'t exist in '.$vhffs_team.' database. Please create an account on <a href="'.$vhffs_hoster_url.'">'.$vhffs_team.'\'s panel </a>';
++	}
++	else if( $vhffs_user_status != 6 ) {  // If user status is not "Activated"
++		$errors[] = 'User not activated in '.$vhffs_team.' database. Is registration process complete ?';
++	}
++	else if( crypt($form_password, $vhffs_db_password_hash) != $vhffs_db_password_hash) {  // VHFFS password verification
++		$errors[] = sprintf($lang_login['Wrong user/pass']);
++	}
++	else if(empty($user_id)) { // new user 
++		$initial_group_id = ($forum_config['o_regs_verify'] == '0') ? $forum_config['o_default_user_group'] : FORUM_UNVERIFIED;
++		if( ! $forum_db->query('INSERT INTO '.$forum_db->prefix.'users (group_id, username, email, realname, registered, registration_ip, last_visit) VALUES ( '.$initial_group_id.' , \''.$forum_db->escape($form_username).'\', \''.$forum_db->escape($vhffs_user_mail).'\', \''.$forum_db->escape($vhffs_user_firstname).' '. $forum_db->escape($vhffs_user_lastname).'\', '.$vhffs_inscription_date.', \''.get_remote_address().'\', '.time().' )' ) ) {
+ 
+-			($hook = get_hook('li_login_qr_update_user_hash')) ? eval($hook) : null;
+-			$forum_db->query_build($query) or error(__FILE__, __LINE__);
++			$dberr = $forum_db->error();
++			$errors[] = 'Unable to create user in forum database. Error: '.$dberr['error_sql'].' : '.$dberr['error_msg'];
++		}
++		else {
++			$user_id = $forum_db->insert_id();
+ 		}
++	} else { // update user
++		$forum_db->query('UPDATE '.$forum_db->prefix.'users SET email=\''.$forum_db->escape($vhffs_user_mail).'\', realname=\''.$forum_db->escape($vhffs_user_firstname).' '. $forum_db->escape($vhffs_user_lastname).'\' WHERE id='.$user_id );
+ 	}
+ 
+ 	($hook = get_hook('li_login_pre_auth_message')) ? eval($hook) : null;
+ 
+-	if (!$authorized)
+-		$errors[] = sprintf($lang_login['Wrong user/pass']);
+-
+ 	// Did everything go according to plan?
+ 	if (empty($errors))
+ 	{
+@@ -165,188 +176,6 @@
+ 	redirect(forum_link($forum_url['index']), $lang_login['Logout redirect']);
+ }
+ 
+-
+-// New password
+-else if ($action == 'forget' || $action == 'forget_2')
+-{
+-	if (!$forum_user['is_guest'])
+-		header('Location: '.forum_link($forum_url['index']));
+-
+-	($hook = get_hook('li_forgot_pass_selected')) ? eval($hook) : null;
+-
+-	if (isset($_POST['form_sent']))
+-	{
+-		// User pressed the cancel button
+-		if (isset($_POST['cancel']))
+-			redirect(forum_link($forum_url['index']), $lang_login['New password cancel redirect']);
+-
+-		if (!defined('FORUM_EMAIL_FUNCTIONS_LOADED'))
+-			require FORUM_ROOT.'include/email.php';
+-
+-		// Validate the email-address
+-		$email = strtolower(forum_trim($_POST['req_email']));
+-		if (!is_valid_email($email))
+-			$errors[] = $lang_login['Invalid e-mail'];
+-
+-		($hook = get_hook('li_forgot_pass_end_validation')) ? eval($hook) : null;
+-
+-		// Did everything go according to plan?
+-		if (empty($errors))
+-		{
+-			// Fetch user matching $email
+-			$query = array(
+-				'SELECT'	=> 'u.id, u.username, u.salt, u.last_email_sent',
+-				'FROM'		=> 'users AS u',
+-				'WHERE'		=> 'u.email=\''.$forum_db->escape($email).'\''
+-			);
+-
+-			($hook = get_hook('li_forgot_pass_qr_get_user_data')) ? eval($hook) : null;
+-			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+-			if ($forum_db->num_rows($result))
+-			{
+-				($hook = get_hook('li_forgot_pass_pre_email')) ? eval($hook) : null;
+-
+-				// Load the "activate password" template
+-				$mail_tpl = forum_trim(file_get_contents(FORUM_ROOT.'lang/'.$forum_user['language'].'/mail_templates/activate_password.tpl'));
+-
+-				// The first row contains the subject
+-				$first_crlf = strpos($mail_tpl, "\n");
+-				$mail_subject = forum_trim(substr($mail_tpl, 8, $first_crlf-8));
+-				$mail_message = forum_trim(substr($mail_tpl, $first_crlf));
+-
+-				// Do the generic replacements first (they apply to all e-mails sent out here)
+-				$mail_message = str_replace('<base_url>', $base_url.'/', $mail_message);
+-				$mail_message = str_replace('<board_mailer>', sprintf($lang_common['Forum mailer'], $forum_config['o_board_title']), $mail_message);
+-
+-				($hook = get_hook('li_forgot_pass_new_general_replace_data')) ? eval($hook) : null;
+-
+-				// Loop through users we found
+-				while ($cur_hit = $forum_db->fetch_assoc($result))
+-				{
+-					$forgot_pass_timeout = 3600;
+-
+-					($hook = get_hook('li_forgot_pass_pre_flood_check')) ? eval($hook) : null;
+-
+-					if ($cur_hit['last_email_sent'] != '' && (time() - $cur_hit['last_email_sent']) < $forgot_pass_timeout && (time() - $cur_hit['last_email_sent']) >= 0)
+-						message(sprintf($lang_login['Email flood'], $forgot_pass_timeout));
+-
+-					// Generate a new password activation key
+-					$new_password_key = random_key(8, true);
+-
+-					$query = array(
+-						'UPDATE'	=> 'users',
+-						'SET'		=> 'activate_key=\''.$new_password_key.'\', last_email_sent = '.time(),
+-						'WHERE'		=> 'id='.$cur_hit['id']
+-					);
+-
+-					($hook = get_hook('li_forgot_pass_qr_set_activate_key')) ? eval($hook) : null;
+-					$forum_db->query_build($query) or error(__FILE__, __LINE__);
+-
+-					// Do the user specific replacements to the template
+-					$cur_mail_message = str_replace('<username>', $cur_hit['username'], $mail_message);
+-					$cur_mail_message = str_replace('<activation_url>', str_replace('&amp;', '&', forum_link($forum_url['change_password_key'], array($cur_hit['id'], $new_password_key))), $cur_mail_message);
+-
+-					($hook = get_hook('li_forgot_pass_new_user_replace_data')) ? eval($hook) : null;
+-
+-					forum_mail($email, $mail_subject, $cur_mail_message);
+-				}
+-
+-				message(sprintf($lang_login['Forget mail'], '<a href="mailto:'.forum_htmlencode($forum_config['o_admin_email']).'">'.forum_htmlencode($forum_config['o_admin_email']).'</a>'));
+-			}
+-			else
+-				$errors[] = sprintf($lang_login['No e-mail match'], forum_htmlencode($email));
+-		}
+-	}
+-
+-	// Setup form
+-	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
+-	$forum_page['form_action'] = forum_link($forum_url['request_password']);
+-
+-	// Setup breadcrumbs
+-	$forum_page['crumbs'] = array(
+-		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+-		array($lang_login['New password request'], forum_link($forum_url['request_password']))
+-	);
+-
+-	($hook = get_hook('li_forgot_pass_pre_header_load')) ? eval($hook) : null;
+-
+-	define ('FORUM_PAGE', 'reqpass');
+-	require FORUM_ROOT.'header.php';
+-
+-	// START SUBST - <!-- forum_main -->
+-	ob_start();
+-
+-	($hook = get_hook('li_forgot_pass_output_start')) ? eval($hook) : null;
+-
+-?>
+-	<div class="main-head">
+-		<h2 class="hn"><span><?php echo $lang_login['New password request'] ?></span></h2>
+-	</div>
+-	<div class="main-content main-frm">
+-		<div class="ct-box info-box">
+-			<p class="important"><?php echo $lang_login['New password info'] ?></p>
+-		</div>
+-<?php
+-
+-	// If there were any errors, show them
+-	if (!empty($errors))
+-	{
+-		$forum_page['errors'] = array();
+-		foreach ($errors as $cur_error)
+-			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
+-
+-		($hook = get_hook('li_forgot_pass_pre_new_password_errors')) ? eval($hook) : null;
+-
+-?>
+-		<div class="ct-box error-box">
+-			<h2 class="warn hn"><?php echo $lang_login['New password errors'] ?></h2>
+-			<ul class="error-list">
+-				<?php echo implode("\n\t\t\t\t", $forum_page['errors'])."\n" ?>
+-			</ul>
+-		</div>
+-<?php
+-
+-	}
+-
+-?>
+-		<div id="req-msg" class="req-warn ct-box error-box">
+-			<p class="important"><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Required'].'</em>') ?></p>
+-		</div>
+-		<form id="afocus" class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+-			<div class="hidden">
+-				<input type="hidden" name="form_sent" value="1" />
+-				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />
+-			</div>
+-<?php ($hook = get_hook('li_forgot_pass_pre_group')) ? eval($hook) : null; ?>
+-			<div class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
+-<?php ($hook = get_hook('li_forgot_pass_pre_email')) ? eval($hook) : null; ?>
+-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+-					<div class="sf-box text required">
+-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_login['E-mail address'] ?> <em><?php echo $lang_common['Required'] ?></em></span> <small><?php echo $lang_login['E-mail address help'] ?></small></label><br />
+-						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="text" name="req_email" value="<?php echo isset($_POST['req_email']) ? forum_htmlencode($_POST['req_email']) : '' ?>" size="35" maxlength="80" /></span>
+-					</div>
+-				</div>
+-<?php ($hook = get_hook('li_forgot_pass_pre_group_end')) ? eval($hook) : null; ?>
+-			</div>
+-<?php ($hook = get_hook('li_forgot_pass_group_end')) ? eval($hook) : null; ?>
+-			<div class="frm-buttons">
+-				<span class="submit"><input type="submit" name="request_pass" value="<?php echo $lang_login['Submit password request'] ?>" /></span>
+-				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
+-			</div>
+-		</form>
+-	</div>
+-<?php
+-
+-	($hook = get_hook('li_forgot_pass_end')) ? eval($hook) : null;
+-
+-	$tpl_temp = forum_trim(ob_get_contents());
+-	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+-	ob_end_clean();
+-	// END SUBST - <!-- forum_main -->
+-
+-	require FORUM_ROOT.'footer.php';
+-}
+-
+ if (!$forum_user['is_guest'])
+ 	header('Location: '.forum_link($forum_url['index']));
+ 
+@@ -382,7 +211,7 @@
+ 	</div>
+ 	<div class="main-content main-frm">
+ 		<div class="content-head">
+-			<p class="hn"><?php printf($lang_login['Login options'], '<a href="'.forum_link($forum_url['register']).'">'.$lang_login['register'].'</a>', '<a href="'.forum_link($forum_url['request_password']).'">'.$lang_login['Obtain pass'].'</a>') ?></p>
++			<p class="hn"><?php printf($lang_login['Login options'], '<a href="'.$vhffs_hoster_url.'">'.$lang_login['register'].'</a>', '<a href="'.$vhffs_panel_url.'/?do=lost">'.$lang_login['Obtain pass'].'</a>') ?></p>
+ 		</div>
+ <?php
+ 
+diff -Nru a/post.php b/post.php
+--- a/post.php	2011-03-07 21:13:25.000000000 +0100
++++ b/post.php	2011-04-17 22:12:05.000000000 +0200
+@@ -5,6 +5,11 @@
+  * @copyright (C) 2008-2009 PunBB, partially based on code (C) 2008-2009 FluxBB.org
+  * @license http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
+  * @package PunBB
++ * 
++ * VHFFS Antibot patch by
++ *   Samuel Lesueur <crafty@tuxfamily.org>
++ *   Sylvain Rochet <gradator@gradator.net>
++ * 
+  */
+ 
+ define('FORUM_SKIP_CSRF_CONFIRM', 1);
+@@ -163,6 +168,12 @@
+ 	if ($forum_user['is_admmod'] && (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== generate_form_token(get_current_url())))
+ 		$errors[] = $lang_post['CSRF token mismatch'];
+ 
++	//Check that the antispam code is ok
++	if( $forum_user['is_guest'] && crypt($_POST['antibot_test'] , $_POST['code']) != $_POST['code'])
++	{
++		$errors[] = $lang_post['Captcha failed'];
++	}
++
+ 	// Clean up message from POST
+ 	$message = forum_linebreaks(forum_trim($_POST['req_message']));
+ 
+@@ -443,6 +454,25 @@
+ 					</div>
+ 				</div>
+ <?php ($hook = get_hook('po_pre_guest_info_fieldset_end')) ? eval($hook) : null; ?>
++				<div class="txt-set set<?php echo ++$forum_page['item_count'] ?>">
++					<div class="txt-box textarea required">
++						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span>Antispam <em>(Required)</em></span></label><br />
++						<p><?php echo $lang_post['Bot message'] ?></p><p>
++						<?php
++							$antibot_code = '';
++							$antibot_text = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789';
++							for($i=0;$i<6;$i++) {
++								$antibot_chr=$antibot_text[ rand(0,34) ];
++								echo("<img alt='antibot' src='img/antibot/".$antibot_chr.".png'/>");
++								$antibot_code .= $antibot_chr;
++							}
++							$antibot_code=crypt($antibot_code , 'a4' );
++						?>
++						<input type='text' name='antibot_test' size='6' maxlength='6' /></p>
++						<input type='hidden' value='<?php echo $antibot_code;?>' name='code'/>
++						<p><?php echo $lang_post['Bot warning'] ?></p>
++					</div>
++				</div>
+ 			</fieldset>
+ <?php
+ 
+diff -Nru a/profile.php b/profile.php
+--- a/profile.php	2011-03-11 19:46:44.000000000 +0100
++++ b/profile.php	2011-04-17 22:14:32.000000000 +0200
+@@ -5,6 +5,11 @@
+  * @copyright (C) 2008-2009 PunBB, partially based on code (C) 2008-2009 FluxBB.org
+  * @license http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
+  * @package PunBB
++ *
++ * VHFFS patch by
++ *   Samuel Lesueur <crafty@tuxfamily.org>
++ *   Sylvain Rochet <gradator@gradator.net>
++ *
+  */
+ 
+ 
+@@ -55,583 +60,14 @@
+ $user = $forum_db->fetch_assoc($result);
+ 
+ 
+-if ($action == 'change_pass')
+-{
+-	($hook = get_hook('pf_change_pass_selected')) ? eval($hook) : null;
+-
+-	// User pressed the cancel button
+-	if (isset($_POST['cancel']))
+-		redirect(forum_link($forum_url['profile_about'], $id), $lang_common['Cancel redirect']);
+-
+-	if (isset($_GET['key']))
+-	{
+-		$key = $_GET['key'];
+-
+-		// If the user is already logged in we shouldn't be here :)
+-		if (!$forum_user['is_guest'])
+-			message($lang_profile['Pass logout']);
+-
+-		($hook = get_hook('pf_change_pass_key_supplied')) ? eval($hook) : null;
+-
+-		if ($key == '' || $key != $user['activate_key'])
+-			message(sprintf($lang_profile['Pass key bad'], '<a href="mailto:'.forum_htmlencode($forum_config['o_admin_email']).'">'.forum_htmlencode($forum_config['o_admin_email']).'</a>'));
+-		else
+-		{
+-			if (isset($_POST['form_sent']))
+-			{
+-				($hook = get_hook('pf_change_pass_key_form_submitted')) ? eval($hook) : null;
+-
+-				$new_password1 = forum_trim($_POST['req_new_password1']);
+-				$new_password2 = forum_trim($_POST['req_new_password2']);
+-
+-				if (utf8_strlen($new_password1) < 4)
+-					$errors[] = $lang_profile['Pass too short'];
+-				else if ($new_password1 != $new_password2)
+-					$errors[] = $lang_profile['Pass not match'];
+-
+-				// Did everything go according to plan?
+-				if (empty($errors))
+-				{
+-					$new_password_hash = forum_hash($new_password1, $user['salt']);
+-
+-					$query = array(
+-						'UPDATE'	=> 'users',
+-						'SET'		=> 'password=\''.$new_password_hash.'\', activate_key=NULL',
+-						'WHERE'		=> 'id='.$id
+-					);
+-
+-					($hook = get_hook('pf_change_pass_key_qr_update_password')) ? eval($hook) : null;
+-					$forum_db->query_build($query) or error(__FILE__, __LINE__);
+-
+-					($hook = get_hook('pf_change_pass_key_pre_redirect')) ? eval($hook) : null;
+-
+-					redirect(forum_link($forum_url['index']), $lang_profile['Pass updated']);
+-				}
+-			}
+-
+-			// Is this users own profile
+-			$forum_page['own_profile'] = ($forum_user['id'] == $id) ? true : false;
+-
+-			// Setup form
+-			$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
+-			$forum_page['form_action'] = forum_link($forum_url['change_password_key'], array($id, $key));
+-
+-			// Setup breadcrumbs
+-			$forum_page['crumbs'] = array(
+-				array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+-				array(sprintf($lang_profile['Users profile'], $user['username'], $lang_profile['Section about']), forum_link($forum_url['profile_about'], $id)),
+-				($forum_page['own_profile']) ? array($lang_profile['Change your password'], forum_link($forum_url['change_password'], $id)) : array(sprintf($lang_profile['Change user password'], forum_htmlencode($user['username'])),forum_link($forum_url['change_password']), $id)
+-			);
+-
+-			($hook = get_hook('pf_change_pass_key_pre_header_load')) ? eval($hook) : null;
+-
+-			define('FORUM_PAGE', 'profile-changepass');
+-			require FORUM_ROOT.'header.php';
+-
+-			// START SUBST - <!-- forum_main -->
+-			ob_start();
+-
+-			($hook = get_hook('pf_change_pass_key_output_start')) ? eval($hook) : null;
+-
+-?>
+-	<div class="main-head">
+-		<h2 class="hn"><span><?php echo $forum_page['own_profile'] ? $lang_profile['Change your password'] : sprintf($lang_profile['Change user password'], forum_htmlencode($user['username'])) ?></span></h2>
+-	</div>
+-	<div class="main-content main-frm">
+-<?php
+-
+-			// If there were any errors, show them
+-			if (!empty($errors))
+-			{
+-				$forum_page['errors'] = array();
+-				foreach ($errors as $cur_error)
+-					$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
+-
+-				($hook = get_hook('pf_change_pass_key_pre_errors')) ? eval($hook) : null;
+-
+-?>
+-		<div class="ct-box error-box">
+-			<h2 class="warn hn"><?php echo $lang_profile['Change pass errors'] ?></h2>
+-			<ul class="error-list">
+-				<?php echo implode("\n\t\t\t\t", $forum_page['errors'])."\n" ?>
+-			</ul>
+-		</div>
+-<?php
+-
+-			}
+-
+-?>
+-		<div id="req-msg" class="req-warn ct-box error-box">
+-			<p class="important"><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Required'].'</em>') ?></p>
+-		</div>
+-		<form id="afocus" class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+-			<div class="hidden">
+-				<input type="hidden" name="form_sent" value="1" />
+-				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />
+-			</div>
+-<?php ($hook = get_hook('pf_change_pass_key_pre_fieldset')) ? eval($hook) : null; ?>
+-			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
+-				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
+-<?php ($hook = get_hook('pf_change_pass_key_pre_new_password')) ? eval($hook) : null; ?>
+-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+-					<div class="sf-box text required">
+-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['New password'] ?> <em><?php echo $lang_common['Required'] ?></em></span> <small><?php echo $lang_profile['Password help'] ?></small></label><br />
+-						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_new_password1" size="35" value="<?php echo(isset($_POST['req_new_password1']) ? forum_htmlencode($_POST['req_new_password1']) : ''); ?>"/></span><br />
+-					</div>
+-				</div>
+-<?php ($hook = get_hook('pf_change_pass_key_pre_new_password_confirm')) ? eval($hook) : null; ?>
+-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+-					<div class="sf-box text required">
+-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Confirm new password'] ?> <em><?php echo $lang_common['Required'] ?></em></span> <small><?php echo $lang_profile['Confirm password help'] ?></small></label><br />
+-						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_new_password2" size="35" value="<?php echo(isset($_POST['req_new_password2']) ? forum_htmlencode($_POST['req_new_password2']) : ''); ?>"/></span><br />
+-					</div>
+-				</div>
+-<?php ($hook = get_hook('pf_change_pass_key_pre_fieldset_end')) ? eval($hook) : null; ?>
+-			</fieldset>
+-<?php ($hook = get_hook('pf_change_pass_key_fieldset_end')) ? eval($hook) : null; ?>
+-			<div class="frm-buttons">
+-				<span class="submit"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /></span>
+-				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
+-			</div>
+-		</form>
+-	</div>
+-
+-<?php
+-
+-			($hook = get_hook('pf_change_pass_key_end')) ? eval($hook) : null;
+-
+-			$tpl_temp = forum_trim(ob_get_contents());
+-			$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+-			ob_end_clean();
+-			// END SUBST - <!-- forum_main -->
+-
+-			require FORUM_ROOT.'footer.php';
+-		}
+-	}
+-
+-	// Make sure we are allowed to change this user's password
+-	if ($forum_user['id'] != $id &&
+-		$forum_user['g_id'] != FORUM_ADMIN &&
+-		($forum_user['g_moderator'] != '1' || $forum_user['g_mod_edit_users'] == '0' || $forum_user['g_mod_change_passwords'] == '0' || $user['g_id'] == FORUM_ADMIN || $user['g_moderator'] == '1'))
+-		message($lang_common['No permission']);
++// VHFFS MODIFICATION : password and email change disabled
+ 
+-	if (isset($_POST['form_sent']))
+-	{
+-		($hook = get_hook('pf_change_pass_normal_form_submitted')) ? eval($hook) : null;
+-
+-		$old_password = isset($_POST['req_old_password']) ? forum_trim($_POST['req_old_password']) : '';
+-		$new_password1 = forum_trim($_POST['req_new_password1']);
+-		$new_password2 = forum_trim($_POST['req_new_password2']);
+-
+-		if (utf8_strlen($new_password1) < 4)
+-			$errors[] = $lang_profile['Pass too short'];
+-		else if ($new_password1 != $new_password2)
+-			$errors[] = $lang_profile['Pass not match'];
+-
+-		$authorized = false;
+-		if (!empty($user['password']))
+-		{
+-			$old_password_hash = forum_hash($old_password, $user['salt']);
+-
+-			if (($user['password'] == $old_password_hash) || $forum_user['is_admmod'])
+-				$authorized = true;
+-		}
+-
+-		if (!$authorized)
+-			$errors[] = $lang_profile['Wrong old password'];
+-
+-		// Did everything go according to plan?
+-		if (empty($errors))
+-		{
+-			$new_password_hash = forum_hash($new_password1, $user['salt']);
+-
+-			$query = array(
+-				'UPDATE'	=> 'users',
+-				'SET'		=> 'password=\''.$new_password_hash.'\'',
+-				'WHERE'		=> 'id='.$id
+-			);
+-
+-			($hook = get_hook('pf_change_pass_normal_qr_update_password')) ? eval($hook) : null;
+-			$forum_db->query_build($query) or error(__FILE__, __LINE__);
+-
+-			if ($forum_user['id'] == $id)
+-			{
+-				$cookie_data = @explode('|', base64_decode($_COOKIE[$cookie_name]));
+-
+-				$expire = ($cookie_data[2] > time() + $forum_config['o_timeout_visit']) ? time() + 1209600 : time() + $forum_config['o_timeout_visit'];
+-				forum_setcookie($cookie_name, base64_encode($forum_user['id'].'|'.$new_password_hash.'|'.$expire.'|'.sha1($user['salt'].$new_password_hash.forum_hash($expire, $user['salt']))), $expire);
+-			}
+-
+-			($hook = get_hook('pf_change_pass_normal_pre_redirect')) ? eval($hook) : null;
+-
+-			redirect(forum_link($forum_url['profile_about'], $id), $lang_profile['Pass updated redirect']);
+-		}
+-	}
+-
+-	// Is this users own profile
+-	$forum_page['own_profile'] = ($forum_user['id'] == $id) ? true : false;
+-
+-	// Setup form
+-	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
+-	$forum_page['form_action'] = forum_link($forum_url['change_password'], $id);
+-
+-	$forum_page['hidden_fields'] = array(
+-		'form_sent'		=> '<input type="hidden" name="form_sent" value="1" />',
+-		'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />'
+-	);
+-
+-	// Setup breadcrumbs
+-	$forum_page['crumbs'] = array(
+-		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+-		array(sprintf($lang_profile['Users profile'], $user['username']), forum_link($forum_url['profile_about'], $id)),
+-		($forum_page['own_profile']) ? array($lang_profile['Change your password'], forum_link($forum_url['change_password'], $id)) : array(sprintf($lang_profile['Change user password'], forum_htmlencode($user['username'])),forum_link($forum_url['change_password'], $id))
+-	);
+-
+-	($hook = get_hook('pf_change_pass_normal_pre_header_load')) ? eval($hook) : null;
+-
+-	define('FORUM_PAGE', 'profile-changepass');
+-	require FORUM_ROOT.'header.php';
+-
+-	// START SUBST - <!-- forum_main -->
+-	ob_start();
+-
+-	($hook = get_hook('pf_change_pass_normal_output_start')) ? eval($hook) : null;
+-
+-?>
+-	<div class="main-head">
+-		<h2 class="hn"><span><?php echo $forum_page['own_profile'] ? $lang_profile['Change your password'] : sprintf($lang_profile['Change user password'], forum_htmlencode($user['username'])) ?></span></h2>
+-	</div>
+-	<div class="main-content main-frm">
+-<?php
+-
+-	// If there were any errors, show them
+-	if (!empty($errors))
+-	{
+-		$forum_page['errors'] = array();
+-		foreach ($errors as $cur_error)
+-			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
+-
+-		($hook = get_hook('pf_change_pass_normal_pre_errors')) ? eval($hook) : null;
+-
+-?>
+-		<div class="ct-box error-box">
+-			<h2 class="warn hn"><?php echo $lang_profile['Change pass errors'] ?></h2>
+-			<ul class="error-list">
+-				<?php echo implode("\n\t\t\t\t", $forum_page['errors'])."\n" ?>
+-			</ul>
+-		</div>
+-<?php
+-
+-	}
+-
+-?>
+-		<div id="req-msg" class="req-warn ct-box error-box">
+-			<p class="important"><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Required'].'</em>') ?></p>
+-		</div>
+-		<form id="afocus" class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action']  ?>">
+-			<div class="hidden">
+-				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
+-			</div>
+-<?php ($hook = get_hook('pf_change_pass_normal_pre_fieldset')) ? eval($hook) : null; ?>
+-			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
+-				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
+-<?php ($hook = get_hook('pf_change_pass_normal_pre_old_password')) ? eval($hook) : null; ?>
+-<?php if (!$forum_user['is_admmod'] || $forum_user['id'] == $id): ?>
+-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+-					<div class="sf-box text required">
+-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Old password'] ?> <em><?php echo $lang_common['Required'] ?></em></span> <small><?php echo $lang_profile['Old password help'] ?></small></label><br />
+-						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_old_password" size="35" value="<?php echo(isset($_POST['req_old_password']) ? forum_htmlencode($_POST['req_old_password']) : ''); ?>"/></span>
+-					</div>
+-				</div>
+-<?php endif; ($hook = get_hook('pf_change_pass_normal_pre_new_password')) ? eval($hook) : null; ?>
+-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+-					<div class="sf-box text required">
+-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['New password'] ?> <em><?php echo $lang_common['Required'] ?></em></span> <small><?php echo $lang_profile['Password help'] ?></small></label><br />
+-						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_new_password1" size="35" value="<?php echo(isset($_POST['req_new_password1']) ? forum_htmlencode($_POST['req_new_password1']) : ''); ?>"/></span><br />
+-					</div>
+-				</div>
+-<?php ($hook = get_hook('pf_change_pass_normal_pre_new_password_confirm')) ? eval($hook) : null; ?>
+-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+-					<div class="sf-box text required">
+-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Confirm new password'] ?> <em><?php echo $lang_common['Required'] ?></em></span> <small><?php echo $lang_profile['Confirm password help'] ?></small></label><br />
+-						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_new_password2" size="35" value="<?php echo(isset($_POST['req_new_password2']) ? forum_htmlencode($_POST['req_new_password2']) : ''); ?>"/></span><br />
+-					</div>
+-				</div>
+-<?php ($hook = get_hook('pf_change_pass_normal_pre_fieldset_end')) ? eval($hook) : null; ?>
+-			</fieldset>
+-<?php ($hook = get_hook('pf_change_pass_normal_fieldset_end')) ? eval($hook) : null; ?>
+-			<div class="frm-buttons">
+-				<span class="submit"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /></span>
+-				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
+-			</div>
+-		</form>
+-	</div>
+-<?php
+-
+-	($hook = get_hook('pf_change_pass_normal_end')) ? eval($hook) : null;
+-
+-	$tpl_temp = forum_trim(ob_get_contents());
+-	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+-	ob_end_clean();
+-	// END SUBST - <!-- forum_main -->
+-
+-	require FORUM_ROOT.'footer.php';
++if ($action == 'change_pass') {
++	message('Please use the <a href="'.$vhffs_panel_url.'">'.$vhffs_team.'\'s panel </a> to modify your password.' );
+ }
+ 
+-
+-else if ($action == 'change_email')
+-{
+-	// Make sure we are allowed to change this user's e-mail
+-	if ($forum_user['id'] != $id &&
+-		$forum_user['g_id'] != FORUM_ADMIN &&
+-		($forum_user['g_moderator'] != '1' || $forum_user['g_mod_edit_users'] == '0' || $user['g_id'] == FORUM_ADMIN || $user['g_moderator'] == '1'))
+-		message($lang_common['No permission']);
+-
+-	($hook = get_hook('pf_change_email_selected')) ? eval($hook) : null;
+-
+-	// User pressed the cancel button
+-	if (isset($_POST['cancel']))
+-		redirect(forum_link($forum_url['profile_about'], $id), $lang_common['Cancel redirect']);
+-
+-	if (isset($_GET['key']))
+-	{
+-		$key = $_GET['key'];
+-
+-		($hook = get_hook('pf_change_email_key_supplied')) ? eval($hook) : null;
+-
+-		if ($key == '' || $key != $user['activate_key'])
+-			message(sprintf($lang_profile['E-mail key bad'], '<a href="mailto:'.forum_htmlencode($forum_config['o_admin_email']).'">'.forum_htmlencode($forum_config['o_admin_email']).'</a>'));
+-		else
+-		{
+-			$query = array(
+-				'UPDATE'	=> 'users',
+-				'SET'		=> 'email=activate_string, activate_string=NULL, activate_key=NULL',
+-				'WHERE'		=> 'id='.$id
+-			);
+-
+-			($hook = get_hook('pf_change_email_key_qr_update_email')) ? eval($hook) : null;
+-			$forum_db->query_build($query) or error(__FILE__, __LINE__);
+-
+-			message($lang_profile['E-mail updated']);
+-		}
+-	}
+-	else if (isset($_POST['form_sent']))
+-	{
+-		($hook = get_hook('pf_change_email_normal_form_submitted')) ? eval($hook) : null;
+-
+-		if (forum_hash($_POST['req_password'], $forum_user['salt']) !== $forum_user['password'])
+-			$errors[] = $lang_profile['Wrong password'];
+-
+-		if (!defined('FORUM_EMAIL_FUNCTIONS_LOADED'))
+-			require FORUM_ROOT.'include/email.php';
+-
+-		// Validate the email-address
+-		$new_email = strtolower(forum_trim($_POST['req_new_email']));
+-		if (!is_valid_email($new_email))
+-			$errors[] = $lang_common['Invalid e-mail'];
+-
+-		// Check if it's a banned e-mail address
+-		if (is_banned_email($new_email))
+-		{
+-			($hook = get_hook('pf_change_email_normal_banned_email')) ? eval($hook) : null;
+-
+-			if ($forum_config['p_allow_banned_email'] == '0')
+-				$errors[] = $lang_profile['Banned e-mail'];
+-			else if ($forum_config['o_mailing_list'] != '')
+-			{
+-				$mail_subject = 'Alert - Banned e-mail detected';
+-				$mail_message = 'User \''.$forum_user['username'].'\' changed to banned e-mail address: '.$new_email."\n\n".'User profile: '.forum_link($forum_url['user'], $id)."\n\n".'-- '."\n".'Forum Mailer'."\n".'(Do not reply to this message)';
+-
+-				forum_mail($forum_config['o_mailing_list'], $mail_subject, $mail_message);
+-			}
+-		}
+-
+-		// Check if someone else already has registered with that e-mail address
+-		$query = array(
+-			'SELECT'	=> 'u.id, u.username',
+-			'FROM'		=> 'users AS u',
+-			'WHERE'		=> 'u.email=\''.$forum_db->escape($new_email).'\''
+-		);
+-
+-		($hook = get_hook('pf_change_email_normal_qr_check_email_dupe')) ? eval($hook) : null;
+-		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+-		if ($forum_db->num_rows($result))
+-		{
+-			($hook = get_hook('pf_change_email_normal_dupe_email')) ? eval($hook) : null;
+-
+-			if ($forum_config['p_allow_dupe_email'] == '0')
+-				$errors[] = $lang_profile['Dupe e-mail'];
+-			else if (($forum_config['o_mailing_list'] != '') && empty($errors))
+-			{
+-				while ($cur_dupe = $forum_db->fetch_assoc($result))
+-					$dupe_list[] = $cur_dupe['username'];
+-
+-				$mail_subject = 'Alert - Duplicate e-mail detected';
+-				$mail_message = 'User \''.$forum_user['username'].'\' changed to an e-mail address that also belongs to: '.implode(', ', $dupe_list)."\n\n".'User profile: '.forum_link($forum_url['user'], $id)."\n\n".'-- '."\n".'Forum Mailer'."\n".'(Do not reply to this message)';
+-
+-				forum_mail($forum_config['o_mailing_list'], $mail_subject, $mail_message);
+-			}
+-		}
+-
+-		// Did everything go according to plan?
+-		if (empty($errors))
+-		{
+-			if ($forum_config['o_regs_verify'] != '1')
+-			{
+-				// We have no confirmed e-mail so we change e-mail right now
+-				$query = array(
+-					'UPDATE'	=> 'users',
+-					'SET'		=> 'email=\''.$forum_db->escape($new_email).'\'',
+-					'WHERE'		=> 'id='.$id
+-				);
+-
+-				($hook = get_hook('pf_change_email_key_qr_update_email')) ? eval($hook) : null;
+-				$forum_db->query_build($query) or error(__FILE__, __LINE__);
+-
+-				redirect(forum_link($forum_url['profile_about'], $id), $lang_profile['E-mail updated redirect']);
+-			}
+-
+-			// We have a confirmed e-mail so we going to send an activation link
+-
+-			$new_email_key = random_key(8, true);
+-
+-			// Save new e-mail and activation key
+-			$query = array(
+-				'UPDATE'	=> 'users',
+-				'SET'		=> 'activate_string=\''.$forum_db->escape($new_email).'\', activate_key=\''.$new_email_key.'\'',
+-				'WHERE'		=> 'id='.$id
+-			);
+-
+-			($hook = get_hook('pf_change_email_normal_qr_update_email_activation')) ? eval($hook) : null;
+-			$forum_db->query_build($query) or error(__FILE__, __LINE__);
+-
+-			// Load the "activate e-mail" template
+-			$mail_tpl = forum_trim(file_get_contents(FORUM_ROOT.'lang/'.$forum_user['language'].'/mail_templates/activate_email.tpl'));
+-
+-			// The first row contains the subject
+-			$first_crlf = strpos($mail_tpl, "\n");
+-			$mail_subject = forum_trim(substr($mail_tpl, 8, $first_crlf-8));
+-			$mail_message = forum_trim(substr($mail_tpl, $first_crlf));
+-
+-			$mail_message = str_replace('<username>', $forum_user['username'], $mail_message);
+-			$mail_message = str_replace('<base_url>', $base_url.'/', $mail_message);
+-			$mail_message = str_replace('<activation_url>', str_replace('&amp;', '&', forum_link($forum_url['change_email_key'], array($id, $new_email_key))), $mail_message);
+-			$mail_message = str_replace('<board_mailer>', sprintf($lang_common['Forum mailer'], $forum_config['o_board_title']), $mail_message);
+-
+-			($hook = get_hook('pf_change_email_normal_pre_activation_email_sent')) ? eval($hook) : null;
+-
+-			forum_mail($new_email, $mail_subject, $mail_message);
+-
+-			message(sprintf($lang_profile['Activate e-mail sent'], '<a href="mailto:'.forum_htmlencode($forum_config['o_admin_email']).'">'.forum_htmlencode($forum_config['o_admin_email']).'</a>'));
+-		}
+-	}
+-
+-	// Is this users own profile
+-	$forum_page['own_profile'] = ($forum_user['id'] == $id) ? true : false;
+-
+-	// Setup form
+-	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
+-	$forum_page['form_action'] = forum_link($forum_url['change_email'], $id);
+-
+-	$forum_page['hidden_fields'] = array(
+-		'form_sent'		=> '<input type="hidden" name="form_sent" value="1" />',
+-		'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />'
+-	);
+-
+-	// Setup form information
+-	$forum_page['frm_info'] = '<p class="important"><span>'.$lang_profile['E-mail info'].'</span></p>';
+-
+-	// Setup breadcrumbs
+-	$forum_page['crumbs'] = array(
+-		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+-		array(sprintf($lang_profile['Users profile'], $user['username'], $lang_profile['Section about']), forum_link($forum_url['profile_about'], $id)),
+-		($forum_page['own_profile']) ? array($lang_profile['Change your e-mail'], forum_link($forum_url['change_email'], $id)) : array(sprintf($lang_profile['Change user e-mail'], forum_htmlencode($user['username'])), forum_link($forum_url['change_email'], $id))
+-	);
+-
+-	($hook = get_hook('pf_change_email_normal_pre_header_load')) ? eval($hook) : null;
+-
+-	define('FORUM_PAGE', 'profile-changemail');
+-	require FORUM_ROOT.'header.php';
+-
+-	// START SUBST - <!-- forum_main -->
+-	ob_start();
+-
+-	($hook = get_hook('pf_change_email_normal_output_start')) ? eval($hook) : null;
+-
+-?>
+-	<div class="main-head">
+-		<h2 class="hn"><span><?php printf(($forum_user['id'] == $id) ? $lang_profile['Profile welcome'] : $lang_profile['Profile welcome user'], forum_htmlencode($user['username'])) ?></span></h2>
+-	</div>
+-	<div class="main-content main-frm">
+-		<div class="ct-box info-box">
+-			<?php echo $forum_page['frm_info']."\n" ?>
+-		</div>
+-<?php
+-
+-	// If there were any errors, show them
+-	if (!empty($errors))
+-	{
+-		$forum_page['errors'] = array();
+-		foreach ($errors as $cur_error)
+-			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
+-
+-		($hook = get_hook('pf_change_email_pre_errors')) ? eval($hook) : null;
+-
+-?>
+-		<div class="ct-box error-box">
+-			<h2 class="warn hn"><?php echo $lang_profile['Change e-mail errors'] ?></h2>
+-			<ul class="error-list">
+-				<?php echo implode("\n\t\t\t\t", $forum_page['errors'])."\n" ?>
+-			</ul>
+-		</div>
+-<?php
+-
+-	}
+-
+-?>
+-		<div id="req-msg" class="req-warn ct-box error-box">
+-			<p class="important"><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Required'].'</em>') ?></p>
+-		</div>
+-		<form id="afocus" class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+-			<div class="hidden">
+-				<?php echo implode("\n\t\t\t", $forum_page['hidden_fields'])."\n" ?>
+-			</div>
+-<?php ($hook = get_hook('pf_change_email_normal_pre_fieldset')) ? eval($hook) : null; ?>
+-			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
+-				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
+-<?php ($hook = get_hook('pf_change_email_normal_pre_new_email')) ? eval($hook) : null; ?>
+-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+-					<div class="sf-box text required">
+-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['New e-mail'] ?> <em><?php echo $lang_common['Required'] ?></em></span></label><br />
+-						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_new_email" size="50" maxlength="80" value="<?php echo(isset($_POST['req_new_email']) ? forum_htmlencode($_POST['req_new_email']) : ''); ?>"/></span>
+-					</div>
+-				</div>
+-<?php ($hook = get_hook('pf_change_email_normal_pre_password')) ? eval($hook) : null; ?>
+-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+-					<div class="sf-box text required">
+-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Password'] ?> <em><?php echo $lang_common['Required'] ?></em></span></label><br />
+-						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_password" size="25" value="<?php echo(isset($_POST['req_password']) ? forum_htmlencode($_POST['req_password']) : ''); ?>"/></span>
+-					</div>
+-				</div>
+-<?php ($hook = get_hook('pf_change_email_normal_pre_fieldset_end')) ? eval($hook) : null; ?>
+-			</fieldset>
+-<?php ($hook = get_hook('pf_change_email_normal_fieldset_end')) ? eval($hook) : null; ?>
+-			<div class="frm-buttons">
+-				<span class="submit"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /></span>
+-				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
+-			</div>
+-		</form>
+-	</div>
+-<?php
+-
+-	($hook = get_hook('pf_change_email_normal_end')) ? eval($hook) : null;
+-
+-	$tpl_temp = forum_trim(ob_get_contents());
+-	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+-	ob_end_clean();
+-	// END SUBST - <!-- forum_main -->
+-
+-	require FORUM_ROOT.'footer.php';
++else if ($action == 'change_email') {
++	message('Please use the <a href="'.$vhffs_panel_url.'">'.$vhffs_team.'\'s panel </a> to modify your email.' );
+ }
+ 
+ else if ($action == 'delete_user' || isset($_POST['delete_user_comply']) || isset($_POST['cancel']))
+diff -Nru a/register.php b/register.php
+--- a/register.php	2011-03-10 08:44:00.000000000 +0100
++++ b/register.php	2011-04-17 21:11:52.000000000 +0200
+@@ -5,6 +5,10 @@
+  * @copyright (C) 2008-2009 PunBB, partially based on code (C) 2008-2009 FluxBB.org
+  * @license http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
+  * @package PunBB
++ * 
++ * VHFFS patch by
++ *   Samuel Lesueur <crafty@tuxfamily.org>
++ *   Sylvain Rochet <gradator@gradator.net>
+  */
+ 
+ 
+@@ -12,481 +16,7 @@
+ 	define('FORUM_ROOT', './');
+ require FORUM_ROOT.'include/common.php';
+ 
+-($hook = get_hook('rg_start')) ? eval($hook) : null;
+-
+-// If we are logged in, we shouldn't be here
+-if (!$forum_user['is_guest'])
+-{
+-	header('Location: '.forum_link($forum_url['index']));
+-	exit;
+-}
+-
+-// Load the profile.php language file
+-require FORUM_ROOT.'lang/'.$forum_user['language'].'/profile.php';
+-
+-if ($forum_config['o_regs_allow'] == '0')
+-	message($lang_profile['No new regs']);
+-
+-$errors = array();
+-
+-
+-// User pressed the cancel button
+-if (isset($_GET['cancel']))
+-	redirect(forum_link($forum_url['index']), $lang_profile['Reg cancel redirect']);
+-
+-// User pressed agree but failed to tick checkbox
+-else if (isset($_GET['agree']) && !isset($_GET['req_agreement']))
+-	redirect(forum_link($forum_url['index']), $lang_profile['Reg cancel redirect']);
+-
+-// Show the rules
+-else if ($forum_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_POST['form_sent']))
+-{
+-	// Setup form
+-	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
+-
+-	// Setup breadcrumbs
+-	$forum_page['crumbs'] = array(
+-		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+-		array($lang_common['Register'], forum_link($forum_url['register'])),
+-		$lang_common['Rules']
+-	);
+-
+-	($hook = get_hook('rg_rules_pre_header_load')) ? eval($hook) : null;
+-
+-	define('FORUM_PAGE', 'rules');
+-	require FORUM_ROOT.'header.php';
+-
+-	// START SUBST - <!-- forum_main -->
+-	ob_start();
+-
+-	($hook = get_hook('rg_rules_output_start')) ? eval($hook) : null;
+-
+-	$forum_page['set_count'] = $forum_page['fld_count'] = 0;
+-
+-?>
+-	<div class="main-head">
+-		<h2 class="hn"><span><?php echo sprintf($lang_profile['Register at'], $forum_config['o_board_title']) ?></span></h2>
+-	</div>
+-	<div class="main-subhead">
+-		<h2 class="hn"><span><?php echo $lang_profile['Reg rules head'] ?></span></h2>
+-	</div>
+-	<div class="main-content main-frm">
+-		<div class="ct-box user-box">
+-			<?php echo $forum_config['o_rules_message'] ?>
+-		</div>
+-		<form class="frm-form" method="get" accept-charset="utf-8" action="<?php echo forum_link($forum_url['register']) ?>">
+-<?php ($hook = get_hook('rg_rules_pre_group')) ? eval($hook) : null; ?>
+-			<div class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
+-<?php ($hook = get_hook('rg_rules_pre_agree_checkbox')) ? eval($hook) : null; ?>
+-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+-					<div class="sf-box checkbox">
+-						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_agreement" value="1" /></span>
+-						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Agreement'] ?></span> <?php echo $lang_profile['Agreement label'] ?></label>
+-					</div>
+-				</div>
+-<?php ($hook = get_hook('rg_rules_pre_group_end')) ? eval($hook) : null; ?>
+-			</div>
+-<?php ($hook = get_hook('rg_rules_group_end')) ? eval($hook) : null; ?>
+-			<div class="frm-buttons">
+-				<span class="submit"><input type="submit" name="agree" value="<?php echo $lang_profile['Agree'] ?>" /></span>
+-				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
+-			</div>
+-		</form>
+-	</div>
+-<?php
+-
+-	($hook = get_hook('rg_rules_end')) ? eval($hook) : null;
+-
+-	$tpl_temp = forum_trim(ob_get_contents());
+-	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+-	ob_end_clean();
+-	// END SUBST - <!-- forum_main -->
+-
+-	require FORUM_ROOT.'footer.php';
+-}
+-
+-else if (isset($_POST['form_sent']))
+-{
+-	($hook = get_hook('rg_register_form_submitted')) ? eval($hook) : null;
+-
+-	// Check that someone from this IP didn't register a user within the last hour (DoS prevention)
+-	$query = array(
+-		'SELECT'	=> '1',
+-		'FROM'		=> 'users AS u',
+-		'WHERE'		=> 'u.registration_ip=\''.$forum_db->escape(get_remote_address()).'\' AND u.registered>'.(time() - 3600)
+-	);
+-
+-	($hook = get_hook('rg_register_qr_check_register_flood')) ? eval($hook) : null;
+-	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+-	if ($forum_db->num_rows($result))
+-		$errors[] = $lang_profile['Registration flood'];
+-
+-	// Did everything go according to plan so far?
+-	if (empty($errors))
+-	{
+-		$username = forum_trim($_POST['req_username']);
+-		$email1 = strtolower(forum_trim($_POST['req_email1']));
+-
+-		if ($forum_config['o_regs_verify'] == '1')
+-		{
+-			$email2 = strtolower(forum_trim($_POST['req_email2']));
+-
+-			$password1 = random_key(8, true);
+-			$password2 = $password1;
+-		}
+-		else
+-		{
+-			$password1 = forum_trim($_POST['req_password1']);
+-			$password2 = forum_trim($_POST['req_password2']);
+-		}
+-
+-		// Validate the username
+-		$errors = array_merge($errors, validate_username($username));
+-
+-		// ... and the password
+-		if (utf8_strlen($password1) < 4)
+-			$errors[] = $lang_profile['Pass too short'];
+-		else if ($password1 != $password2)
+-			$errors[] = $lang_profile['Pass not match'];
+-
+-		// ... and the e-mail address
+-		if (!defined('FORUM_EMAIL_FUNCTIONS_LOADED'))
+-			require FORUM_ROOT.'include/email.php';
+-
+-		if (!is_valid_email($email1))
+-			$errors[] = $lang_profile['Invalid e-mail'];
+-		else if ($forum_config['o_regs_verify'] == '1' && $email1 != $email2)
+-			$errors[] = $lang_profile['E-mail not match'];
+-
+-		// Check if it's a banned e-mail address
+-		$banned_email = is_banned_email($email1);
+-		if ($banned_email && $forum_config['p_allow_banned_email'] == '0')
+-			$errors[] = $lang_profile['Banned e-mail'];
+-
+-		// Clean old unverified registrators - delete older than 72 hours
+-		$query = array(
+-			'DELETE'	=> 'users',
+-			'WHERE'		=> 'group_id='.FORUM_UNVERIFIED.' AND activate_key IS NOT NULL AND registered < '.(time() - 259200)
+-		);
+-		($hook = get_hook('rg_register_qr_delete_unverified')) ? eval($hook) : null;
+-		$forum_db->query_build($query) or error(__FILE__, __LINE__);
+-
+-		// Check if someone else already has registered with that e-mail address
+-		$dupe_list = array();
+-
+-		$query = array(
+-			'SELECT'	=> 'u.username',
+-			'FROM'		=> 'users AS u',
+-			'WHERE'		=> 'u.email=\''.$forum_db->escape($email1).'\''
+-		);
+-
+-		($hook = get_hook('rg_register_qr_check_email_dupe')) ? eval($hook) : null;
+-		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+-		if ($forum_db->num_rows($result) && empty($errors))
+-		{
+-			if ($forum_config['p_allow_dupe_email'] == '0')
+-				$errors[] = $lang_profile['Dupe e-mail'];
+-
+-			while ($cur_dupe = $forum_db->fetch_assoc($result))
+-				$dupe_list[] = $cur_dupe['username'];
+-		}
+-
+-		($hook = get_hook('rg_register_end_validation')) ? eval($hook) : null;
+-
+-		// Did everything go according to plan so far?
+-		if (empty($errors))
+-		{
+-			// Make sure we got a valid language string
+-			if (isset($_POST['language']))
+-			{
+-				$language = preg_replace('#[\.\\\/]#', '', $_POST['language']);
+-				if (!file_exists(FORUM_ROOT.'lang/'.$language.'/common.php'))
+-					message($lang_common['Bad request']);
+-			}
+-			else
+-				$language = $forum_config['o_default_lang'];
+-
+-			$initial_group_id = ($forum_config['o_regs_verify'] == '0') ? $forum_config['o_default_user_group'] : FORUM_UNVERIFIED;
+-			$salt = random_key(12);
+-			$password_hash = forum_hash($password1, $salt);
+-
+-			// Insert the new user into the database. We do this now to get the last inserted id for later use.
+-			$user_info = array(
+-				'username'				=>	$username,
+-				'group_id'				=>	$initial_group_id,
+-				'salt'					=>	$salt,
+-				'password'				=>	$password1,
+-				'password_hash'			=>	$password_hash,
+-				'email'					=>	$email1,
+-				'email_setting'			=>	$forum_config['o_default_email_setting'],
+-				'timezone'				=>	$_POST['timezone'],
+-				'dst'					=>	isset($_POST['dst']) ? '1' : '0',
+-				'language'				=>	$language,
+-				'style'					=>	$forum_config['o_default_style'],
+-				'registered'			=>	time(),
+-				'registration_ip'		=>	get_remote_address(),
+-				'activate_key'			=>	($forum_config['o_regs_verify'] == '1') ? '\''.random_key(8, true).'\'' : 'NULL',
+-				'require_verification'	=>	($forum_config['o_regs_verify'] == '1'),
+-				'notify_admins'			=>	($forum_config['o_regs_report'] == '1')
+-			);
+-
+-			($hook = get_hook('rg_register_pre_add_user')) ? eval($hook) : null;
+-			add_user($user_info, $new_uid);
+-
+-			// If we previously found out that the e-mail was banned
+-			if ($banned_email && $forum_config['o_mailing_list'] != '')
+-			{
+-				$mail_subject = 'Alert - Banned e-mail detected';
+-				$mail_message = 'User \''.$username.'\' registered with banned e-mail address: '.$email1."\n\n".'User profile: '.forum_link($forum_url['user'], $new_uid)."\n\n".'-- '."\n".'Forum Mailer'."\n".'(Do not reply to this message)';
+-
+-				($hook = get_hook('rg_register_banned_email')) ? eval($hook) : null;
+-
+-				forum_mail($forum_config['o_mailing_list'], $mail_subject, $mail_message);
+-			}
+-
+-			// If we previously found out that the e-mail was a dupe
+-			if (!empty($dupe_list) && $forum_config['o_mailing_list'] != '')
+-			{
+-				$mail_subject = 'Alert - Duplicate e-mail detected';
+-				$mail_message = 'User \''.$username.'\' registered with an e-mail address that also belongs to: '.implode(', ', $dupe_list)."\n\n".'User profile: '.forum_link($forum_url['user'], $new_uid)."\n\n".'-- '."\n".'Forum Mailer'."\n".'(Do not reply to this message)';
+-
+-				($hook = get_hook('rg_register_dupe_email')) ? eval($hook) : null;
+-
+-				forum_mail($forum_config['o_mailing_list'], $mail_subject, $mail_message);
+-			}
+-
+-			($hook = get_hook('rg_register_pre_login_redirect')) ? eval($hook) : null;
+-
+-			// Must the user verify the registration or do we log him/her in right now?
+-			if ($forum_config['o_regs_verify'] == '1')
+-				message(sprintf($lang_profile['Reg e-mail'], '<a href="mailto:'.forum_htmlencode($forum_config['o_admin_email']).'">'.forum_htmlencode($forum_config['o_admin_email']).'</a>'));
+-
+-			$expire = time() + $forum_config['o_timeout_visit'];
+-
+-			forum_setcookie($cookie_name, base64_encode($new_uid.'|'.$password_hash.'|'.$expire.'|'.sha1($salt.$password_hash.forum_hash($expire, $salt))), $expire);
+-
+-			redirect(forum_link($forum_url['index']), $lang_profile['Reg complete']);
+-		}
+-	}
+-}
+-
+-// Setup form
+-$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
+-$forum_page['form_action'] = forum_link($forum_url['register']).'?action=register';
+-
+-// Setup form information
+-$forum_page['frm_info']['intro'] = '<p>'.$lang_profile['Register intro'].'</p>';
+-if ($forum_config['o_regs_verify'] != '0')
+-	$forum_page['frm_info']['email'] = '<p class="warn">'.$lang_profile['Reg e-mail info'].'</p>';
+-
+-// Setup breadcrumbs
+-$forum_page['crumbs'] = array(
+-	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+-	array(sprintf($lang_profile['Register at'], $forum_config['o_board_title']), forum_link($forum_url['register'])),
+-
+-);
+-
+-($hook = get_hook('rg_register_pre_header_load')) ? eval($hook) : null;
+-
+-define('FORUM_PAGE', 'register');
+-require FORUM_ROOT.'header.php';
+-
+-// START SUBST - <!-- forum_main -->
+-ob_start();
+-
+-($hook = get_hook('rg_register_output_start')) ? eval($hook) : null;
+-
+-?>
+-	<div class="main-head">
+-		<h2 class="hn"><span><?php echo sprintf($lang_profile['Register at'], $forum_config['o_board_title']) ?></span></h2>
+-	</div>
+-	<div class="main-content main-frm">
+-		<div class="ct-box info-box">
+-			<?php echo implode("\n\t\t\t", $forum_page['frm_info'])."\n" ?>
+-		</div>
+-<?php
+-
+-	// If there were any errors, show them
+-	if (!empty($errors))
+-	{
+-		$forum_page['errors'] = array();
+-		foreach ($errors as $cur_error)
+-			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
+-
+-		($hook = get_hook('rg_pre_register_errors')) ? eval($hook) : null;
+-
+-?>
+-		<div class="ct-box error-box">
+-			<h2 class="warn hn"><span><?php echo $lang_profile['Register errors'] ?></span></h2>
+-			<ul class="error-list">
+-				<?php echo implode("\n\t\t\t\t", $forum_page['errors'])."\n" ?>
+-			</ul>
+-		</div>
+-<?php
+-
+-	}
+-
+-?>
+-		<div id="req-msg" class="req-warn ct-box error-box">
+-			<p class="important"><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Required'].'</em>') ?></p>
+-		</div>
+-		<form class="frm-form" id="afocus" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+-			<div class="hidden">
+-				<input type="hidden" name="form_sent" value="1" />
+-				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />
+-			</div>
+-<?php ($hook = get_hook('rg_register_pre_group')) ? eval($hook) : null; ?>
+-			<div class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
+-<?php ($hook = get_hook('rg_register_pre_username')) ? eval($hook) : null; ?>
+-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+-					<div class="sf-box text required">
+-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Username'] ?> <em><?php echo $lang_common['Required'] ?></em></span> <small><?php echo $lang_profile['Username help'] ?></small></label><br />
+-						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_username" value="<?php echo(isset($_POST['req_username']) ? forum_htmlencode($_POST['req_username']) : '') ?>" size="35" maxlength="25" /></span>
+-					</div>
+-				</div>
+-<?php ($hook = get_hook('rg_register_pre_password')) ? eval($hook) : null; ?>
+-<?php if ($forum_config['o_regs_verify'] == '0'): ?>				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+-					<div class="sf-box text required">
+-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Password'] ?> <em><?php echo $lang_common['Required'] ?></em></span> <small><?php echo $lang_profile['Password help'] ?></small></label><br />
+-						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_password1" size="35" /></span>
+-					</div>
+-				</div>
+-<?php ($hook = get_hook('rg_register_pre_confirm_password')) ? eval($hook) : null; ?>
+-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+-					<div class="sf-box text required">
+-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Confirm password'] ?> <em><?php echo $lang_common['Required'] ?></em></span> <small><?php echo $lang_profile['Confirm password help'] ?></small></label><br />
+-						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_password2" size="35" /></span>
+-					</div>
+-				</div>
+-<?php endif; ($hook = get_hook('rg_register_pre_email')) ? eval($hook) : null; ?>				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+-					<div class="sf-box text required">
+-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['E-mail'] ?> <em><?php echo $lang_common['Required'] ?></em></span> <small><?php echo $lang_profile['E-mail help'] ?></small></label><br />
+-						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_email1" value="<?php echo(isset($_POST['req_email1']) ? forum_htmlencode($_POST['req_email1']) : '') ?>" size="35" maxlength="80" /></span>
+-					</div>
+-				</div>
+-<?php ($hook = get_hook('rg_register_pre_email_confirm')) ? eval($hook) : null; ?>
+-<?php if ($forum_config['o_regs_verify'] == '1'): ?>				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+-					<div class="sf-box text required">
+-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Confirm e-mail'] ?> <em><?php echo $lang_common['Required'] ?></em></span> <small><?php echo $lang_profile['Confirm e-mail help'] ?></small></label><br />
+-						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_email2" value="<?php echo(isset($_POST['req_email2']) ? forum_htmlencode($_POST['req_email2']) : '') ?>" size="35" maxlength="80" /></span>
+-					</div>
+-				</div>
+-<?php endif;
+-
+-		$languages = array();
+-		$d = dir(FORUM_ROOT.'lang');
+-		while (($entry = $d->read()) !== false)
+-		{
+-			if ($entry != '.' && $entry != '..' && is_dir(FORUM_ROOT.'lang/'.$entry) && file_exists(FORUM_ROOT.'lang/'.$entry.'/common.php'))
+-				$languages[] = $entry;
+-		}
+-		$d->close();
+-
+-		($hook = get_hook('rg_register_pre_language')) ? eval($hook) : null;
+-
+-		// Only display the language selection box if there's more than one language available
+-		if (count($languages) > 1)
+-		{
+-			natcasesort($languages);
+-
+-?>
+-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+-					<div class="sf-box select">
+-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Language'] ?></span></label><br />
+-						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="language">
+-<?php
+-
+-			$select_lang = isset($_POST['language']) ? $_POST['language'] : $forum_config['o_default_lang'];
+-			foreach ($languages as $lang)
+-			{
+-				if ($select_lang == $lang)
+-					echo "\t\t\t\t\t\t".'<option value="'.$lang.'" selected="selected">'.$lang.'</option>'."\n";
+-				else
+-					echo "\t\t\t\t\t\t".'<option value="'.$lang.'">'.$lang.'</option>'."\n";
+-			}
+-
+-?>
+-						</select></span>
+-					</div>
+-				</div>
+-<?php
+-
+-		}
+-
+-		$select_timezone = isset($_POST['timezone']) ? $_POST['timezone'] : $forum_config['o_default_timezone'];
+-		$select_dst = isset($_POST['form_sent']) ? isset($_POST['dst']) : $forum_config['o_default_dst'];
+-
+-		($hook = get_hook('rg_register_pre_timezone')) ? eval($hook) : null;
+-
+-?>
+-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+-					<div class="sf-box select">
+-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Timezone'] ?></span></label><br />
+-						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="timezone">
+-						<option value="-12"<?php if ($select_timezone == -12) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC-12:00'] ?></option>
+-						<option value="-11"<?php if ($select_timezone == -11) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC-11:00'] ?></option>
+-						<option value="-10"<?php if ($select_timezone == -10) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC-10:00'] ?></option>
+-						<option value="-9.5"<?php if ($select_timezone == -9.5) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC-09:30'] ?></option>
+-						<option value="-9"<?php if ($select_timezone == -9) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC-09:00'] ?></option>
+-						<option value="-8"<?php if ($select_timezone == -8) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC-08:00'] ?></option>
+-						<option value="-7"<?php if ($select_timezone == -7) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC-07:00'] ?></option>
+-						<option value="-6"<?php if ($select_timezone == -6) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC-06:00'] ?></option>
+-						<option value="-5"<?php if ($select_timezone == -5) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC-05:00'] ?></option>
+-						<option value="-4"<?php if ($select_timezone == -4) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC-04:00'] ?></option>
+-						<option value="-3.5"<?php if ($select_timezone == -3.5) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC-03:30'] ?></option>
+-						<option value="-3"<?php if ($select_timezone == -3) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC-03:00'] ?></option>
+-						<option value="-2"<?php if ($select_timezone == -2) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC-02:00'] ?></option>
+-						<option value="-1"<?php if ($select_timezone == -1) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC-01:00'] ?></option>
+-						<option value="0"<?php if ($select_timezone == 0) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC'] ?></option>
+-						<option value="1"<?php if ($select_timezone == 1) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+01:00'] ?></option>
+-						<option value="2"<?php if ($select_timezone == 2) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+02:00'] ?></option>
+-						<option value="3"<?php if ($select_timezone == 3) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+03:00'] ?></option>
+-						<option value="3.5"<?php if ($select_timezone == 3.5) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+03:30'] ?></option>
+-						<option value="4"<?php if ($select_timezone == 4) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+04:00'] ?></option>
+-						<option value="4.5"<?php if ($select_timezone == 4.5) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+04:30'] ?></option>
+-						<option value="5"<?php if ($select_timezone == 5) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+05:00'] ?></option>
+-						<option value="5.5"<?php if ($select_timezone == 5.5) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+05:30'] ?></option>
+-						<option value="5.75"<?php if ($select_timezone == 5.75) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+05:45'] ?></option>
+-						<option value="6"<?php if ($select_timezone == 6) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+06:00'] ?></option>
+-						<option value="6.5"<?php if ($select_timezone == 6.5) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+06:30'] ?></option>
+-						<option value="7"<?php if ($select_timezone == 7) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+07:00'] ?></option>
+-						<option value="8"<?php if ($select_timezone == 8) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+08:00'] ?></option>
+-						<option value="8.75"<?php if ($select_timezone == 8.75) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+08:45'] ?></option>
+-						<option value="9"<?php if ($select_timezone == 9) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+09:00'] ?></option>
+-						<option value="9.5"<?php if ($select_timezone == 9.5) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+09:30'] ?></option>
+-						<option value="10"<?php if ($select_timezone == 10) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+10:00'] ?></option>
+-						<option value="10.5"<?php if ($select_timezone == 10.5) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+10:30'] ?></option>
+-						<option value="11"<?php if ($select_timezone == 11) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+11:00'] ?></option>
+-						<option value="11.5"<?php if ($select_timezone == 11.5) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+11:30'] ?></option>
+-						<option value="12"<?php if ($select_timezone == 12) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+12:00'] ?></option>
+-						<option value="12.75"<?php if ($select_timezone == 12.75) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+12:45'] ?></option>
+-						<option value="13"<?php if ($select_timezone == 13) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+13:00'] ?></option>
+-						<option value="14"<?php if ($select_timezone == 14) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+14:00'] ?></option>
+-						</select></span>
+-					</div>
+-				</div>
+-<?php ($hook = get_hook('rg_register_pre_dst_checkbox')) ? eval($hook) : null; ?>
+-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+-					<div class="sf-box checkbox">
+-						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="dst"<?php if ($select_dst) echo ' checked="checked"' ?> /></span>
+-						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Adjust for DST'] ?></span> <?php echo $lang_profile['DST label'] ?></label>
+-					</div>
+-				</div>
+-<?php ($hook = get_hook('rg_register_pre_group_end')) ? eval($hook) : null; ?>
+-			</div>
+-<?php ($hook = get_hook('rg_register_group_end')) ? eval($hook) : null; ?>
+-			<div class="frm-buttons">
+-				<span class="submit"><input type="submit" name="register" value="<?php echo $lang_profile['Register'] ?>" /></span>
+-			</div>
+-		</form>
+-	</div>
+-<?php
+-
+-($hook = get_hook('rg_end')) ? eval($hook) : null;
+-
+-$tpl_temp = forum_trim(ob_get_contents());
+-$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+-ob_end_clean();
+-// END SUBST - <!-- forum_main -->
++//VHFFS MODIFICATION : Registering process removed
++message('Registration is disabled on this forum. Please use the <a href="'.$vhffs_panel_url.'">'.$vhffs_team.'\'s panel </a>to register.');
+ 
+ require FORUM_ROOT.'footer.php';

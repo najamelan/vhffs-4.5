@@ -1,0 +1,24 @@
+Add a new language
+==================
+
+Initialize the new po file:
+msginit -l LL_CC
+Where LL is your language code and CC your country code (fr_CA, en_GB, ...).
+
+Translate the file LL_CC.po.
+Add your language code to LINGUAS, make make install.
+If you make a full translation you can add your language to the default
+available languages in vhffs-backend/conf/vhffs.conf.dist.in.
+
+Update all translation files
+============================
+
+Run update-POFILES.in.sh, this will update POFILES.in (list of files containing
+translated strings) and update the translations.
+
+
+More information
+================
+
+You can ask your questions on vhffs DASH dev AT vhffs DOT org or join
+our IRC channel #vhffs on irc.tuxfamily.net.

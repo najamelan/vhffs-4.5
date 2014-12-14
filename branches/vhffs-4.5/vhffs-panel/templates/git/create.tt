@@ -1,0 +1,18 @@
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p>
+		<label>[% 'Owner group for this Git repository:' | i18n | html %]</label>
+		[% group.get_groupname | html %]
+	</p>
+	<p>
+		<label for="reponame">[% 'Repository name: '%]</label>
+        [% group.get_groupname | html %]/<input type="text" name="reponame" id="reponame" value="[% reponame | html %]"/>
+	</p>
+	<p>
+		<label for="PROJECT_USAGE">[% 'Description:' | i18n | html %]</label>
+		<textarea name="description" id="description"  cols="45" rows="7">[% description | html %]</textarea>
+	</p>
+	<p class="button" id="buttonSend">
+		<input type="hidden" name="group" value="[% group.get_groupname | html %]" />
+		<input type="submit" value="[% 'Send' | i18n | html %]" name="git_submit"/>
+	</p>
+</form>

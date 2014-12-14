@@ -1,0 +1,28 @@
+<VirtualHost *:80>
+	ServerAdmin adm@domain.tld
+	ServerName panel.your.host
+	DocumentRoot /usr/share/vhffs/panel/
+	DirectoryIndex index.pl
+
+	<Directory /usr/share/vhffs/panel/>
+		AllowOverride None
+		Order allow,deny
+		Allow from all
+	</Directory>
+
+	SuExecUserGroup www-data www-data
+	FcgidMaxProcessesPerClass 5
+	<Files "index.pl">
+		SetHandler fcgid-script
+		Options +ExecCGI
+	</Files>
+
+	ErrorLog /var/log/apache2/panel-error.log
+
+	# Possible values include: 
+	#   debug, info, notice, warn, error, crit, alert, emerg
+	LogLevel warn
+
+	CustomLog /var/log/apache2/panel-access.log combined
+	ServerSignature On
+</VirtualHost>

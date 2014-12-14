@@ -1,0 +1,7 @@
+[% IF infos.defined() AND infos.size() %]
+<div id="infos">
+[% FOREACH i IN infos %]
+    <p class="info">[% i.msg | html %]</p>
+[% END %]
+</div>
+[% END %]

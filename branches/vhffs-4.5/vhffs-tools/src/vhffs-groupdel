@@ -1,0 +1,37 @@
+#!%PERL%
+
+use lib '%VHFFS_LIB_DIR%';
+use Vhffs::Group;
+use Vhffs;
+use Vhffs::Constants;
+
+if( $#ARGV != 0 )
+{
+	print "Usage: vhffs-groupdel user\n";
+	exit( 1 );
+}
+
+my $vhffs = new Vhffs;
+my $group = Vhffs::Group::get_by_groupname( $vhffs , $ARGV[0] );
+
+
+if( defined $group )
+{
+	$group->set_status( Vhffs::Constants::WAITING_FOR_DELETION );
+	
+	if( $group->commit <= 0 )
+	{
+		print "Status change failed\n";
+		exit( 2 );
+	}
+	else
+	{
+		print "This group WILL BE DELETED\n";
+		exit( 0 );
+	}
+}
+else
+{
+	print "No such group with this name\n";
+	exit( -1 );
+}

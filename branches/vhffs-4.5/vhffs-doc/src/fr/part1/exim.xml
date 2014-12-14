@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section id="sec-exim">
+  <title id="title-exim">Exim (serveur mail)</title>
+
+  <para>Cette section pr&eacute;sente la configuration du serveur de mail
+  utilis&eacute; g&eacute;n&eacute;ralement avec VHFFS&nbsp;: Exim.</para>
+
+  <para>Si vous voulez offrir un service de qualit&eacute;, il est
+  n&eacute;cessaire de disposer d'au moins deux serveurs mail, le
+  <emphasis>serveur mail primaire</emphasis> et <emphasis>le (ou les)
+  serveur(s) mail secondaire(s)</emphasis>. Leur configuration diff&egrave;re,
+  nous les pr&eacute;sentons dans cette section.</para>
+
+  <section>
+    <title>Serveur mail primaire (mx1)</title>
+
+    <para>Ce serveur est appel&eacute; <literal>mx1</literal> dans les
+    documents relatifs &agrave; VHFFS (du fait qu'il s'appelle
+    g&eacute;n&eacute;ralement mx1.domaine.tld). Sa configuration est plus
+    complexe que pour le serveur mail secondaire. En effet, il va devoir
+    d&eacute;terminer si les adresses sont des bo&icirc;tes mail, des
+    redirections ou des listes de diffusion et agir en
+    cons&eacute;quence.</para>
+
+    <para>Il est possible de faire en sorte que le mx1 utilise directement la
+    base de VHFFS ou bien de r&eacute;pliquer celle-ci afin de r&eacute;duire
+    les co&ucirc;ts d'interrogation (pour plus d'information sur la
+    r&eacute;plication, consultez <xref linkend="sec-mirror-mx1" />).</para>
+
+    <para>La configuration &agrave; adapter se trouve dans le
+    r&eacute;pertoire <filename
+    class="directory">vhffs-doc/config/exim4-mx1/</filename> &agrave; la
+    racine des sources.</para>
+
+    <section>
+      <title>Param&egrave;tres de connexion</title>
+
+      <para>Les param&egrave;tres de connexion sont le premier
+      &eacute;l&eacute;ment &agrave; &ecirc;tre d&eacute;finis par la biais de
+      la variable pgsql_servers. Elle doit &ecirc;tre
+      pr&eacute;c&eacute;d&eacute;e du mot cl&eacute; hide pour &eacute;viter
+      que des utilisateurs "ordinaires" puissent y acc&eacute;der. Vous devez
+      sp&eacute;cifier, dans l'ordre, l'adresse du serveur PostgreSQL (sous la
+      forme h&ocirc;te::port, il y a deux fois deux-points, ce n'est pas une
+      erreur typographique, si vous utilisez le port par d&eacute;faut vour
+      pouvez l'omettre), le nom de la base de donn&eacute;es, le nom
+      d'utilisateur ayant acc&egrave;s aux donn&eacute;es n&eacute;cessaires
+      et enfin son mot de passe.</para>
+    </section>
+
+    <section>
+      <title>Configuration des requ&ecirc;tes</title>
+
+      <para></para>
+    </section>
+  </section>
+
+  <section>
+    <title>Serveur mail secondaire (mx2)</title>
+
+    <para>Le serveur mail secondaire peut &ecirc;tre configur&eacute; de deux
+    fa&ccedil;ons diff&eacute;rentes (en tout cas, nous n'en pr&eacute;sentons
+    que deux). La configuration &agrave; utiliser d&eacute;pend de la
+    fa&ccedil;on dont vous souhaitez organiser votre architecture. Vous avez
+    le choix entre faire en sorte que le serveur mail utilise directement la
+    base de donn&eacute;es VHFFS ou bien r&eacute;pliquer celle-ci &agrave;
+    intervalles r&eacute;guliers sur le mx2 (pour plus d'information,
+    consultez <xref linkend="sec-mirror-mx2" />).</para>
+
+    <para>La seule t&acirc;che du mx2 consiste &agrave; v&eacute;rifier que
+    les adresses qu'on lui soumet existent afin de relayer les mails
+    correspondants au mx1, les adresses inexistantes seront
+    ignor&eacute;es.</para>
+
+    <para>Nous ne rentrons pas ici dans les d&eacute;tails de la
+    configuration, nous pr&eacute;sentons simplement l'interfa&ccedil;age avec
+    VHFFS, c'est-&agrave;-dire principalement les requ&ecirc;tes
+    n&eacute;cessaires &agrave; l'exploitation des adresses VHFFS par
+    Exim.</para>
+
+    <section>
+      <title>Utilisation directe de la base VHFFS</title>
+
+      <section>
+        <title>Param&egrave;tres de connexion</title>
+
+        <para>Les param&egrave;tres de connexion se d&eacute;finissent de la
+        m&ecirc;me fa&ccedil;on que pour le serveur mail primaire.</para>
+      </section>
+
+      <section>
+        <title>Configuration des requ&ecirc;tes</title>
+
+        <para>Seule la requ&ecirc;te
+        <literal>PGSQL_RELAY_CHECKLOCALPART</literal> est &agrave; configurer,
+        elle permet de d&eacute;terminer si une adresse est valide et doit
+        &ecirc;tre relay&eacute;e vers le mx1. Si vous utilisez directement la
+        base de donn&eacute;es VHFFS, elle doit contenir la requ&ecirc;te
+        suivante&nbsp;:</para>
+
+        <para><example>
+            <title>Configuration du mx2 (utilisation de la base VHFFS)</title>
+
+            <para><programlisting>PGSQL_RELAY_CHECKLOCALPART = ${lookup pgsql{SELECT d.domain 
+    FROM vhffs_mxdomain d 
+    WHERE d.domain = '$domain' AND (d.catchall != '' OR
+    EXISTS (SELECT domain FROM vhffs_boxes WHERE domain = '$domain' AND local_part = '$local_part') OR
+    EXISTS (SELECT domain FROM vhffs_forward WHERE domain = '$domain' AND local_part = '$local_part') OR
+    EXISTS (SELECT domain FROM vhffs_ml WHERE domain = '$domain' 
+        AND (local_part = '$local_part' OR local_part || '-request' = '$local_part')))}}</programlisting>En
+            cas d'utilisation de la r&eacute;plication, la requ&ecirc;te est
+            beaucoup plus simple, &eacute;vite de surcharger le serveur de
+            base de donn&eacute;es principal et devrait offrir de meilleures
+            performances.</para>
+
+            <para><example>
+                <title>Configuration du mx2 (r&eacute;plication)</title>
+
+                <para><programlisting>PGSQL_RELAY_CHECKLOCALPART = ${lookup pgsql{SELECT d.domain
+    FROM vhffs_mxdomain WHERE d.domain = '$domain' AND (d.catchall != '' OR
+    EXISTS (SELECT domain FROM vhffs_addresses WHERE domain = '$domain' AND local_part = '$local_part'))}}</programlisting>Le
+                reste de la configuration rel&egrave;ve d'une configuration
+                classique d'Exim. Vous trouverez plus d'informations &agrave;
+                ce sujet sur <ulink
+                url="http://www.exim.org">http://www.exim.org</ulink>.</para>
+              </example></para>
+          </example></para>
+      </section>
+    </section>
+  </section>
+</section>

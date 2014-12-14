@@ -1,0 +1,57 @@
+VHFFS PunBB patch by
+  Samuel Lesueur <crafty@tuxfamily.org>
+  Sylvain Rochet <gradator@gradator.net>
+
+
+
+The VHFFS patch needs some extra files for the antibot system. just copy 
+the 'antibot' directory in the 'img' folder of your new PunBB 
+installation
+
+
+Modifications:
+
+- login.php :
+
+	- New strings to explain login conditions
+	- Connection on VHFFS database
+	- Auth using VHFFS database
+	- Verification of user status in VHFFS database
+	- Create new user in PunBB Database with informations fetched 
+	  from VHFFS database
+	- Update user in PunBB Database with informations fetched from
+	  VHFFS database
+	- Lost password redirection to VHFFS panel
+	- Bad password redirection to VHFFS panel
+
+- include/dblayer/vhffs.php :
+
+	New DB class to connect to the VHFFS database
+	(based on pgsql.php PunBB class)
+
+- register.php :
+
+	- Redirection to VHFFS panel
+
+- profile.php :
+
+	- Restrictions on Username modifications and redirection to 
+	  VHFFS panel
+	- Restrictions on Mail modifications and redirection to VHFFS panel
+ 	- Restrictions on Real name modifications (Real name is fetched 
+	  from VHFFS database)
+
+- post.php:
+
+	-Anti bot system : capcha on public forums
+
+- footer.php :
+
+	- VHFFS powered link
+
+- lang/English/post.php
+	
+	- added strings for antibot
+
+
+Please visit http://www.vhffs.org for support and new versions

@@ -1,0 +1,30 @@
+Compile
+-------
+
+You'll need Glib2 development packages (libglib2.0-dev on Debian) and inotify support.
+
+gcc [-ggdb] -Wall -Werror -o vhffsfssync_master `pkg-config --cflags --libs glib-2.0` vhffsfssync_master.c
+gcc [-ggdb] -Wall -Werror -o vhffsfssync_slave `pkg-config --cflags --libs glib-2.0` vhffsfssync_slave.c
+gcc -DCHECK [-ggdb] -Wall -Werror -o vhffsfssync_check `pkg-config --cflags --libs glib-2.0` vhffsfssync_slave.c
+
+
+Run
+---
+
+You'll need Glib2 packages (libglib2.0-0 on lenny).
+Your two boxes should be time synced using NTP.
+
+On master (as root): ./vhffsfssync_master [--foreground] [--bind=IP] [--port=PORT] DIRTOSYNC
+Defaults are all IP and port 4567
+
+On slave (as root): ./vhffsfssync_slave [--foreground] [--limit-rate=kB/s] MASTER_IP[:PORT] DESTDIR
+
+
+Ways to check if data are successfully synchronised 
+---------------------------------------------------
+
+./vhffsfssync_check [--foreground] [--limit-rate=kB/s] MASTER_IP[:PORT] DESTDIR
+
+rsync -rltnvi rsync://source/ /dest  (without preserve option)
+rsync -rltpgonvi rsync://source/ /dest  (with preserve option) 
+

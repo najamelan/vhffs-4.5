@@ -1,0 +1,625 @@
+#!%PERL% -w
+
+use strict;
+use Curses;
+use Curses::UI;
+use Curses::UI::Popupmenu;
+
+use lib '%VHFFS_LIB_DIR%';
+
+use Vhffs;
+use Vhffs::Functions;
+use Vhffs::Group;
+use Vhffs::Services::DNS;
+use Vhffs::User;
+
+my $ui = new Curses::UI(-clear_on_exit => 1);
+my $vhffs = new Vhffs;
+
+my ($w_start, 
+	$w_new_domain, $w_list_domains,
+	$w_new_rr, $w_list_rr,
+	$w_status);
+
+my @menu = (
+	{
+		-label => 'Main',
+		-submenu => [
+			{ -label => 'Quit	^Q', -value => sub { exit(0); } }
+		]
+	},
+	{
+		-label => 'Manage',
+		-submenu => [
+			{
+				-label => 'Domains',
+				-submenu => [
+					{ -label => 'New	^D', -value => \&create_domain },
+					{ -label => 'List	^S', -value => '' }
+				]
+			},
+			{
+				-label => 'Resource Records',
+				-submenu => [
+					{ -label => 'New	^B', -value => \&create_rr },
+					{ -label => 'Modify	^V', -value => \&list_rr }
+				]
+			}
+		]
+	}
+);
+
+# Creates the main menu
+my $m_main = $ui->add('main_menu', 'Menubar', -menu => \@menu);
+
+$ui->set_binding( sub {$m_main->focus()}, KEY_F(10) );
+$ui->set_binding( sub { exit(0) }, "\cQ" );
+$ui->set_binding( \&create_domain, "\cD" );
+$ui->set_binding( \&create_rr, "\cR" );
+
+&create_windows;
+$w_start->focus();
+
+$ui->mainloop();
+
+
+sub index_array($@)
+{
+	my $val = shift;
+	for(my $i = 0 ; $i < scalar(@_) ; ++$i) {
+		return $i if($val eq $_[$i]);
+	}
+	-1;
+}
+
+
+sub create_domain {
+	$w_new_domain->focus();
+}
+
+sub create_rr {
+	$w_new_rr->focus();
+}
+
+sub list_rr {
+    $w_list_rr->focus();
+}
+
+sub create_windows {
+	my %w_common_attrs = (
+		-padtop => 1, -border => 1, -ipad => 5, -padbottom => 1, -titlefullwidth => 1
+	);
+
+	$w_start = $ui->add( 'start_window', 'Window', -title => 'Welcome', %w_common_attrs );
+	my $txt = 'Select a menu item to start';
+	$w_start->add( undef, 'Label', -text => $txt, -y => $w_start->height() / 2, -x => ( $w_start->width() - length($txt) ) / 2 );
+
+	$w_status = $ui->add( 'status_window', 'Window', -title => '', -border => 0, -y => ( $ui->height() - 1 ) );
+	$w_status->add( undef, 'Label', -text => 'Press F10 to open menu' );
+
+	####################
+	# Domains creation #
+	####################
+
+	my $users = Vhffs::User::getall($vhffs);
+	my $groups = Vhffs::Group::getall($vhffs);
+	my $domains = Vhffs::Services::DNS::getall($vhffs);
+
+	my @domains_values = ( -1 );
+	my %domains_labels = ( -1 => '-- Select one --' );
+	foreach my $d (@$domains) {
+		push @domains_values, $d->get_domain;
+	}
+
+
+	$w_new_domain = $ui->add('new_domain_window', 'Window', -title => 'New mail domain', %w_common_attrs);
+	my $label = $w_new_domain->add( undef, 'Label', -text => 'Domain name: ');
+	my $field = $w_new_domain->add('new_domain_name', 'TextEntry', -x => 20, -y => 0, -sbborder => 1, -width => 30 );
+	
+	my %labels = ( -1 => '-- Select one --' );
+	my @values = ( -1 );
+	foreach my $g (@$groups) {
+		$labels{$g->get_gid} = $g->get_groupname;
+		push @values, $g->get_gid;
+	}
+
+	$label = $w_new_domain->add( undef, 'Label', -text => 'Group: ', -y => 1 );
+	$field = $w_new_domain->add( 'new_domain_group', 'Popupmenu', -y => 1, -x => 20, -labels => {%labels}, -values => [@values], -selected => 0 );
+
+	%labels = ( -1 => '-- Select one --' );
+	@values = ( -1 );
+	foreach my $u (@$users) {
+		$labels{$u->get_uid} = $u->get_username;
+		push @values, $u->get_uid;
+	}
+
+	$label = $w_new_domain->add( undef, 'Label', -text => 'User: ', -y => 2 );
+	$field = $w_new_domain->add( 'new_domain_user', 'Popupmenu', -y => 2, -x => 20, -labels => {%labels}, -values => [@values], -selected => 0 );
+
+	$label = $w_new_domain->add( undef, 'Label', -text => 'Description: ', -y => 5);
+	$field = $w_new_domain->add( 'new_domain_description', 'TextEditor', -y => 3, -x => 20, -width => 30,
+		-height => 5, -border => 1, -wrapping => 1, -sbborder => 1 );
+
+	$w_new_domain->add('new_domain_submit', 'Buttonbox', 
+		-buttons => [
+			{
+				-label => '< OK >',
+				-onpress => \&create_domain_save
+			}
+		],
+		-x => 20,
+		-y => 10
+	);
+
+	#############################
+	# Resource records creation #
+	#############################
+
+	$w_new_rr = $ui->add( 'new_rr_window', 'Window', -title => 'New Resource Record', %w_common_attrs);
+	$label = $w_new_rr->add( undef, 'Label', -text => 'Domain: ', -y => 1 );
+	$field = $w_new_rr->add( 'new_rr_domain', 'Popupmenu', -y => 1, -x => 20, -labels => \%domains_labels, -values => \@domains_values, -selected => 0 );
+	$label = $w_new_rr->add( undef, 'Label', -text => 'Name: ', -y => 2);
+	$field = $w_new_rr->add( 'new_rr_name', 'TextEntry', -sbborder => 1, -y => 2, -x => 20, -width => 30 );
+	$label = $w_new_rr->add( undef, 'Label', -text => 'Use @ to enter a value for origin', -y => 3 );
+	$label = $w_new_rr->add( undef, 'Label', -text => 'Type: ', -y => 4 );
+	$field = $w_new_rr->add( 'new_rr_type', 'Popupmenu', -y => 4, -x => 20, -values => ['A', 'AAAA', 'CNAME', 'NS', 'MX', 'TXT'], 
+				-selected => 0, -onchange => \&rr_type_change );
+	$label = $w_new_rr->add( 'new_rr_ip_lbl', 'Label', -text => 'IP address: ', -y => 5, -width => 20);
+	$field = $w_new_rr->add( 'new_rr_ip', 'TextEntry', -sbborder => 1, -y => 5, -x => 20, -width => 30 );
+	$label = $w_new_rr->add( 'new_rr_priority_lbl', 'Label', -text => 'Priority: ', -y => 5, -hidden => 1, -focusable => 0, -width => 20 );
+	$field = $w_new_rr->add( 'new_rr_priority', 'TextEntry', -sbborder => 1, -y => 5, -x => 20, -width => 30, -hidden => 1, -focusable => 0 );
+	$label = $w_new_rr->add( 'new_rr_destination_lbl', 'Label', -text => 'Destination: ', -y => 5, -hidden => 1, -focusable => 0, -width => 20 );
+	$field = $w_new_rr->add( 'new_rr_destination', 'TextEntry', -sbborder => 1, -y => 5, -x => 20, -width => 30, -hidden => 1, -focusable => 0 );
+	$label = $w_new_rr->add( 'new_rr_text_lbl', 'Label', -text => 'Text: ', -y => 5, -hidden => 1, -focusable => 0, -width => 20 );
+	$field = $w_new_rr->add( 'new_rr_text', 'TextEntry', -sbborder => 1, -y => 5, -x => 20, -width => 30, -hidden => 1, -focusable => 0 );
+
+	$w_new_rr->add('new_domain_submit', 'Buttonbox', 
+		-buttons => [
+			{
+				-label => '< OK >',
+				-onpress => \&create_rr_save
+			}
+		],
+		-x => 20,
+		-y => 6
+	);
+
+    #########################
+    # Resource records list #
+    #########################
+
+    $w_list_rr = $ui->add( 'list_rr_window', 'Window', -title => 'List Resource Records', %w_common_attrs);
+    $label = $w_list_rr->add( undef, 'Label', -text => 'Domain: ', -y => 1 );
+    $field = $w_list_rr->add( 'list_rr_domains', 'Popupmenu', -y => 1, -x => 20, -labels => \%domains_labels, -values => \@domains_values, -selected => 0,
+        -onchange => \&list_rr_domain_change );
+    $label = $w_list_rr->add( undef, 'Label', -text => 'Name: ', -y => 2);
+    $field = $w_list_rr->add( 'list_rr_rrs', 'Popupmenu', -y => 2, -x => 20, -width => 30, -onchange => \&list_rr_rr_change );
+    $label = $w_list_rr->add( 'list_rr_ip_lbl', 'Label', -text => 'IP address: ', -y => 3, -hidden => 1, -focusable => 0, -width => 20);
+    $label = $w_list_rr->add( 'list_rr_destination_lbl', 'Label', -text => 'Destination: ', -y => 3, -hidden => 1, -focusable => 0, -width => 20 );
+    $label = $w_list_rr->add( 'list_rr_text_lbl', 'Label', -text => 'Text: ', -y => 3, -hidden => 1, -focusable => 0, -width => 20 );
+    $field = $w_list_rr->add( 'list_rr_data', 'TextEntry', -sbborder => 1, -y => 3, -x => 20, -width => 30, -hidden => 1, -focusable => 0 );
+    $label = $w_list_rr->add( 'list_rr_priority_lbl', 'Label', -text => 'Priority: ', -y => 4, -hidden => 1, -focusable => 0, -width => 20 );
+    $field = $w_list_rr->add( 'list_rr_aux', 'TextEntry', -sbborder => 1, -y => 4, -x => 20, -width => 30, -hidden => 1, -focusable => 0 );
+    $label = $w_list_rr->add( 'list_rr_ttl_lbl', 'Label', -text => 'TTL: ', -y => 5, -hidden => 1, -focusable => 0, -width => 20 );
+    $field = $w_list_rr->add( 'list_rr_ttl', 'TextEntry', -sbborder => 1, -y => 5, -x => 20, -width => 30, -hidden => 1, -focusable => 0 );
+
+	$w_list_rr->add('modify_rr_submit', 'Buttonbox', 
+		-buttons => [
+			{
+				-label => '< OK >',
+				-onpress => \&update_rr_save
+			},
+            {
+                -label => '< Cancel >',
+                -onpress => \&update_rr_cancel
+            },
+            {
+                -label => '< Delete >',
+                -onpress => \&update_rr_delete
+            }
+		],
+		-x => 20,
+		-y => 6
+	);
+}
+
+sub rr_type_change {
+	my %visibility = ( A => 'new_rr_ip', AAAA => 'new_rr_ip', NS => '', MX => 'new_rr_priority', TXT => 'new_rr_text', CNAME => 'new_rr_destination');
+	my @fields = ('new_rr_ip', 'new_rr_priority', 'new_rr_destination', 'new_rr_text');
+	my $current = $_[0]->get();
+	foreach(@fields) {
+		my $hidden;
+		my $focusable;
+		if($_ eq $visibility{$current}) {
+			$hidden = 0;
+			$focusable = 1;
+		} else {
+			$hidden = 1;
+			$focusable = 0;
+		}
+		my $w = $w_new_rr->getobj( $_ );
+		$w->{-hidden} = $hidden;
+		$w->{-focusable} = $focusable;
+		$w = $w_new_rr->getobj( $_.'_lbl' );
+		$w->{-hidden} = $hidden;
+	}
+	$w_new_rr->intellidraw();
+}
+
+sub list_rr_domain_change {
+    my $current = $_[0]->get();
+    my $list = $w_list_rr->getobj( 'list_rr_rrs' );
+    if($current eq '-1') {
+        $list->{-labels} = {};
+        $list->{-values} = [];
+        $list->{-selected} = undef;
+        $list->layout();
+        $list->draw();
+        return;
+    }
+    my $domain = Vhffs::Services::DNS::get_by_domainname( $vhffs, $current );
+
+    my %rr_labels = ( 'NONE|-1' => '-- Select one --' );
+    my @rr_values = ( 'NONE|-1' );
+    my @record_types = ( 'A', 'AAAA', 'CNAME', 'NS', 'MX', 'TXT' );
+    foreach my $rr (@record_types) {
+        foreach(values %{$domain->{$rr}}) {
+            my $value = "$rr|$_->{id}";
+            if($rr eq 'NS') {
+                $rr_labels{$value} = 'Name server ('.$_->{data}.')';
+            } elsif($_->{name} eq '' or $_->{name} eq '@') {
+                $rr_labels{$value} = ($rr eq 'MX' ? 'MX for ' : '')."[ORIGIN] ($rr)";
+            } else {
+                $rr_labels{$value} = ($rr eq 'MX' ? 'MX for ' : '').$_->{name}." ($rr)";
+            }
+            push @rr_values, $value;
+        }
+    }
+
+    $list->{-labels} = \%rr_labels;
+    $list->{-values} = \@rr_values;
+    $list->{-selected} = 0;
+    $list->layout();
+    $list->intellidraw();
+
+}
+
+sub list_rr_rr_change {
+    my $value = $_[0]->get();
+    my ($type, $id) = ($value =~ /^([A-Z]+)\|(-?\d+)$/);
+    if($id == -1) {
+        foreach(qw(list_rr_ttl_lbl list_rr_ttl list_rr_data list_rr_aux list_rr_priority_lbl list_rr_ip_lbl list_rr_destination_lbl list_rr_text_lbl)) {
+            my $field = $w_list_rr->getobj( $_ );
+            $field->{-hidden} = 1;
+            $field->{-focusable} = 0;
+        }
+    } else {
+        my $domain = Vhffs::Services::DNS::get_by_domainname( $vhffs, $w_list_rr->getobj('list_rr_domains')->get() );
+        my $rr = $domain->{$type}{$id};
+    
+        my $field = $w_list_rr->getobj( 'list_rr_ttl_lbl' );
+        $field->{-hidden} = 0;
+        $field = $w_list_rr->getobj( 'list_rr_ttl' );
+        $field->{-hidden} = 0;
+        $field->{-focusable} = 1;
+        $field->text($rr->{ttl});
+
+        $field = $w_list_rr->getobj( 'list_rr_data' );
+        $field->{-hidden} = 0;
+        $field->{-focusable} = 1;
+        $field->text($rr->{data});
+
+        $field = $w_list_rr->getobj( 'list_rr_aux' );
+        $field->{-hidden} = ($type ne 'MX');
+        $field->{-focusable} = ($type eq 'MX');
+        $field->text($rr->{aux});
+
+        $field = $w_list_rr->getobj( 'list_rr_priority_lbl' );
+        $field->{-hidden} = ($type ne 'MX');
+
+        $field = $w_list_rr->getobj( 'list_rr_ip_lbl' );
+        $field->{-hidden} = ($type ne 'A' && $type ne 'AAAA');
+    
+        $field = $w_list_rr->getobj( 'list_rr_destination_lbl' );
+        $field->{-hidden} = ($type ne 'CNAME');
+
+        $field = $w_list_rr->getobj( 'list_rr_text_lbl' );
+        $field->{-hidden} = ($type ne 'TXT');
+    }
+
+    $w_list_rr->draw();
+}
+
+sub create_domain_save {
+	my $domain = $w_new_domain->getobj( 'new_domain_name' )->get();
+	my $user = Vhffs::User::get_by_uid( $vhffs, $w_new_domain->getobj( 'new_domain_user' )->get() );
+	my $group = Vhffs::Group::get_by_gid( $vhffs, $w_new_domain->getobj( 'new_domain_group' )->get() );
+	if( $domain =~ /^\s*$/) {
+		$ui->error( 'You have to enter a domain name' );
+		return;
+	}
+	unless(Vhffs::Functions::check_domain_name($domain)) {
+		$ui->error( 'Invalid domain name' );
+		return;
+	}
+	unless(defined $user && defined $group) {
+		$ui->error( 'Please select a valid user/group' );
+		return;
+	}
+	my $md = Vhffs::Services::DNS::create($vhffs, $domain, $w_new_domain->getobj( 'new_domain_description' )->get(), $user, $group);
+
+	if($md) {
+		$md->set_status( Vhffs::Constants::WAITING_FOR_CREATION );
+		$md->commit;
+
+		$ui->dialog(
+			-title => 'Domain name created',
+			-message => 'Domain name '.$domain.' successfully created'
+		);
+		$w_new_domain->getobj( 'new_domain_name' )->text('');
+		$w_new_domain->getobj( 'new_domain_name' )->draw();
+		$w_new_domain->getobj( 'new_domain_description' )->text('');
+		$w_new_domain->getobj( 'new_domain_description' )->draw();
+		$w_new_domain->getobj( 'new_domain_user' )->{-selected} = 0;
+		$w_new_domain->getobj( 'new_domain_user' )->draw();
+		$w_new_domain->getobj( 'new_domain_group' )->{-selected} = 0;
+		$w_new_domain->getobj( 'new_domain_group' )->draw();
+
+	} else {
+		$ui->error( 'An error occured while creating the mail domain' );
+	}
+	$w_new_domain->draw();
+}
+
+sub update_rr_cancel {
+    my $value = $w_list_rr->getobj('list_rr_rrs')->get();
+    my ($type, $id) = ($value =~ /^([A-Z]+)\|(\d+)$/);
+    my $domain = Vhffs::Services::DNS::get_by_domainname( $vhffs, $w_list_rr->getobj('list_rr_domains')->get() );
+    my $rr = $domain->{$type}{$id};
+
+    $w_list_rr->getobj('list_rr_data')->text($rr->{data});
+    $w_list_rr->getobj('list_rr_aux')->text($rr->{aux});
+    $w_list_rr->getobj('list_rr_ttl')->text($rr->{ttl});
+
+    $w_list_rr->draw();
+
+}
+
+sub update_rr_save {
+    my $value = $w_list_rr->getobj('list_rr_rrs')->get();
+    my ($type, $id) = ($value =~ /^([A-Z]+)\|(\d+)$/);
+    my $domain = Vhffs::Services::DNS::get_by_domainname( $vhffs, $w_list_rr->getobj('list_rr_domains')->get() );
+    my $data = $w_list_rr->getobj('list_rr_data')->get();
+    my $aux = $w_list_rr->getobj('list_rr_aux')->get();
+    my $ttl = $w_list_rr->getobj('list_rr_ttl')->get();
+
+    # TODO improve me
+    my $messages = {
+        'A' => {
+            -1 => 'Invalid record ID',
+            -2 => 'RR does not exists',
+            -3 => 'Invalid IP address',
+            -4 => 'DB Error while updating record'
+        },
+        'MX' => {
+            -1 => 'Invalid record ID',
+            -2 => 'RR does not exists',
+            -3 => 'Invalid hostname for MX',
+            -4 => 'DB Error while updating record'
+        },
+        'TXT' => {
+            -1 => 'Invalid record ID',
+            -2 => 'RR does not exists',
+            -3 => 'TXT Record shouldn\'t be empty',
+            -4 => 'DB Error while updating record'
+ 
+        },
+        'CNAME' => {
+            -1 => 'Invalid record ID',
+            -2 => 'RR does not exists',
+            -3 => 'Invalid IP address',
+            -4 => 'DB Error while updating record'
+
+        }
+    };
+    my $rval;
+UPDATE_RR_SAVE_SWITCH: {
+    $rval = $domain->update_a($id, $data, $ttl), last UPDATE_RR_SAVE_SWITCH if($type eq 'A');
+    $rval = $domain->update_aaaa($id, $data, $ttl), last UPDATE_RR_SAVE_SWITCH if($type eq 'AAAA');
+    $rval = $domain->update_mx($id, $data, $aux, $ttl), last UPDATE_RR_SAVE_SWITCH if($type eq 'MX');
+    $rval = $domain->update_txt($id, $data, $ttl), last UPDATE_RR_SAVE_SWITCH if($type eq 'TXT');
+    $rval = $domain->update_cname($id, $data, $ttl), last UPDATE_RR_SAVE_SWITCH if($type eq 'CNAME');
+}
+
+    if($rval < 0) {
+        $ui->error($messages->{($type eq 'AAAA' ? 'A' : $type)}{$rval});
+    } else {
+        $ui->dialog(
+            -title => 'RR updated',
+            -message => 'RR has been successfuly updated'
+        );
+    }
+}
+
+
+# Called upon RR deletion
+sub update_rr_delete {
+    my $value = $w_list_rr->getobj('list_rr_rrs')->get();
+    my ($type, $id) = ($value =~ /^([A-Z]+)\|(\d+)$/);
+    my $domain = Vhffs::Services::DNS::get_by_domainname( $vhffs, $w_list_rr->getobj('list_rr_domains')->get() );
+    my $rval = $domain->delete_record($id, $type);
+    $ui->error('Invalid ID') if($rval == -1);
+    $ui->error("No RR of type $type for this domain") if($rval == -2);
+    $ui->error('RR not found') if($rval == -3);
+    $ui->dialog( -title => 'RR deleted', -message => 'RR successfuly deleted' ) if($rval > 0);
+    &list_rr_domain_change($w_list_rr->getobj('list_rr_domains'));
+}
+
+# Called upon RR creation, calls the appropriate
+# create_xx_rr depending on record type.
+sub create_rr_save {
+	my $domain = Vhffs::Services::DNS::get_by_domainname( $vhffs, $w_new_rr->getobj( 'new_rr_domain' )->get() );
+	my $type = $w_new_rr->getobj( 'new_rr_type' )->get();
+	unless(defined $domain) {
+		$ui->error( 'You have to select a domain' );
+		return;
+	}
+
+CREATE_RR_SAVE_SWITCH: {
+	&create_a_rr($domain, $type), last CREATE_RR_SAVE_SWITCH if($type eq 'A' or $type eq 'AAAA');
+	&create_cname_rr($domain), last CREATE_RR_SAVE_SWITCH if($type eq 'CNAME');
+	&create_ns_rr($domain), last CREATE_RR_SAVE_SWITCH if($type eq 'NS');
+	&create_mx_rr($domain), last CREATE_RR_SAVE_SWITCH if($type eq 'MX');
+	&create_txt_rr($domain), last CREATE_RR_SAVE_SWITCH if($type eq 'TXT');
+}
+}
+
+# Creates a a or AAAA record
+# create_a_rr($domain, $type)
+sub create_a_rr {
+	my ($domain, $type) = @_;
+	my $name = $w_new_rr->getobj('new_rr_name')->get();
+	$name = '@' if($name eq '');
+	my $ip = $w_new_rr->getobj('new_rr_ip')->get();
+	my $rval = ( $type eq 'A' ? $domain->add_a( $name, $ip ) : $domain->add_aaaa( $name, $ip ) );
+	$ui->error('Invalid name') if($rval == -1);
+	$ui->error('This name is already used by an '.$type.' record or a CNAME') if($rval == -2);
+	$ui->error('You have to specify an IP address since no default is defined in config file') if($rval == -3);
+	$ui->error('Invalid ip address specified') if($rval == -4);
+	$ui->error('DB error while adding record') if($rval == -5);
+	$ui->dialog(
+		-title => $type.' record added',
+		-message => 'Name '.$name.'.'.$domain->{domain}.' now points to '.$ip
+	) if($rval > 0);
+}
+
+
+sub create_cname_rr {
+	my $domain = shift;
+	my $name = $w_new_rr->getobj('new_rr_name')->get();
+	$name = '@' if($name eq '');
+	my $destination = $w_new_rr->getobj('new_rr_destination')->get();
+	my $rval = $domain->add_cname( $name, $destination );
+	$ui->error('Invalid name') if($rval == -1);
+	$ui->error('Invalid destination') if($rval == -2);
+	$ui->error('This name is already used by an A, AAAA or CNAME record') if($rval == -3);
+	$ui->error('DB error while adding record') if($rval == -4);
+	$ui->dialog(
+		-title => 'CNAME record added',
+		-message => 'Name '.$name.'.'.$domain->{domain}.' is now an alias for '.$destination
+	) if($rval > 0);
+}
+
+sub create_ns_rr {
+	my $domain = shift;
+	my $name = $w_new_rr->getobj('new_rr_name')->get();
+	my $rval = $domain->add_ns( '@', $name );
+
+	$ui->error('Invalid name (must be an hostname)') if($rval == -1);
+	$ui->error('DB error while adding NS record') if($rval == -2);
+	$ui->dialog(
+		-title => 'NS record added',
+		-message => 'Name server '.$name.' added for domain '.$domain->{domain}
+	) if($rval > 0);
+}
+
+sub create_mx_rr {
+	my $domain = shift;
+	my $name = $w_new_rr->getobj('new_rr_name')->get();
+	my $priority = $w_new_rr->getobj('new_rr_priority')->get();
+	my $rval = $domain->add_mx( '@', $name, $priority );
+
+	$ui->error('Invalid name (must be an hostname') if($rval == -1);
+	$ui->error('Invalid priority (must be an integer)') if($rval == -2);
+	$ui->error('DB error while creating record') if($rval == -3);
+	$ui->dialog(
+		-title => 'MX record added',
+		-message => 'Mail eXchanger '.$name.' added with priority '.$priority.' for domain '.$domain->{domain}
+	) if($rval > 0);
+}
+
+sub create_txt_rr {
+	my $domain = shift;
+	my $name = $w_new_rr->getobj('new_rr_name')->get();
+	my $text = $w_new_rr->getobj('new_rr_text')->get();
+	my $rval = $domain->add_txt( $name, $text );
+
+	$ui->error( 'Invalid name' ) if($rval == -1);
+	$ui->error( 'You have to enter a text' ) if($rval == -2);
+	$ui->error( 'DB error while creating record') if($rval == -3);
+	$ui->dialog(
+		-title => 'TXT record added',
+		-message => 'TXT record "'.$text.'" added for domain '.$domain->{domain}
+	) if($rval > 0);
+}
+
+=pod
+
+It seems that Curses::UI is quite unmaintained. Fortunately
+perl allows us to redefine buggy elements.
+
+=cut
+
+package Curses::UI::Popupmenu;
+
+{
+no warnings 'redefine';
+
+sub draw(;$)
+{
+    my $this = shift;
+    my $no_doupdate = shift || 0;
+
+    # Draw the widget.
+    $this->SUPER::draw(1) or return $this;
+
+    # Get the selected label.
+    my $sellabel;
+    if (defined $this->{-selected})
+    {
+	$sellabel = $this->{-values}->[$this->{-selected}];
+	$sellabel = $this->{-labels}->{$sellabel}
+	    if defined $this->{-labels}->{$sellabel};
+    }
+
+    # Let there be color
+    if ($Curses::UI::color_support) {
+	my $co = $Curses::UI::color_object;
+	my $pair = $co->get_color_pair(
+			     $this->{-fg},
+			     $this->{-bg});
+
+	$this->{-canvasscr}->attron(COLOR_PAIR($pair));
+
+    }
+
+    $this->{-canvasscr}->attron(A_REVERSE) if $this->{-focus};
+    my $width = $this->canvaswidth;
+    if (defined $sellabel)
+    {
+	if (length($sellabel) > $width) {
+		# The bug was here... R.I.P. (http://rt.cpan.org/Public/Bug/Display.html?id=25885)
+		$sellabel = substr($sellabel, 0, $width);
+		$sellabel =~ s/.$/\$/;
+	}
+    }
+    else # No selection yet.
+    {
+	$this->{-canvasscr}->attron(A_DIM);
+	$sellabel = "-"x$width;
+    }
+
+    $this->{-canvasscr}->addstr(0,0, " "x$width);
+    $this->{-canvasscr}->addstr(0,0, $sellabel);
+    $this->{-canvasscr}->move(0,$this->canvaswidth-1);
+    $this->{-canvasscr}->attroff(A_DIM);
+    $this->{-canvasscr}->attroff(A_REVERSE);
+
+    $this->{-canvasscr}->noutrefresh;
+    doupdate() unless $no_doupdate;;
+
+    return $this;
+}
+
+}
+

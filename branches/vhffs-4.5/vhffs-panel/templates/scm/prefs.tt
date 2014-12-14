@@ -1,0 +1,36 @@
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+<h2>[% 'Public' | i18n | html %]</h2>
+	<p>
+		<label for="is-public">[% 'Is this a public repository?' | i18n | html %]</label>
+		<select name="public" id="is-public">
+			<option value="1"[% ' selected="selected"' IF repository.is_public %]>[% 'Yes' | i18n | html %]</option>
+			<option value="0"[% ' selected="selected"' UNLESS repository.is_public %]>[% 'No' | i18n | html %]</option>
+		</select>
+	</p>
+[% IF repository.supports_notifications %]
+<h2>[% 'Options' | i18n | html %]</h2>
+	<p>
+		<label for="option">[% 'Notify changes on mailing-list:' | i18n | html %]</label>
+                <input type="text" name="ml_name" value="[% repository.ml_name | html %]" />
+		<br/>
+        [% 'Don\'t forget to subscribe %s to your mailing list if you are filtering posts.' | i18n | pretty_print(notify_from) %]
+	</p>
+[% END %]
+	<p class="button">
+		<input type="hidden" name="name" value="[% repository.get_reponame %]" />
+		<input type="submit" value="[% 'Update' | i18n | html %]" name="save_prefs_submit"/>
+	</p>
+</form>
+
+[% INCLUDE 'acl/form.tt' 
+    object = repository %]
+
+[% INCLUDE 'object/delete.tt'
+    type = type
+    oid = repository.get_oid %]
+
+[% IF current_user.is_admin %]
+    [% INCLUDE 'admin/object/edit.tt' 
+        object = repository %]
+[% END %]
+

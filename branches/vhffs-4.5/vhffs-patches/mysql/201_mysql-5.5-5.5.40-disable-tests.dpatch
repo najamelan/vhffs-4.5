@@ -1,0 +1,29 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 201_mysql-5.5-5.5.40-disable-tests.dpatch
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: TuxFamily patch to disable mysql build tests
+
+diff -Nru a/mysql-test/mysql-stress-test.pl b/mysql-test/mysql-stress-test.pl
+--- a/mysql-test/mysql-stress-test.pl	2014-07-05 19:45:21.103398747 +0000
++++ b/mysql-test/mysql-stress-test.pl	2014-07-05 19:42:02.319631194 +0000
+@@ -1,5 +1,7 @@
+ #!/usr/bin/perl
+ 
++exit 0;
++
+ # Copyright (c) 2005, 2011, Oracle and/or its affiliates. All rights reserved.
+ #
+ # This program is free software; you can redistribute it and/or
+diff -Nru a/mysql-test/mysql-test-run.pl b/mysql-test/mysql-test-run.pl
+--- a/mysql-test/mysql-test-run.pl	2014-07-05 19:45:16.815403752 +0000
++++ b/mysql-test/mysql-test-run.pl	2014-07-05 19:41:55.183639554 +0000
+@@ -1,6 +1,8 @@
+ #!/usr/bin/perl
+ # -*- cperl -*-
+ 
++exit 0;
++
+ # Copyright (c) 2004, 2014, Oracle and/or its affiliates. All rights reserved.
+ #
+ # This program is free software; you can redistribute it and/or modify

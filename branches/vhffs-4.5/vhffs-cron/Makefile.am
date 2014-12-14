@@ -1,0 +1,5 @@
+if INSTALL_CRON
+
+SUBDIRS = src
+
+endif # INSTALL_CRON

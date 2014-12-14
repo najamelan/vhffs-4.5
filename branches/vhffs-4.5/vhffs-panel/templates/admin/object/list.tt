@@ -1,0 +1,28 @@
+<h1>[% 'Objects list' | i18n | html %]</h1>
+
+[% IF objects.size > 0 %]
+<table>
+    <thead>
+		<tr>
+			<th>[% 'Object ID' | i18n | html %]</th>
+			<th>[% 'Owner user' | i18n | html %]</th>
+			<th>[% 'Owner group' | i18n | html %]</th>
+			<th>[% 'State' | i18n | html %]</th>
+            <th>[% 'Preferences' | i18n | html %]</th>
+		</tr>
+    </thead>
+    <tbody>
+[% FOREACH o IN objects %]
+        <tr>
+            <td>[% o.oid %] ([% o.type | stringify_type %])</td>
+            <td>[% o.owner_user | html %]</td>
+            <td>[% o.owner_group | html %]</td>
+            <td>[% o.state | stringify_status | html %]</td>
+            <td><a href="?do=objectedit;oid=[% o.oid %]">[% 'Edit' | i18n | html %]</a></td>
+        </tr>
+[% END %]
+    </tbody>
+</table>
+[% ELSE %]
+<p>[% 'No object found' | i18n | html %]</p>
+[% END %]

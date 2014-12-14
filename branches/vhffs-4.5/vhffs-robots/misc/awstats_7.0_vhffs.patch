@@ -1,0 +1,46 @@
+--- awstats.pl	2011-04-17 01:03:15.000000000 +0200
++++ awstats.pl.web	2011-04-17 01:02:56.000000000 +0200
+@@ -1710,29 +1710,12 @@
+ 	# Other possible directories :				"/usr/local/etc/awstats", "/etc"
+ 	# FHS standard, Suse package : 				"/etc/opt/awstats"
+ 	my $configdir         = shift;
+-	my @PossibleConfigDir = (
+-			"$DIR",
+-			"/etc/awstats",
+-			"/usr/local/etc/awstats", "/etc",
+-			"/etc/opt/awstats"
+-		); 
+ 
+-	if ($configdir) {
+-		# Check if configdir is outside default values.
+-		my $outsidedefaultvalue=1;
+-		foreach (@PossibleConfigDir) {
+-			if ($_ eq $configdir) { $outsidedefaultvalue=0; last; }
+-		}
+-
+-		# If from CGI, overwriting of configdir with a value that differs from a defautl value
+-		# is only possible if AWSTATS_ENABLE_CONFIG_DIR defined
+-		if ($ENV{'GATEWAY_INTERFACE'} && $outsidedefaultvalue && ! $ENV{"AWSTATS_ENABLE_CONFIG_DIR"})
+-		{
+-			error("Sorry, to allow overwriting of configdir parameter, from an AWStats CGI page, with a non default value, environment variable AWSTATS_ENABLE_CONFIG_DIR must be set to 1. For example, by adding the line 'SetEnv AWSTATS_ENABLE_CONFIG_DIR 1' in your Apache config file or into a .htaccess file.");
+-		}
+-
+-		@PossibleConfigDir = ("$configdir");
+-	}
++	error("Wrong config name") unless( $SiteConfig =~ /^[0-9a-z\.\-]+$/ );
++	use Digest::MD5;
++	my $vhffssitehash = Digest::MD5::md5_hex( $SiteConfig );
++	my $vhffsconfigdir = '/data/web/'.substr( $vhffssitehash, 0, 2 ).'/'.substr( $vhffssitehash, 2, 2 ).'/'.substr( $vhffssitehash, 4, 2 ).'/'.$SiteConfig.'/awstats';
++	my @PossibleConfigDir=("$vhffsconfigdir");
+ 
+ 	# Open config file
+ 	$FileConfig = $FileSuffix = '';
+@@ -16976,7 +16959,7 @@
+ else { @DOWIndex = ( 0, 1, 2, 3, 4, 5, 6 ); }
+ 
+ # Should we link to ourselves or to a wrapper script
+-$AWScript = ( $WrapperScript ? "$WrapperScript" : "$DirCgi$PROG.$Extension" );
++$AWScript = ( $WrapperScript ? "$WrapperScript" : "/$DirCgi$PROG.$Extension" );
+ if (index($AWScript,'?')>-1) 
+ {
+     $AWScript .= '&amp;';   # $AWScript contains URL parameters

@@ -1,0 +1,12 @@
+#MASTER0_NAME="data"
+#MASTER0_ARGS="-p 4567 /data/web"
+
+#MASTER1_NAME ..
+#MASTER1_ARGS ..
+
+#SLAVE0_NAME="data"
+#SLAVE0_ARGS="-t 1800 -r 1000 -p --prevent-loop 10.20.30.40:4567 /data/web"
+
+#SLAVE1_NAME ..
+#SLAVE1_ARGS ..
+

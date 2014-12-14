@@ -1,0 +1,5 @@
+<h1>[% lg_title %]</h1>
+
+[% FOREACH g = groups %]
+[% INCLUDE 'parts/group-general.tt' %]
+[% END %]

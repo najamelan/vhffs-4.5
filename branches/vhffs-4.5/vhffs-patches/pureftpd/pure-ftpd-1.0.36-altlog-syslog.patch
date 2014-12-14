@@ -1,0 +1,204 @@
+diff -Nru a/man/pure-ftpd.8.in b/man/pure-ftpd.8.in
+--- a/man/pure-ftpd.8.in	2012-03-16 01:01:37.000000000 +0000
++++ b/man/pure-ftpd.8.in	2014-07-06 20:21:46.099727584 +0000
+@@ -402,6 +402,20 @@
+ (eg.
+ \fB/var/log/pureftpd.log\fR, not \fB ../log/pureftpd.log\fR).
+ .TP
++.B \-O format:syslog,facility
++Send all file transfers to syslog.
++.br
++If you add
++.br
++\fB\-O clf:syslog,local2\fR
++.br
++to your starting options,
++Pure-FTPd will send log, in a format similar to the Apache web server in default
++configuration, to syslog with the local2 facility.
++.I Facility is optional and
++defaults to
++.BR ftp .
++.TP
+ .B \-p first:last
+ Use only ports in the range \fIfirst\fR to \fIlast\fR
+ inclusive for passive\-mode downloads. This means that clients will
+diff -Nru a/src/altlog.c b/src/altlog.c
+--- a/src/altlog.c	2012-03-16 01:01:37.000000000 +0000
++++ b/src/altlog.c	2014-07-06 20:21:46.103727580 +0000
+@@ -19,30 +19,48 @@
+ 
+ static int altlog_write(const char *str)
+ {
+-    struct flock lock;
+-    ssize_t left;
+-    
+-    if (altlog_fd == -1 || str == NULL || 
+-        (left = (ssize_t) strlen(str)) <= (ssize_t) 0) {
+-        return -1;
+-    }
+-    lock.l_whence = SEEK_SET;
+-    lock.l_start = (off_t) 0;
+-    lock.l_len = (off_t) 0;
+-    lock.l_pid = getpid();
+-    lock.l_type = F_WRLCK;
+-    while (fcntl(altlog_fd, F_SETLKW, &lock) < 0 && errno == EINTR);
+-    if (lseek(altlog_fd, (off_t) 0, SEEK_END) < (off_t) 0
++    if( altlog_syslog ) {
++# ifdef SAVE_DESCRIPTORS
++        openlog("pure-ftpd", log_pid, altlog_syslog_facility);
++# else
++        if (syslog_facility != altlog_syslog_facility) {
++            openlog("pure-ftpd", log_pid, altlog_syslog_facility);
++        }
++# endif
++        syslog(LOG_NOTICE, "%s", str);
++# ifdef SAVE_DESCRIPTORS
++        closelog();
++# else
++        if (syslog_facility != altlog_syslog_facility) {
++            openlog("pure-ftpd", LOG_NDELAY | log_pid, syslog_facility);
++        }
++# endif
++    } else {
++        struct flock lock;
++        ssize_t left;
++        
++        if (altlog_fd == -1 || str == NULL || 
++            (left = (ssize_t) strlen(str)) <= (ssize_t) 0) {
++            return -1;
++        }
++        lock.l_whence = SEEK_SET;
++        lock.l_start = (off_t) 0;
++        lock.l_len = (off_t) 0;
++        lock.l_pid = getpid();
++        lock.l_type = F_WRLCK;
++        while (fcntl(altlog_fd, F_SETLKW, &lock) < 0 && errno == EINTR);
++        if (lseek(altlog_fd, (off_t) 0, SEEK_END) < (off_t) 0
+ # ifdef ESPIPE
+-        && errno != ESPIPE
++            && errno != ESPIPE
+ # endif
+-	) {
+-        return -1;
++    	) {
++            return -1;
++        }
++        (void) safe_write(altlog_fd, str, (size_t) left, -1);
++        lock.l_type = F_UNLCK;
++        while (fcntl(altlog_fd, F_SETLK, &lock) < 0 && errno == EINTR);    
+     }
+-    (void) safe_write(altlog_fd, str, (size_t) left, -1);
+-    lock.l_type = F_UNLCK;
+-    while (fcntl(altlog_fd, F_SETLK, &lock) < 0 && errno == EINTR);    
+-    
++
+     return 0;
+ }
+ 
+diff -Nru a/src/ftpd.c b/src/ftpd.c
+--- a/src/ftpd.c	2014-07-06 20:21:14.939767679 +0000
++++ b/src/ftpd.c	2014-07-06 20:21:46.103727580 +0000
+@@ -5069,21 +5069,27 @@
+ #endif
+ 
+ #ifdef WITH_ALTLOG
+-    if (altlog_format != ALTLOG_NONE) {
++    if(altlog_syslog) {
+         if (altlog_format == ALTLOG_W3C) {
+-            if ((altlog_fd = open(altlog_filename, 
+-                                  O_CREAT | O_WRONLY | O_NOFOLLOW | O_EXCL,
+-                                  (mode_t) 0600)) != -1) {
+-                altlog_write_w3c_header();
+-            } else if (errno == EEXIST) {
+-                altlog_fd = open(altlog_filename, O_WRONLY | O_NOFOLLOW);
+-            } 
+-        } else {
+-            altlog_fd = open(altlog_filename,
+-                             O_CREAT | O_WRONLY | O_NOFOLLOW, (mode_t) 0600);
++            altlog_write_w3c_header();
+         }
+-        if (altlog_fd == -1) {
+-            logfile(LOG_ERR, "altlog %s: %s", altlog_filename, strerror(errno));
++    } else {
++        if (altlog_format != ALTLOG_NONE) {
++            if (altlog_format == ALTLOG_W3C) {
++                if ((altlog_fd = open(altlog_filename, 
++                                      O_CREAT | O_WRONLY | O_NOFOLLOW | O_EXCL,
++                                      (mode_t) 0600)) != -1) {
++                    altlog_write_w3c_header();
++                } else if (errno == EEXIST) {
++                    altlog_fd = open(altlog_filename, O_WRONLY | O_NOFOLLOW);
++                } 
++            } else {
++                altlog_fd = open(altlog_filename,
++                                 O_CREAT | O_WRONLY | O_NOFOLLOW, (mode_t) 0600);
++            }
++            if (altlog_fd == -1) {
++                logfile(LOG_ERR, "altlog %s: %s", altlog_filename, strerror(errno));
++            }
+         }
+     }
+ #endif
+@@ -5952,14 +5958,35 @@
+                         optarg_copy);
+                 }
+             }
+-            if (*delpoint != '/') {
++            if (*delpoint == '/') {
++                if ((altlog_filename = strdup(delpoint)) == NULL) {
++                    die_mem();
++                }
++            }
++            else if ( strncasecmp(delpoint, "syslog", sizeof "syslog" - 1U) == 0) {
++                char *syslogdelpoint;
++                if ((syslogdelpoint = strchr(delpoint, ALTLOG_SYSLOG_DELIMITER)) != NULL) {
++                    int n = 0;
++                    *syslogdelpoint++ = 0;
++
++                    while (facilitynames[n].c_name &&
++                           strcasecmp(facilitynames[n].c_name, syslogdelpoint) != 0) {
++                        n++;
++                    }
++                    if (facilitynames[n].c_name) {
++                        altlog_syslog_facility = facilitynames[n].c_val;
++                    } else {
++                        logfile(LOG_ERR, 
++                                MSG_CONF_ERR ": " MSG_ILLEGAL_FACILITY ": %s", syslogdelpoint);
++                    }
++                }
++                altlog_syslog = 1;
++            }
++            else {
+                 die(421, LOG_ERR,
+                     MSG_CONF_ERR ": " MSG_SANITY_FILE_FAILURE,
+                     delpoint);
+             }
+-            if ((altlog_filename = strdup(delpoint)) == NULL) {
+-                die_mem();
+-            }
+             (void) free(optarg_copy);
+             break;
+         }
+diff -Nru a/src/ftpd_p.h b/src/ftpd_p.h
+--- a/src/ftpd_p.h	2011-04-17 15:05:54.000000000 +0000
++++ b/src/ftpd_p.h	2014-07-06 20:21:46.103727580 +0000
+@@ -207,6 +207,7 @@
+ };
+ 
+ # define ALTLOG_DELIMITER ':'
++# define ALTLOG_SYSLOG_DELIMITER ','
+ # define ALTLOG_DEFAULT ALTLOG_CLF
+ #endif
+ 
+diff -Nru a/src/globals.h b/src/globals.h
+--- a/src/globals.h	2012-03-16 01:01:37.000000000 +0000
++++ b/src/globals.h	2014-07-06 20:21:46.107727575 +0000
+@@ -134,6 +134,8 @@
+ #ifdef WITH_ALTLOG
+ GLOBAL0(const char *altlog_filename);
+ GLOBAL0(AltLogFormat altlog_format);
++GLOBAL(signed char altlog_syslog, 0);
++GLOBAL(int altlog_syslog_facility, DEFAULT_FACILITY);
+ GLOBAL(int altlog_fd, -1);
+ #endif
+ 

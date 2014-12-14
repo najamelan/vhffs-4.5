@@ -1,0 +1,27 @@
+Files baked into this build:
+
+dojo.js:
+./jslib/dojoGuardStart.jsfrag
+./../../dojo/_base/_loader/bootstrap.js
+./../../dojo/_base/_loader/loader.js
+./../../dojo/_base/_loader/hostenv_browser.js
+./../../release/vhffs-public/dojo/_base/lang.js
+./../../release/vhffs-public/dojo/_base/array.js
+./../../release/vhffs-public/dojo/_base/declare.js
+./../../release/vhffs-public/dojo/_base/connect.js
+./../../release/vhffs-public/dojo/_base/Deferred.js
+./../../release/vhffs-public/dojo/_base/json.js
+./../../release/vhffs-public/dojo/_base/Color.js
+./../../release/vhffs-public/dojo/_base.js
+./../../release/vhffs-public/dojo/_base/window.js
+./../../release/vhffs-public/dojo/_base/event.js
+./../../release/vhffs-public/dojo/_base/html.js
+./../../release/vhffs-public/dojo/_base/NodeList.js
+./../../release/vhffs-public/dojo/_base/query.js
+./../../release/vhffs-public/dojo/_base/xhr.js
+./../../release/vhffs-public/dojo/_base/fx.js
+./../../release/vhffs-public/dojo/_base/browser.js
+./jslib/dojoGuardEnd.jsfrag
+
+../dojo/vhffs-public.js:
+./../../release/vhffs-public/dojo/back.js

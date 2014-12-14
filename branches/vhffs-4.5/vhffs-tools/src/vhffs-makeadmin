@@ -1,0 +1,35 @@
+#!%PERL%
+
+use lib '%VHFFS_LIB_DIR%';
+use Vhffs::User;
+use Vhffs;
+use Vhffs::Constants;
+
+if( scalar @ARGV != 1 )
+{
+	print "Usage: vhffs-makeadmin username\n";
+	exit( 1 );
+}
+
+my $vhffs = new Vhffs;
+my $user = Vhffs::User::get_by_username($vhffs, $ARGV[0]);
+if ( !defined $user ) {
+    die "User >$ARGV[0]< does not exists !\n";
+}
+
+$user->set_admin( Vhffs::Constants::USER_ADMIN );
+if ( $user->commit < 0 ) {
+    die "Unable to give admin status for this user\n";
+}
+
+print "User $ARGV[0] is now an administrator\n";
+print "Thanks for using VHFFS\n";
+print "\n";
+print "							VHFFS Team\n";
+
+
+exit( 0 );
+
+
+
+

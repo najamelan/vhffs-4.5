@@ -1,0 +1,26 @@
+<h1>[% list_title | html %]</h1>
+
+[% IF users.size > 0 %]
+<table>
+    <thead>
+        <tr>
+            <th>[% 'Username' | i18n | html %]</th>
+            <th>[% 'Real Name' | i18n | html %]</th>
+            <th>[% 'State' | i18n | html %]</th>
+            <th>[% 'Preferences' | i18n | html %]</th>
+        </tr>
+    </thead>
+    <tbody>
+[% FOREACH u IN users %]
+        <tr>
+            <td>[% u.username | html %]</td>
+            <td>[% u.realname | html %]</td>
+            <td>[% u.state | stringify_status | html %]</td>
+            <td><a href="?do=userprefs;name=[% u.username %]">[% 'Preferences' | i18n | html %]</a></td>
+        </tr>
+[% END %]
+    </tbody>
+</table>
+[% ELSE %]
+<p>[% 'No user found' | i18n | html %]</p>
+[% END %]

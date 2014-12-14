@@ -1,0 +1,16 @@
+<form class="table-like" name="createTag" accept-charset="utf-8" method="post">
+<p><label for="category">[% 'Category:' | i18n | html %]</label>
+<select name="category_id" id="category">
+[% FOREACH c IN categories %]
+<option value="[% c.category_id %]"[% ' selected="selected"' IF c.category_id == category_id %]>[% c.label | html %]</option>
+[% END %]
+</select>
+</p>
+<p><label for="label">[% 'Label:' | i18n | html %]</label>
+	<input type="text" name="label" id="label" value="[% label | html %]"/></p>
+<p><label for="description">[% 'Description:' | i18n | html %]</label>
+	<textarea name="description" id="description">[% description | html %]</textarea></p>
+<p class="button">
+	<input type="submit" name="create_tag_submit" value="[% 'Create' | i18n | html %]"/>
+</p> 
+</form>

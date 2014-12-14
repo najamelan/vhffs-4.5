@@ -1,0 +1,45 @@
+# With the help of http://wiki.exim.org/EximAutoReply
+
+vhffs_autoreply:
+	debug_print = "R: vhffs_autoreply for $local_part@$domain, To: $h_to"
+	driver = accept
+	domains = VHFFS_AUTOREPLY_DOMAINS
+	transport = vhffs_autoreply
+# This is were we try not to be banned from the internet...
+	condition = ${if or{ \
+		{!match{$h_to:}{\\b$local_part@$domain\\b} } \
+		{ match {$h_precedence:} {(?i)junk|bulk|list} } \
+		{ eq {$sender_address} {} } \
+		{ def:header_X-Cron-Env: } \
+		{ def:header_Auto-Submitted: } \
+		{ def:header_List-Id: } \
+		{ def:header_List-Help: } \
+		{ def:header_List-Unsubscribe:} \
+		{ def:header_List-Subscribe: } \
+		{ def:header_List-Owner: } \
+		{ def:header_List-Post: } \
+		{ def:header_List-Archive: } \
+		{ def:header_Autorespond: } \
+		{ def:header_X-Autoresponse: } \
+		{ def:header_X-Autoreply-From: } \
+		{ def:header_X-eBay-MailTracker: } \
+		{ def:header_X-MaxCode-Template: } \
+		{ match {$h_X-Auto-Response-Suppress: } {OOF} } \
+		{ match {$h_X-OS:} {HP Onboard Administrator} } \
+		{ match {$h_X-MimeOLE:} {\N^Produced By phpBB2$\N} } \
+		{ match {$h_Subject:} {\N^Yahoo! Auto Response$\N} } \
+		{ match {$h_Subject:} {\N^ezmlm warning$\N} } \
+		{ match {$h_X-FC-MachineGenerated:} {true} } \
+		{ match {$message_body} {\N^Your \"cron\" job on\N} } \
+		{ match {$h_Subject:} {\N^Out of Office\N} } \
+		{ match {$h_Subject:} {\N^Auto-Reply:\N} } \
+		{ match {$h_Subject:} {\N^Autoresponse:\N} } \
+		{ match {$h_Subject:} {\N(Auto Reply)$\N} } \
+		{ match {$h_Subject:} {\N(Out of Office)$\N} } \
+		{ match {$h_Subject:} {\Nis out of the office.$\N} } \
+		{ match {$h_From:} {\N(via the vacation program)\N } } \
+		}{no}{yes} }
+# Very important, forwards the mail to next routers
+	unseen 
+	no_verify
+

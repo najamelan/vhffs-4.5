@@ -1,0 +1,30 @@
+<form class="table-like" method="post" action="?do=[% type | html %]prefs;name=[% db.get_dbname | html %]" accept-charset="utf-8">
+	<p>
+		<label>[% 'Name of the database:' | i18n | html %]</label>
+		[% db.get_dbname | html %]
+	</p>
+	<p>
+		<label>[% 'Username for this database:' | i18n | html %]</label>
+        [% db.get_dbusername | html %]
+	</p>
+    <p class="info">[% 'Warning, password change isn\'t immediate, you\'ve to check periodically to see if it\'s done' | i18n | html %]</p>
+	<p>
+		<label for="newpassword">[% 'Password for this database:' | i18n | html %]</label>
+		<input type="password" name="newpassword" id="newpassword" value="" autocomplete="off"/>
+	</p>
+	<p class="button">
+        <input type="hidden" name="name" value="[% db.get_dbname | html %]"/>
+		<input type="submit" value="[% 'Update' | i18n | html %]" name="save_prefs_submit"/>
+	</p>
+</form>
+
+[% INCLUDE 'acl/form.tt' 
+    object = db %]
+
+[% INCLUDE 'object/delete.tt'
+    oid = db.get_oid %]
+
+[% IF current_user.is_admin %]
+    [% INCLUDE 'admin/object/edit.tt' 
+        object = db %]
+[% END %]

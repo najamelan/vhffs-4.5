@@ -1,0 +1,27 @@
+[% IF history.size() %]
+[% USE date %]
+<table>
+    <thead>
+    <tr>
+        <th>[% 'Date' | i18n | html %]</th>
+        [% IF history.0.object.defined() %]<th>[% 'Object type' | i18n %]</th>
+        <th>[% 'Object label' | i18n %]</th>[% END %]
+        <th>[% 'Event' | i18n | html %]</th>
+        [% IF current_user.is_moderator() || current_user.is_admin() %]<th>[% 'Source' | i18n | html %]</th>[% END %]
+    </tr>
+    </thead>
+    <tbody>
+[% FOREACH h IN history %]
+    <tr>
+        <td>[% date.format(h.date, '%x %X') %]</td>
+        [% IF h.object.defined() %]<td>[% h.object_type | html %]</td>
+        <td>[% h.object.get_label %]</td>[% END %]
+        <td>[% h.message %]</td>
+        [% IF current_user.is_moderator() || current_user.is_admin() %]<td>[% h.source || 'N/A' %]</td>[% END %]
+    </tr>
+[% END %]
+    </tbody>
+</table>
+[% ELSE %]
+<p class="info">[% 'No history information about this object.' | i18n | html %]</p>
+[% END %]

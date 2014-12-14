@@ -1,0 +1,47 @@
+<h1>[% 'Project search' | i18n%]</h1>
+<form action="?do=groupsearch" method="post" id="AdvancedSearchGroupForm">
+<h2>[% 'Tags' | i18n %]</h2>
+<p>[% 'Matches' | i18n %]:
+<span id="searchTagInclude">
+[% FOREACH t = included_tags %]
+<span>[% t.tag_label %]&#160;<a href="?[% query_string %];discard_inc=[% t.tag_id %]">X</a></span>
+<input type="hidden" name="included_tags" id="included_tags[% t.tag_id %]" value="[% t.tag_id %]"/>
+[% END %]
+</span></p>
+<p>[% "Doesn't matches" | i18n %]:
+<span id="searchTagExclude">
+[% FOREACH t = excluded_tags %]
+<span>[% t.tag_label %]&#160;<a href="?[% query_string %];discard_ex=[% t.tag_id %]">X</a></span>
+<input type="hidden" name="excluded_tags" id="excluded_tags[% t.tag_id %]" value="[% t.tag_id %]"/>
+[% END %]
+</span></p>
+<p>[% 'Other tags' | i18n %]:</p>
+[% IF other_tags %]
+<ul id="searchTagsList">
+[% SET c = '' %]
+[% FOREACH t = other_tags %]
+[% IF t.category_label != c %]
+	[% SET c = t.category_label %]
+	[% '</li>' UNLESS loop.first() %]
+	<li><span class="category">[% c %]: </span>
+[% END %]
+<span id="tag[% t.tag_id %]">
+	<span class="label">[% t.tag_label %]</span>&#160;<a class="include" href="?[% query_string %];included_tags=[% t.tag_id %]">+</a>/<a class="exclude" href="?[% query_string %];excluded_tags=[% t.tag_id %]">-</a>
+</span>
+[% END %]
+</li>
+</ul>
+[% END %]
+<h2>[% 'Advanced search' | i18n %]</h2>
+<p><label class="own-line" for="groupname">[% 'Groupname' | i18n %]:</label>
+<input type="text" maxlength="50" id="groupname" name="groupname"/></p>
+<p><label class="own-line" for="description">[% 'Description' | i18n %]:</label>
+<textarea name="description" id="description" cols="100" rows="10"></textarea></p>
+<p class="submit"><input type="submit" value="[% 'OK' | i18n %]" name="searchSubmit" id="AdvancedSearchGroupFormSubmit"/></p>
+</form>
+<script type="text/javascript">
+<!--
+dojo.addOnLoad(Public.SearchGroup.onLoad);
+//-->
+</script>
+

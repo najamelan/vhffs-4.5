@@ -1,0 +1,12 @@
+hide pgsql_servers = 127.0.0.1/vhffs/exim/astrongpass
+
+# Domains to be relayed
+VHFFS_RELAY_DOMAINS = ${lookup pgsql{SELECT mx.domain FROM vhffs_mxdomain mx INNER JOIN vhffs_object o ON o.object_id=mx.object_id WHERE o.state = 6 AND domain = E'${quote_pgsql:$domain}'}}
+
+# Checks localparts (to avoid forwarding mail to non-existent boxes).
+VHFFS_VALID_LOCALPARTS = ${lookup pgsql{SELECT d.domain FROM vhffs_mxdomain d WHERE d.domain = E'${quote_pgsql:$domain}' AND (d.catchall != '' OR EXISTS (SELECT domain FROM vhffs_boxes WHERE domain = E'${quote_pgsql:$domain}' AND local_part = E'${quote_pgsql:$local_part}' AND state = 6) OR EXISTS (SELECT domain FROM vhffs_forward WHERE domain = E'${quote_pgsql:$domain}' AND local_part = E'${quote_pgsql:$local_part}') OR EXISTS (SELECT domain FROM vhffs_ml WHERE domain = E'${quote_pgsql:$domain}' AND (local_part = E'${quote_pgsql:$local_part}' OR local_part || '-request' = E'${quote_pgsql:$local_part}')))}}
+
+# Self explanatory. We only accept to relay on this address.
+MX1_IP_ADDRESS=123.45.67.89
+
+domainlist vhffs_domains=VHFFS_RELAY_DOMAINS

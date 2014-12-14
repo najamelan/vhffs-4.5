@@ -1,0 +1,34 @@
+#!%PERL%
+
+use lib '%VHFFS_LIB_DIR%';
+use Vhffs::User;
+use Vhffs;
+use Vhffs::Constants;
+
+if( $#ARGV != 0 ) {
+	print 'Usage: vhffs-userdel user'."\n";
+	exit( 1 );
+}
+
+my $vhffs = new Vhffs;
+my $user = Vhffs::User::get_by_username( $vhffs , $ARGV[0] );
+
+unless( defined $user ) {
+	print 'No such user with this username'."\n";
+	exit(-1);
+}
+
+if( @{$user->get_groups} ) {
+	print 'This user is still in a group'."\n";
+	exit(-1);
+}
+
+$user->set_status( Vhffs::Constants::WAITING_FOR_DELETION );
+	
+if( $user->commit <= 0 ) {
+	print 'Status change failed'."\n";
+	exit(-1);
+}
+
+print 'This user WILL BE DELETED'."\n";
+exit(0);

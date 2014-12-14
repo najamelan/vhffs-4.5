@@ -1,0 +1,26 @@
+<h1>[% list_title | html %]</h1>
+
+[% IF groups.size > 0 %]
+<table>
+    <thead>
+		<tr>
+			<th>[% 'Groupname' | i18n | html %]</th>
+			<th>[% 'Owner user' | i18n | html %]</th>
+			<th>[% 'State' | i18n | html %]</th>
+            <th>[% 'Preferences' | i18n | html %]</th>
+		</tr>
+    </thead>
+    <tbody>
+[% FOREACH g IN groups %]
+        <tr>
+            <td>[% g.groupname | html %]</td>
+            <td>[% g.owner_user | html %]</td>
+            <td>[% g.state | stringify_status | html %]</td>
+            <td><a href="?do=groupprefs;group=[% g.groupname | html %]">[% 'Preferences' | i18n | html %]</a></td>
+        </tr>
+[% END %]
+    </tbody>
+</table>
+[% ELSE %]
+<p>[% 'No group found' | i18n | html %]</p>
+[% END %]

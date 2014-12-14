@@ -1,0 +1,1 @@
+./vhffsfs -o allow_other,hard_remove,readdir_ino,use_ino,noauto_cache,entry_timeout=0,negative_timeout=0,attr_timeout=0,ac_attr_timeout=0,intr /mnt/fuse/

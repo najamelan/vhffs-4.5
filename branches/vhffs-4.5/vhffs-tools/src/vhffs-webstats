@@ -1,0 +1,131 @@
+#!%PERL%
+
+# VHFFS tool to display statistics for all websites read from awstats files
+
+use strict;
+use utf8;
+
+use Fcntl;
+use Getopt::Long;
+
+use lib '%VHFFS_LIB_DIR%';
+use Vhffs;
+use Vhffs::Functions;
+use Vhffs::Services::Web;
+
+my ( $obandwidth, $ohits, $opages, $ovisits );
+my $oresult = GetOptions (
+    'bandwidth' => \$obandwidth,
+    'hits' => \$ohits,
+    'pages' => \$opages,
+    'visits' => \$ovisits );
+
+if( not $oresult or $#ARGV != 0 or $ARGV[0] !~ /^\d{4}(?:\d{2})?(?:\d{2})?$/ )  {
+	print "Usage: web_traffic [OPTION]... YYYY[MM][DD]\n";
+	print " -b, --bandwidth\tprint used bandwidth (in bytes)\n";
+	print " -h, --hits\t\tprint hits\n";
+	print " -p, --pages\t\tprint pages\n";
+	print " -v, --visits\t\tprint visits\n";
+	exit 1;
+}
+
+$obandwidth = $ohits = $opages = $ovisits = 1 unless $obandwidth or $ohits or $opages or $ovisits;
+
+my $vhffs = new Vhffs;
+die "ERROR: Cannot init VHFFS !!!\n" unless defined $vhffs;
+
+my $webs = Vhffs::Services::Web::getall( $vhffs , Vhffs::Constants::ACTIVATED );
+die "ERROR: Cannot fetch the list of websites\n" unless defined $webs;
+
+my $webconf = $vhffs->get_config->get_service('web');
+die "ERROR: A full web configuration is needed to generate stats\n" unless defined $webconf;
+
+my $log_parsed_root = $webconf->{"log_parsed_root"};
+die "ERROR: ".$log_parsed_root." is not a directory\n" unless -d $log_parsed_root;
+
+my ( $year , $month , $day ) = ( $ARGV[0] =~ /^(\d{4})(\d{2})?(\d{2})?$/ );
+my $mode = defined $day ? 'day' : defined $month ? 'month' : 'year';
+
+my @months = ( '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12' );
+@months = ( $month ) if defined $month;
+
+foreach ( @{$webs} )
+{
+	my $svname = $_->get_servername;
+	my $awstatsdir = $log_parsed_root.'/'.$_->get_hash.'/awstats';
+	next unless -d $awstatsdir;
+
+	my ( $pages , $hits , $bandwidth, $visits );
+
+	foreach(@months) {
+		my $month = $_;
+
+		my $path = $awstatsdir.'/awstats'.$month.$year.'.'.$svname.'.txt';
+		next unless -f $path;
+
+		open( my $file , '<'.$path );
+		next unless defined $file;
+
+		my $line;
+
+		# search BEGIN_MAP over the 100 first lines
+		my $nbline = 0;
+		$nbline++ while defined ( $line = <$file> ) and $nbline < 100 and $line !~ /^BEGIN_MAP\s+/;
+
+		# if we found BEGIN_MAP, we need to search for POS_DAY, but not after END_MAP
+		my ( $mapsize ) = ( $line =~ /^BEGIN_MAP\s+(\d+)\s*$/ ) if defined $line;
+		if( defined $mapsize ) {	
+			$mapsize++; # awstat size of MAP is actually #lastnb, so for a 27 value, there is 28 elements
+			my $nbline = 0;
+			$nbline++ while defined ( $line = <$file> ) and $nbline < $mapsize and $line !~ /^END_MAP$/ and $line !~ /^POS_DAY\s+/;
+
+			# if POS_DAY was found, seek to POS_DAY offset
+			my ( $posday ) = ( $line =~ /^POS_DAY\s+(\d+)\s*$/ );
+			seek $file, $posday, Fcntl::SEEK_SET if defined $posday;	
+		}
+
+		# next line should be BEGIN_DAY if MAP exists and offset is correct
+		if( defined ( $line = <$file> ) and $line !~ /^BEGIN_DAY\s+/ ) {
+			# if not, search for BEGIN_DAY from the beginning of the file
+			seek $file, 0, Fcntl::SEEK_SET;
+			while( defined ( $line = <$file> ) and $line !~ /^BEGIN_DAY\s+/ ){};
+		}
+
+		# search through DAY
+		my ( $daysize ) = ( $line =~ /^BEGIN_DAY\s+(\d+)\s*$/ ) if defined $line;
+		if( defined $daysize and $daysize > 0 ) {
+
+			if( $mode eq 'day' ) {
+				my $nbline = 0;
+				$nbline++ while defined ( $line = <$file> ) and $nbline < $daysize and $line !~ /^END_DAY$/ and $line !~ /^$year$month$day\s+/;
+				( $pages , $hits , $bandwidth , $visits ) = ( $line =~ /^$year$month$day\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s*$/ );
+			}
+
+			# month or year
+			else {
+				my $nbline = 0;
+				while( defined ( $line = <$file> ) and $nbline < $daysize and $line !~ /^END_DAY$/ ) {
+					my ( $tpages , $thits , $tbandwidth , $tvisits ) = ( $line =~ /^$year$month\d{2}\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s*$/ );
+					if( defined $tpages and defined $thits and defined $tbandwidth and defined $tvisits ) {
+						$pages += $tpages;
+						$hits += $thits;
+						$bandwidth += $tbandwidth;
+						$visits += $tvisits;
+					}
+				}
+			}
+		}
+
+		close( $file );
+	}
+
+	if( defined $pages and defined $hits and defined $bandwidth and defined $visits ) {
+		my @fields;
+		push @fields, $bandwidth if defined $obandwidth;
+		push @fields, $hits if defined $ohits;
+		push @fields, $pages if defined $opages;
+		push @fields, $visits if defined $ovisits;
+		print join(' ', @fields).' '.$svname."\n";
+	}
+}
+

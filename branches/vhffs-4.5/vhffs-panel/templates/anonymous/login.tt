@@ -1,0 +1,49 @@
+		<div class="misc" id="misc">
+	[% IF website.defined() %]
+		[% website = website | html %]
+		<h1>[% 'Welcome on %s' | i18n | pretty_print('<a href="' _ website _ '">' _ hostname _ '</a>') %]</h1>
+	[% ELSE %]
+		<h1>[% 'Welcome on %s' | i18n | pretty_print(hostname) %]</h1>
+	[% END %]
+			
+			<form id="login-form" class="table-like" action="?do=login" method="post" accept-charset="utf-8">
+			<h2>[% 'Please enter your username and password' | i18n %]</h2>
+		[% INCLUDE 'misc/errors.tt' %]
+		[% INCLUDE 'misc/infos.tt' %]
+				<p>
+					<label for="login-username">
+			[% 'Username' | i18n | html %]
+					</label>
+					<input type="text" class="validation-identifier" tabindex="1" name="username" id="login-username" maxlength="32" value="[% username | html %]"/>
+				</p>
+				<p>
+					<label for="login-password">
+						[% 'Password' | i18n | html %]
+					</label>
+						<input type="password" class="validation-required" tabindex="2" name="password" id="login-password" maxlength="32" />
+				</p>
+				<p class="button">
+					<input type="submit" tabindex="3" value="[% 'Access to panel' | i18n %]" id="login-submit" name="login_submit"/>
+				</p>
+			</form>
+			<div id="sub_opts">
+			<ul>
+		[% IF subscription_allowed %]
+				<li>
+				<a class="loginLinks" href="?do=subscribe">[% 'Subscribe' | i18n %]</a>
+				</li>
+				[% END %]
+				
+				<li>
+				<a class="loginLinks" href="?do=lost">[% 'I\'ve lost my password' | i18n %]</a>
+				</li>
+			</ul>
+			</div>
+		</div>
+
+		<div class="foothome">
+	[% IF stats.defined() %]
+	<p>[% 'Woah, %s users and %s groups already trust %s' | i18n | pretty_print(stats.users, stats.groups, hostname) | html %]</p>
+	[% END %]
+		</div>
+	<script type="text/javascript" charset="utf-8" src="/js/vhffs/anonymous/login.js"></script>

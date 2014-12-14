@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>Services VHFFS</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>Ce chapitre pr&eacute;sente les diff&eacute;rents services de VHFFS
+    et leur fa&ccedil;on de fonctionner.</para>
+  </section>
+</chapter>

@@ -1,0 +1,4 @@
+Put mod_partialcontentabuse.c in lighttpd' sources src/ subdirectory. Apply
+needed patches (generic one and optional debian one).
+Compile.
+Enjoy.

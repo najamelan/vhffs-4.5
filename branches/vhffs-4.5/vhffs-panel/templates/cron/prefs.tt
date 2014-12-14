@@ -1,0 +1,67 @@
+[% USE date %]
+<fieldset>
+<legend>[% 'Options' | i18n | html %]</legend>
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p>
+		<label for="name">[% 'Path:' | i18n | html %]</label>
+        [% cron.cronpath | html %]
+		<input type="hidden" name="name" id="name" value="[% cron.get_cronpath | html %]"/>
+		<br/>
+	</p>
+	<p>
+		<label for="interval">[% 'Interval:' | i18n | html %]</label>
+		<input type="text" name="interval" id="interval" value="[% cron.get_interval / 60 %]"/>
+        [% 'minutes' | i18n | html %]
+	</p>
+	<p>
+		<label for="reportmail">[% 'Send reports to:' | i18n | html %]</label>
+		<input type="text" name="reportmail" id="reportmail" value="[% cron.get_reportmail | html %]"/>
+	</p>
+	<p>
+		<label>[% 'Last run:' | i18n | html %]</label>
+[% IF cron.get_lastrundate().defined() %]
+        [% date.format(cron.get_lastrundate, '%x %X') | html %]
+[% ELSE %]
+        [% 'Never run' | i18n | html %]
+[% END %]
+	</p>
+	<p>
+		<label>[% 'Last return code:' | i18n | html %]</label>
+[% IF cron.get_lastrunreturncode().defined() %]
+        [% cron.get_lastrunreturncode %]
+[% ELSE %]
+        [% 'Never run' | i18n | html %]
+[% END %]
+	</p>
+	<p>
+		<label for="nextrundate">[% 'Next run scheduled at:' | i18n | html %]</label>
+		[% date.format(cron.get_nextrundate, '%x %X') | html %]
+	</p>
+	<p>
+		<label for="running">[% 'Status:' | i18n | html %]</label>
+[% IF cron.get_running == 0 %]
+        [% 'Stand-by' | i18n | html %]
+[% ELSIF cron.get_running == 1 %]
+        [% 'Running' | i18n | html %]
+[% ELSE %]
+        [% 'Collided, something went wrong, recovering' | i18n | html %]
+[% END %]
+	</p>
+	<p class="button">
+		<input type="submit" value="[% 'Update' | i18n | html %]" name="save_prefs_submit"/>
+	</p>
+</form>
+</fieldset>
+
+[% INCLUDE 'acl/form.tt' 
+    object = cron %]
+
+[% INCLUDE 'object/delete.tt'
+    type = 'cron'
+    oid = cron.get_oid %]
+
+[% IF current_user.is_admin %]
+    [% INCLUDE 'admin/object/edit.tt' 
+        object = cron %]
+[% END %]
+

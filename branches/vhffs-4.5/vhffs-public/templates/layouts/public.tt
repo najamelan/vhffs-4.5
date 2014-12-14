@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
+  <meta name="author" content="VHFFS Team, based on G. Wolfgang original design" />
+  <meta name="theme" content="[% theme %]"/>
+  <link rel="stylesheet" type="text/css" media="screen,projection" href="/themes/[% theme %]/main.css" />
+  
+[%# TODO: Add a parameter to include extra-js %]
+  
+  <script type="text/javascript">
+    // Dojo configuration
+    djConfig = {
+      preventBackButtonFix: false,
+      ioPublish: true
+    };
+  </script>
+
+  <script type="text/javascript" src="/js/dojo/dojo.js"></script>
+  <script type="text/javascript" src="/js/dijit/dijit.js"></script>
+  <script type="text/javascript" src="/js/public.js"></script>
+  <script type="text/javascript">dojo.back.init();</script>
+  <title>Vhffs::Virtual hosting for free software</title>
+</head>
+<body>
+<div id="background-container">
+  <div class="page-container-public">
+    <div id="loading" style="display:none">
+      <img src="/themes/[% theme %]/img/loading.gif" alt="Loading..."/>
+    </div>
+    <div id="header">
+	[% INCLUDE parts/header.tt %]
+	</div>
+	<div id="top-menu">
+	[% INCLUDE $top %]
+	</div>
+	<div id="left-menu">
+	[% INCLUDE $left %]
+	</div>
+	<div id="right-menu">
+	[% INCLUDE $right %]
+	</div>
+	<div id="public-content">
+	[% PROCESS $template %]
+	</div>
+	<div id="footer">
+	[% INCLUDE parts/footer.tt %]
+	</div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+[% FOREACH c IN categories %]
+    <fieldset>
+        <legend>[% c.name | html %]</legend>
+        <ul class="[% c.type | html %]List">
+[% FOREACH i IN c.items %]
+            <li><a href="[% i.link | html %]">[% i.label %]</a></li>
+[% END %]
+        </ul>
+    </fieldset>
+[% END # c IN categories %]

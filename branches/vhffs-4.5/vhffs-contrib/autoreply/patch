@@ -1,0 +1,301 @@
+Index: vhffs-doc/config/exim4-mx1/00_vhffs-main
+===================================================================
+--- vhffs-doc/config/exim4-mx1/00_vhffs-main    (révision 1240)
++++ vhffs-doc/config/exim4-mx1/00_vhffs-main    (copie de travail)
+@@ -33,5 +33,16 @@
+ VHFFS_LISTENGINE_UID=www-data
+ VHFFS_LISTENGINE_GID=www-data
+
++# auto reply stuff
++VHFFS_AUTOREPLY_DOMAINS = ${lookup pgsql{select domain from vhffs_autoreply where local_part = '${quote_pgsql:$local_part}' and domain = '${quote_pgsql:$domain}' and current_date between start and "end"}}
++VHFFS_AUTOREPLY_TEXT = ${lookup pgsql{select message from vhffs_autoreply where local_part = '${quote_pgsql:$local_part}' and domain = '${quote_pgsql:$domain}'}}
++VHFFS_AUTOREPLY_SUBJECT = ${lookup pgsql{select subject from vhffs_autoreply where local_part = '${quote_pgsql:$local_part}' and domain = '${quote_pgsql:$domain}'}}
++
++# Basedir to store "once" file for autoreply
++# once files holds addresses for which an autoreply has already been sent
++# to avoid duplicate.
++VHFFS_AUTOREPLY_ONCE_HOME = /data/mail/onces
++VHFFS_AUTOREPLY_ONCE_DIR = VHFFS_AUTOREPLY_ONCE_HOME/${lookup pgsql{SELECT boxes_path FROM vhffs_mxdomain WHERE domain = '${quote_pgsql:$domain}'}}
++
+ # Predefines Macro
+ MAIN_LOCAL_DOMAINS=VHFFS_LOCAL_DOMAINS:DEBCONFlocal_domainsDEBCONF
+Index: vhffs-backend/src/pgsql/initdb.sql.in
+===================================================================
+--- vhffs-backend/src/pgsql/initdb.sql.in	(révision 1225)
++++ vhffs-backend/src/pgsql/initdb.sql.in	(copie de travail)
+@@ -323,6 +323,21 @@
+ 	CONSTRAINT vhffs_ml_subscribers_pkey PRIMARY KEY (sub_id)
+ ) WITH OIDS;
+ 
++
++-- Mail autoreplies
++-- An autoreply can only concern existing address.
++
++CREATE TABLE vhffs_autoreply
++(
++	local_part varchar not null,
++	domain varchar not null,
++	subject text not null,
++	message text not null,
++	start date not null,
++	end date not null,
++	CONSTRAINT vhffs_autoreply_pkey PRIMARY KEY (local_part, domain)
++);
++
+ -- MySQL databases
+ 
+ CREATE TABLE vhffs_mysql
+Index: vhffs-api/src/Vhffs/Services/Mail.pm
+===================================================================
+--- vhffs-api/src/Vhffs/Services/Mail.pm	(révision 1228)
++++ vhffs-api/src/Vhffs/Services/Mail.pm	(copie de travail)
+@@ -460,6 +460,52 @@
+ 	return 1;
+ }
+ 
++=head2 addautoreply
++
++	die("Unable to create autoreply\n") unless($mail->addautoreply($local_part, $start, $end, $subject, $message) > 0);
++
++Add a new autoreply message on an existing address. The address must be a forward or
++a box, or the domain must have a catchall.
++
++=over
++
++=item C<$local_part>: Local part of the address to which we
++want to add an autoreply
++
++=item C<$start>: Start date of the autoreply (Date::Simple).
++
++=item C<$end>: End date of the autoreply (Date::Simple).
++
++=item C<$subject>: Subject of the autoreply
++
++=item C<$message>: Body of the autoreply mail.
++
++=back
++
++=cut
++
++sub addautoreply {
++	my ($self, $local_part, $start, $end, $subject, $message) = @_;
++
++	return -1 unless( defined($local_part) && defined($start) && defined($end)
++			&& defined($subject) && defined($message) && $local_part =~ /^[a-z0-9\_\-\.]+$/
++			&& $subject =~ /\S+/ && $message =~ /\S+/);
++	# Autoreply must concern an existing address on the domain.
++	return -2 unless( defined $self->{boxes}{$local_part} || defined $self->{forward}{$local_part}
++		|| (defined $self->{catchall} && $self->{catchall} =~ /\S+/) );
++	
++	my $sql = 'INSERT INTO vhffs_autoreply (domain, local_part, subject, message, start, "end") VALUES(?, ?, ?, ?, ?, ?)';
++	my $dbh = $self->get_db;
++	my $sth = $dbh->prepare($sql);
++	$sth->execute($self->{domain}, $local_part, $subject, $message, $start->as_iso(), $end->as_iso) or return -3;
++	$self->{autoreplies}{$local_part}{local_part} = $local_part;
++	$self->{autoreplies}{$local_part}{start} = $start->as_iso();
++	$self->{autoreplies}{$local_part}{end} = $end->as_iso();
++	$self->{autoreplies}{$local_part}{subject} = $subject;
++	$self->{autoreplies}{$local_part}{message} = $message;
++	return 1;
++}
++
+ sub delbox
+ {
+ 	my $self = shift;
+Index: vhffs-backend/src/pgsql/initdb.sql.in
+===================================================================
+--- vhffs-backend/src/pgsql/initdb.sql.in	(révision 1225)
++++ vhffs-backend/src/pgsql/initdb.sql.in	(copie de travail)
+@@ -323,6 +323,21 @@
+ 	CONSTRAINT vhffs_ml_subscribers_pkey PRIMARY KEY (sub_id)
+ ) WITH OIDS;
+ 
++
++-- Mail autoreplies
++-- An autoreply can only concern existing address.
++
++CREATE TABLE vhffs_autoreply
++(
++	local_part varchar not null,
++	domain varchar not null,
++	subject text not null,
++	message text not null,
++	start date not null,
++	end date not null,
++	CONSTRAINT vhffs_autoreply_pkey PRIMARY KEY (local_part, domain)
++);
++
+ -- MySQL databases
+ 
+ CREATE TABLE vhffs_mysql
+Index: vhffs-tools/src/vhffs-managemail
+===================================================================
+--- vhffs-tools/src/vhffs-managemail	(révision 1234)
++++ vhffs-tools/src/vhffs-managemail	(copie de travail)
+@@ -22,6 +22,7 @@
+ 	$w_new_box, $w_list_boxes,
+ 	$w_new_forward, $w_list_forwards,
+ 	$w_new_ml, $w_manage_ml, $w_manage_ml_members,
++	$w_new_autoreply, $w_list_autoreplies,
+ 	$w_status);
+ 
+ my @mailing_lists_values; # Array holding all mailing lists addresses
+@@ -63,6 +64,13 @@
+ 					{ -label => 'New 	^M', -value => \&create_ml },
+ 					{ -label => 'List	^L', -value => \&manage_ml }
+ 				]
++			},
++			{
++				-label => 'Autoreplies',
++				-submenu => [
++					{ -label => 'New	^A', -value => \&create_autoreply },
++					{ -label => 'List	^Z', -value => \&manage_autoreplies }
++				]
+ 			}
+ 		]
+ 	}
+@@ -94,6 +102,14 @@
+ }
+ 
+ 
++sub create_autoreply {
++	$w_new_autoreply->focus();
++}
++
++sub manage_autoreplies {
++	
++}
++
+ sub create_domain {
+ 	$w_new_domain->focus();
+ }
+@@ -193,7 +209,7 @@
+ 	$w_new_domain->add('new_domain_submit', 'Buttonbox', 
+ 		-buttons => [
+ 			{
+-				-label => 'OK',
++				-label => '< OK >',
+ 				-onpress => \&create_domain_save
+ 			}
+ 		],
+@@ -219,7 +235,7 @@
+ 	$w_new_box->add('new_domain_submit', 'Buttonbox', 
+ 		-buttons => [
+ 			{
+-				-label => 'OK',
++				-label => '< OK >',
+ 				-onpress => \&create_box_save
+ 			}
+ 		],
+@@ -244,7 +260,7 @@
+ 	$w_new_forward->add('new_forward_submit', 'Buttonbox', 
+ 		-buttons => [
+ 			{
+-				-label => 'OK',
++				-label => '< OK >',
+ 				-onpress => \&create_forward_save
+ 			}
+ 		],
+@@ -318,7 +334,7 @@
+ 	$w_new_ml->add('new_ml_submit', 'Buttonbox', 
+ 		-buttons => [
+ 			{
+-				-label => 'OK',
++				-label => '< OK >',
+ 				-onpress => \&create_ml_save
+ 			}
+ 		],
+@@ -448,9 +464,87 @@
+                 -y => 15
+         );
+ 
++	########################
++	# Autoreplies creation #
++	########################
++	
++	$w_new_autoreply = $ui->add( 'new_autoreply_window', 'Window', -title => 'New autoreply', %w_common_attrs );
++	$label = $w_new_autoreply->add( undef, 'Label', -text => 'Address: ');
++	
++	$field = $w_new_autoreply->add( 'new_autoreply_local_part', 'TextEntry', -sbborder => 1, -x => 20, -width => 30 );
++	$label = $w_new_autoreply->add( undef, 'Label', -text => '@', -x => 51 );
++	$field = $w_new_autoreply->add( 'new_autoreply_domain', 'Popupmenu', -x => 53, -labels => \%domains_labels, -values => \@domains_values, -selected => 0 );
+ 
++	$label = $w_new_autoreply->add( undef, 'Label', -text => 'Mails will still be delivered during autoreply period', -y => 2);
++	$label = $w_new_autoreply->add( undef, 'Label', -text => 'Autoreply period: ', -y => 4);
++	$label = $w_new_autoreply->add( undef, 'Label', -text => 'Start (DD/MM/YYYY): ', -y => 5, -x => 3);
++	$field = $w_new_autoreply->add( 'new_autoreply_start', 'TextEntry', -sbborder => 1, -width => 13, -maxlength => 10, -x => 25, -y => 5 );
++	$label = $w_new_autoreply->add( undef, 'Label', -text => 'End (DD/MM/YYYY): ', -y => 6, -x => 3);
++	$field = $w_new_autoreply->add( 'new_autoreply_end', 'TextEntry', -sbborder => 1, -width => 13, -maxlength => 10, -x => 25, -y => 6 );
++	$label = $w_new_autoreply->add( undef, 'Label', -text => 'Reply mail: ', -y => 8);
++	$label = $w_new_autoreply->add( undef, 'Label', -text => 'Subject: ', -y => 9, -x => 3);
++	$field = $w_new_autoreply->add( 'new_autoreply_subject', 'TextEntry', -sbborder => 1, -width => 30, -x => 25, -y => 9 );
++	$label = $w_new_autoreply->add( undef, 'Label', -text => 'Body: ', -y => 10, -x => 3);
++	$field = $w_new_autoreply->add( 'new_autoreply_body', 'TextEditor', -border => 1, -width => 80, -height => 25, -x => 25, -y => 10 );
++
++	$w_new_autoreply->add('new_autoreply_submit', 'Buttonbox',
++                -buttons => [
++                        {
++                                -label => '< OK >',
++                                -onpress => \&create_autoreply_save
++                        }
++                ],
++                -x => 35,
++                -y => 37
++        );
+ }
+ 
++=head2 create_autoreply_save
++
++Callback for the OK button on the autoreply creation form
++
++=cut
++
++sub create_autoreply_save {
++	use Date::Simple;
++
++	my $domain = Vhffs::Services::Mail::get_by_mxdomain($vhffs, $w_new_autoreply->getobj( 'new_autoreply_domain' )->get() );
++	unless(defined $domain) {
++		$ui->error( 'Mail domain not found');
++		return;
++	}
++
++	my ($start_day, $start_month, $start_year) = split( /\//, $w_new_autoreply->getobj( 'new_autoreply_start' )->get() );
++	my $start = Date::Simple::ymd($start_year, $start_month, $start_day);
++	my ($end_day, $end_month, $end_year) = split( /\//, $w_new_autoreply->getobj( 'new_autoreply_end' )->get() );
++	my $end = Date::Simple::ymd($end_year, $end_month, $end_day);
++	unless(defined $start && defined $end && $start <= $end) {
++		$ui->error( 'Invalid interval specified' );
++		return;
++	}
++	my $local_part = $w_new_autoreply->getobj( 'new_autoreply_local_part' )->get();
++	my $subject = $w_new_autoreply->getobj( 'new_autoreply_subject' )->get();
++	my $body = $w_new_autoreply->getobj( 'new_autoreply_body' )->get();
++
++	my $rval = $domain->addautoreply($local_part, $start, $end, $subject, $body);
++
++	$ui->error( 'Invalid localpart, subject or body (must be filled)' ) if($rval == -1);
++	$ui->error( 'Local part doesn\'t match a box or forward and no catchall has been defined') if($rval == -2);
++	$ui->error( 'Error while creating autoreply, does it already exists ?' ) if($rval == -3);
++
++	if($rval > 0) {
++		$ui->dialog( 'Autoreply for '.$local_part.'@'.$domain->get_domain.' successfuly created');
++		$w_new_autoreply->getobj( 'new_autoreply_domain' )->{-selected} = 0;
++		$w_new_autoreply->getobj( 'new_autoreply_domain' )->draw();
++		$w_new_autoreply->getobj( 'new_autoreply_end' )->text('');
++		$w_new_autoreply->getobj( 'new_autoreply_start' )->text('');
++		$w_new_autoreply->getobj( 'new_autoreply_local_part' )->text('');
++		$w_new_autoreply->getobj( 'new_autoreply_subject' )->text('');
++		$w_new_autoreply->getobj( 'new_autoreply_body' )->text('');
++	}
++
++}
++
+ =head2 ml_add_member_save
+ 
+ Callback for the OK button on the ml member creation form
+@@ -819,3 +913,5 @@
+ }
+ 
+ }
++
++

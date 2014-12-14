@@ -1,0 +1,24 @@
+#!%PERL%
+
+use lib '%VHFFS_LIB_DIR%';
+use Vhffs::Group;
+use Vhffs;
+
+my $vhffs = new Vhffs;
+
+
+my $groups = Vhffs::Group::getall( $vhffs , undef , $ARGV[0] );
+my $group;
+
+if( defined $groups )
+{
+	foreach $group ( @{$groups} )
+	{
+		print $group->get_groupname . "\n";
+	}
+}
+else
+{
+	print "No such group with this name";
+	exit( -1 );
+}

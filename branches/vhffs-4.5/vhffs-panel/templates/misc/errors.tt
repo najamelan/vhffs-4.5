@@ -1,0 +1,7 @@
+[% IF errors.defined() AND errors.size() %]
+    <div id="errors">
+[% FOREACH e IN errors %]
+        <p class="error">[% e.msg | html %]</p>
+[% END %]
+    </div>
+[% END %]

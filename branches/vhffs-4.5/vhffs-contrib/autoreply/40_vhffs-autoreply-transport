@@ -1,0 +1,14 @@
+vhffs_autoreply:
+	driver = autoreply
+#	once = VHFFS_AUTOREPLY_ONCE_HOME/$local_part-$domain.once
+	once_repeat = 7d
+	# Include a copy of the original message
+	return_message 
+	# Bounce mail to sender address or to
+	# the address specified in the Errors-To header
+	to = "${if def:h_Errors-To: {$h_Errors-To:} {$sender_address}}"
+	subject = [Autoreply] VHFFS_AUTOREPLY_SUBJECT
+	text = VHFFS_AUTOREPLY_TEXT
+# Avoid characters corruption
+	headers=MIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit
+

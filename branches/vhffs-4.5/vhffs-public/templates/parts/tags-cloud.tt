@@ -1,0 +1,23 @@
+<h1>[% 'Popular tags' | i18n %]</h1>
+<div class="menu tags-menu">
+	<p>
+[% FOREACH t = popular_tags %]
+	<a href="?do=tags;search=[% t.category_label | uri %]::[% t.tag_label | uri %]" class="tag[%t.weight%] ajax">
+	[<span title="[% t.category_description | html %]">[% t.category_label | html %]</span>::<span title="[% t.tag_description | html %]">[% t.tag_label | html %]</span>] 
+	</a>
+[% END %]
+	</p>
+	<p class="more-tags"><a href="?do=groupsearch" class="ajax">[% 'More...' | i18n%]</a></p>
+</div>
+
+<h1>[% 'Random tags' | i18n %]</h1>
+<div class="menu tags-menu">
+	<p>
+[% FOREACH t = random_tags %]
+	<a href="?do=tags;search=[% t.category_label | uri %]::[% t.tag_label %]" class="tag[%t.weight%] ajax">
+	[<span title="[% t.category_description | html %]">[% t.category_label | html %]</span>::<span title="[% t.tag_description | html %]">[% t.tag_label | html %]</span>]
+	</a>
+[% END %]
+	</p>
+	<p class="more-tags"><a href="?do=groupsearch" class="ajax">[% 'More...' | i18n%]</a></p>
+</div>

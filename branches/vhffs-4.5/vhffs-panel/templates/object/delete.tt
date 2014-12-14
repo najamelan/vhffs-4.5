@@ -1,0 +1,35 @@
+[%# Provides delete form for any object, need the following parameters:
+   - type: type of object, used to generate URLs
+   - oid: object ID
+%]
+<h2>[% 'Delete this object' | i18n | html %]</h2>
+
+<form method="post" action="?do=objectdelete" accept-charset="utf-8">
+	<fieldset class="delete">
+		<legend>
+			[% 'Are you SURE you want to DELETE this object?' | i18n | html %]
+		</legend>
+
+		<p class="warning">[% 'This action is non-reversible. This object will be physically destroyed and deleted from the database, there is no way to recover your data.' | i18n | html %]</p>
+[% IF type == 'group' %]
+        <p class="warning">[% 'Moreover all associated services will be DESTROYED' | i18n | html %]</p>
+[% END %]
+		<p>
+			<input type="radio" name="delete" id="DELETE_NO"  value="0" checked="checked" />
+			<label for="DELETE_NO">
+				[% 'No, I\'m not sure, I prefer to keep this object. All these warnings scare me.' | i18n | html %]
+			</label>
+		</p>
+		<p>
+			<input type="radio" name="delete" id="DELETE_YES" value="1" />
+			<label for="DELETE_YES">
+				[% 'Yes I\'m sure of what I do, I do not know the fear.' | i18n | html %]
+			</label>
+		</p>
+	</fieldset>
+	
+	<p class="button" id="buttonDelete">
+		<input type="hidden" name="oid" value="[% oid %]" />
+		<input type="submit" value="[% 'Delete' | i18n | html %]" />
+	</p>
+</form>

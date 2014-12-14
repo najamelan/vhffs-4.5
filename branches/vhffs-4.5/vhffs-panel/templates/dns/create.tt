@@ -1,0 +1,27 @@
+<form class="table-like" method="post" action="#" accept-charset="utf-8">
+	<p>[% 'Be careful ! You must give the reason why you want to host this domain on our servers.' | i18n | html %]</p>
+[% IF help_url %]
+    <p>[% 'Please read the %sdocumentation%s carefully before submitting your request' | i18n | html | pretty_print('<a href="' _ help_url _ '">', '</a>') %]</p>
+[% END %]
+    <p>[% 'First of all, you\'ll have to buy and set up your domain to a registrar.' | i18n | html %]</p>
+	<p>
+		<label>[% 'DNS servers:' | i18n | html %]</label>
+        [% ns.keys().join(', ') | html %]
+	</p>
+	<p>
+		<label>[% 'Group owning this domain:' | i18n | html %]</label>
+        [% group.get_groupname | html %]
+	</p>
+	<p>
+		<label for="DOMAIN_NAME">[% 'Domain name:' | i18n | html %]</label>
+		<input type="text" name="DOMAIN_NAME" id="DOMAIN_NAME" value="[% domain | html %]"/>
+	</p>
+	<p>
+		<label for="PROJECT_USAGE">[% 'Description:' | i18n | html %]</label>
+		<textarea name="DESCRIPTION" id="DESCRIPTION" cols="45" rows="7">[% description | html %]</textarea>
+	</p>
+	<p class="button">
+		<input type="hidden" name="group" value="[% group.get_groupname | html %]" />
+		<input type="submit" value="[% 'Send' | i18n | html %]" name="dns_submit" />
+	</p>
+</form>

@@ -1,0 +1,63 @@
+[% USE date %]
+<h1>[% 'Object administration' | i18n | html %]</h1>
+	
+<form class="table-like" method="post" action="?do=objectedit" accept-charset="utf-8">
+	<p>
+		<label>[% 'Object ID:' | i18n | html %]</label>
+		[% object.get_oid %]
+	</p>
+	<p>
+		<label>[% 'Type:' | i18n | html %]</label>
+		[% object.type | stringify_type | i18n | html %]
+	</p>
+	<p>
+		<label>[% 'Owner UID:' | i18n | html %]</label>
+		[% object.get_owner_uid %] ([% object.get_owner.get_username | html %])
+	</p>
+	<p>
+		<label>[% 'Owner GID:' | i18n | html %]</label>
+		[% object.get_owner_gid %] ([% object.get_group.get_groupname | html %])
+	</p>
+	<p>
+		<label>[% 'Date of creation' | i18n | html %]</label>
+            [% object.get_date ? date.format(object.get_date, '%x %X') : 'N/A' %]
+	</p>
+	<p>
+		<label for="status">[% 'Status:' | i18n | html %]</label>
+			<select name="status" id="status">
+				<option value="[% constants.object_statuses.WAITING_FOR_VALIDATION %]"[% ' selected="selected"' IF object.get_status == constants.object_statuses.WAITING_FOR_VALIDATION %]>[% 'Waiting for validation' | i18n | html %]</option>
+				<option value="[% constants.object_statuses.VALIDATION_REFUSED %]"[% ' selected="selected"' IF object.get_status == constants.object_statuses.VALIDATION_REFUSED %]>[% 'Validation refused' | i18n | html %]</option>
+				<option value="[% constants.object_statuses.WAITING_FOR_CREATION %]"[% ' selected="selected"' IF object.get_status == constants.object_statuses.WAITING_FOR_CREATION %]>[% 'Waiting for creation' | i18n | html %]</option>
+				<option value="[% constants.object_statuses.CREATION_ERROR %]"[% ' selected="selected"' IF object.get_status == constants.object_statuses.CREATION_ERROR %]>[% 'Error while creating object' | i18n | html %]</option>
+				<option value="[% constants.object_statuses.WAITING_FOR_ACTIVATION %]"[% ' selected="selected"' IF object.get_status == constants.object_statuses.WAITING_FOR_ACTIVATION %]>[% 'Waiting for activation' | i18n | html %]</option>
+				<option value="[% constants.object_statuses.ACTIVATED %]"[% ' selected="selected"' IF object.get_status == constants.object_statuses.ACTIVATED %]>[% 'Activated' | i18n | html %]</option>
+				<option value="[% constants.object_statuses.ACTIVATION_ERROR %]"[% ' selected="selected"' IF object.get_status == constants.object_statuses.ACTIVATION_ERROR %]>[% 'Error while activating object' | i18n | html %]</option>
+				<option value="[% constants.object_statuses.WAITING_FOR_SUSPENSION %]"[% ' selected="selected"' IF object.get_status == constants.object_statuses.WAITING_FOR_SUSPENSION %]>[% 'Waiting for suspension' | i18n | html %]</option>
+				<option value="[% constants.object_statuses.SUSPENDED %]"[% ' selected="selected"' IF object.get_status == constants.object_statuses.SUSPENDED %]>[% 'Suspended' | i18n | html %]</option>
+				<option value="[% constants.object_statuses.SUSPENSION_ERROR %]"[% ' selected="selected"' IF object.get_status == constants.object_statuses.SUSPENSION_ERROR %]>[% 'Error while suspending object' | i18n | html %]</option>
+				<option value="[% constants.object_statuses.WAITING_FOR_MODIFICATION %]"[% ' selected="selected"' IF object.get_status == constants.object_statuses.WAITING_FOR_MODIFICATION %]>[% 'Waiting for modification' | i18n | html %]</option>
+				<option value="[% constants.object_statuses.MODIFICATION_ERROR %]"[% ' selected="selected"' IF object.get_status == constants.object_statuses.MODIFICATION_ERROR %]>[% 'Error while modifying object' | i18n | html %]</option>
+				<option value="[% constants.object_statuses.WAITING_FOR_DELETION %]"[% ' selected="selected"' IF object.get_status == constants.object_statuses.WAITING_FOR_DELETION %]>[% 'Will be deleted' | i18n | html %]</option>
+				<option value="[% constants.object_statuses.DELETION_ERROR %]"[% ' selected="selected"' IF object.get_status == constants.object_statuses.DELETION_ERROR %]>[% 'Deletion error' | i18n | html %]</option>
+			</select>
+	</p>
+	<p>
+		<label>[% 'Description:' | i18n | html %]</label>
+		<textarea name="description" id="description" cols="45" rows="7">[% object.get_description | html %]</textarea>
+	</p>
+
+	<p class="button" id="buttonSend">
+		<input type="hidden" name="oid" value="[% object.get_oid %]" />
+		<input type="submit" value="[% 'Update' | i18n | html %]" />
+	</p>
+</form>
+
+<h2>[% 'Object history' | i18n | html %]</h2>
+[% INCLUDE 'misc/history.tt'
+    history = object.get_history %]
+
+[% IF use_avatars %]
+<h2>[% 'Avatar management' | i18n | html %]</h2>
+<p><a href="?do=avatardelete;oid=[% object.get_oid %]">[% 'Delete avatar for this object' | i18n | html %]</a></p>
+[% END %]
+

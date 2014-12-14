@@ -1,0 +1,50 @@
+#!%PERL%
+
+use lib '%VHFFS_LIB_DIR%';
+use Vhffs::User;
+use Vhffs;
+use Vhffs::Constants;
+
+if( $#ARGV != 2 )
+{
+	print "Usage: vhffs-usermod user modifier value\n";
+	print "modifier = shell, firstname , lastname \n";
+	print "value = new value";
+	exit( 1 );
+}
+
+my $vhffs 	= new Vhffs;
+my $user 	= Vhffs::User::get_by_username( $vhffs , $ARGV[0] );
+my $mod		= $ARGV[1];
+my $value	= $ARGV[2];
+
+if( defined $user )
+{
+	if( $mod =~ /shell|firstname|lastname|city|admin/ )
+	{
+		$user->set_fistname( $value )if( $mod eq "firstname");
+		$user->set_lastname( $value )if( $mod eq "lastname");
+		$user->set_admin( $value )if( $mod eq "admin");
+		$user->set_shell( $value )if( $mod eq "shell");
+		if( $user->commit <= 0 )
+		{
+			print "Cannot apply changes\n";
+			exit( 2 );
+		}
+		else
+		{
+			print "Successfully apply changes\n";
+			exit( 0 );
+		}
+	}
+	else
+	{
+		print "Unknown modifier\n";
+		exit( 3 );
+	}
+}
+else
+{
+	print "No such user with this username\n";
+	exit( -1 );
+}

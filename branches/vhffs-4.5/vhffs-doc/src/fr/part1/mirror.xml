@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="chap-mirror">
+  <title>Scripts de r&eacute;plication</title>
+
+  <para>Dans le cadre d'une architecture distribu&eacute;e, il peut &ecirc;tre
+  souhaitable de r&eacute;partir les services sur diff&eacute;rentes machines.
+  Le probl&egrave;me des performances dues &agrave; l'acc&egrave;s &agrave; la
+  base de donn&eacute;es distantes (celle directement aliment&eacute;e par
+  VHFFS) peut alors se poser. Pour palier &agrave; cela il est possible de
+  r&eacute;pliquer certaines parties de la base principale sur les autres
+  machines. Cela permet d'all&eacute;ger la charge du serveur de base de
+  donn&eacute;es principal et d'am&eacute;liorer les performances (puisque les
+  requ&ecirc;tes sont locales). La contrepartie est un certain d&eacute;calage
+  possible entre les donn&eacute;es du serveur principal et celles de la base
+  de donn&eacute;es esclave (les scripts &eacute;tant ex&eacute;cut&eacute;s
+  &agrave; intervalle r&eacute;gulier).</para>
+
+  <section id="sec-mirror-nss">
+    <title>Name Service Switch (NSS)</title>
+
+    <section>
+      <title>Introduction</title>
+
+      <para>Il s'agit du service b&eacute;n&eacute;ficiant du plus gros gain
+      de performances. le NSS est utilis&eacute; pour l'identification des
+      utilisateurs en SSH (utilis&eacute; notamment pour Subversion et CVS)
+      ainsi qu'en FTP. Les diff&eacute;rentes requ&ecirc;tes permettent
+      d'afficher le propri&eacute;taire ou le groupe d'un fichier ainsi que de
+      savoir si un utilisateur peut acc&eacute;der &agrave; tel ou tel fichier
+      (en obtenant ses UID/GID et en les comparant &agrave; ceux du fichier et
+      aux permissions).</para>
+
+      <para>Historiquement, il s'agissait de fichiers qui &eacute;taient
+      utilis&eacute;s, aussi, les requ&ecirc;tes ne sont pas
+      sp&eacute;cialement adapt&eacute;es &agrave; une base de donn&eacute;es.
+      Le co&ucirc;t d'&eacute;tablissement d'une connexion peut &ecirc;tre
+      important dans le cas d'une base de donn&eacute;es distante.</para>
+
+      <para>La solution propos&eacute;e par VHFFS est d'utiliser une
+      biblioth&egrave;que NSS bas&eacute;e sur SQLite (libnss-sqlite). La
+      partie de la base de donn&eacute;es PostgreSQL concernant les
+      utilisateurs est dupliqu&eacute;e pour &ecirc;tre utilis&eacute;e par
+      libnss-sqlite.</para>
+    </section>
+
+    <section>
+      <title>Configuration</title>
+
+      <para>La configuration s'effectue de la m&ecirc;me fa&ccedil;on que
+      n'importe quelle biblioth&egrave;que NSS&nbsp;:</para>
+
+      <orderedlist>
+        <listitem>
+          <para>r&eacute;cup&eacute;rez la derni&egrave;re version de
+          libnss-sqlite sur <ulink
+          url="http://libnss-sqlite.tuxfamily.org">http://libnss-sqlite.tuxfamily.org</ulink>&nbsp;;</para>
+        </listitem>
+
+        <listitem>
+          <para>si vous la compilez &agrave; partir des sources, utilisez les
+          classiques <command>./configure</command>, <command>make</command>
+          et <command>make install</command> (seule la derni&egrave;re
+          commande doit &ecirc;tre effectu&eacute;e en root). Lancez
+          <command>./configure</command> <option>--help</option> pour une
+          liste des options disponibles. Vous aurez besoin des
+          biblioth&egrave;ques de d&eacute;veloppement de sqlite&nbsp;;</para>
+        </listitem>
+
+        <listitem>
+          <para>modifiez le fichier <filename>/etc/nsswitch.conf</filename>
+          pour que les lignes <literal>passwd</literal>,
+          <literal>shadow</literal> et <literal>groups</literal> finissent par
+          <literal>sqlite</literal>&nbsp;;</para>
+        </listitem>
+
+        <listitem>
+          <para>cr&eacute;ez la base de donn&eacute;es esclave, dans laquelle
+          les donn&eacute;es seront r&eacute;pliqu&eacute;es. Par
+          d&eacute;faut, il s'agit de <filename>/var/db/auth.sqlite</filename>
+          (cr&eacute;ez le r&eacute;pertoire <filename
+          class="directory">/var/db/</filename> s'il n'existe pas). Pour cela,
+          lancez la commande suivante depuis le r&eacute;pertoire des sources
+          de libnss-sqlite&nbsp;: <command>sqlite3</command> <option>-init
+          conf/passwd.sql /var/db/passwd.sqlite; sqlite3 -init conf/shadow.sql
+          /var/db/shadow.sqlite</option>&nbsp;(le premierfichier devrait
+          appartenir &agrave; <systemitem class="username">root</systemitem>
+          et &ecirc;tre en mode 644, le second en mode 640 au
+          moins)&nbsp;;</para>
+        </listitem>
+      </orderedlist>
+
+      <para>Le syst&egrave;me est d&eacute;sormais pr&ecirc;t pour
+      l'utilisation de la base SQLite comme source de donn&eacute;es
+      d'authentification. Vous pouvez ins&eacute;rer un utilisateur dans la
+      table <literal>shadow</literal> de la base de donn&eacute;es SQLite et
+      v&eacute;rifier qu'il est bien reconnu en utilisant la commande
+      <command>id</command> <option>nouvel_utilisateur</option>.</para>
+
+      <para>Il est maintenant n&eacute;cessaire de configurer le script de
+      r&eacute;plication. Celui-ci doit s'ex&eacute;cuter sur le serveur
+      esclave (celui disposant de la base de donn&eacute;es SQLite) par le
+      biais de <systemitem class="daemon">cron</systemitem> (ou un outil
+      similaire).</para>
+
+      <para>Il se trouve dans le r&eacute;pertoire
+      <filename>%BACKEND_DIR%/mirror/nss-mirror.pl</filename>. Copiez ce
+      fichier sur le serveur esclave et &eacute;ditez-le pour d&eacute;finir
+      les variables <varname>$PG_DB_HOST</varname>,
+      <varname>$PG_DB_PORT</varname>, <varname>$PG_DB_NAME</varname>,
+      <varname>$PG_DB_USER</varname> et <varname>$PG_DB_PASS</varname> pour
+      les adapter &agrave; votre configuration (n'oubliez pas de configurer le
+      serveur PostgreSQL ma&icirc;tre pour qu'il accepte les connexions de la
+      part de l'esclave<footnote>
+          <para>L'utilisateur d&eacute;fini dans le script n'a besoin que
+          d'acc&eacute;der aux tables <database>vhffs_users</database>,
+          <database>vhffs_user_group</database> et
+          <database>vhffs_groups</database> en lecture, il ne devrait pas
+          disposer de plus de privil&egrave;ges que n&eacute;cessaire.</para>
+        </footnote>). Si besoin, modifiez les variables
+      <varname>$ST_PW_DB</varname> et <varname>$ST_SP_DB</varname> pour
+      qu'elles correspondent aux fichiers de base de donn&eacute;es SQLite
+      pr&eacute;c&eacute;demment cr&eacute;&eacute;.</para>
+
+      <para>Ajoutez une entr&eacute;e dans la <filename>crontab</filename>
+      pour lancer le script de mani&egrave;re r&eacute;guli&egrave;re (toutes
+      les 5, 10 ou 15 minutes, ou n'importe quelle valeur acceptable pour
+      votre syst&egrave;me). Il est conseill&eacute; de lancer une
+      premi&egrave;re fois le script &agrave; la main pour v&eacute;rifier
+      qu'il n'&eacute;met aucun message d'erreur, il est possible que vous
+      deviez installer le paquetage perl
+      <literal>DBD::SQLite</literal>.</para>
+
+      <para>Les utilisateurs enregistr&eacute;s et actifs sur la plateforme
+      VHFFS peuvent d&eacute;sormais acc&eacute;der au serveur esclave en
+      utilisant leur identifiants VHFFS.</para>
+    </section>
+  </section>
+
+  <section id="sec-mirror-mydns">
+    <title>myDNS</title>
+
+    <section>
+      <title>Introduction</title>
+
+      <para>Tout comme le NSS, myDNS peut profiter d'une r&eacute;plication
+      partielle de la base pour &eacute;viter les interrogations trop
+      fr&eacute;quentes vers le serveur principal. Contrairement au NSS cette
+      fois, la base esclave est &eacute;galement une base PostgreSQL. Les
+      donn&eacute;es &agrave; r&eacute;pliquer sont pr&eacute;sentes dans la
+      vue <literal>vhffs_dns_soa</literal> et la table
+      <literal>vhffs_dns_rr</literal>.</para>
+    </section>
+
+    <section>
+      <title>Configuration</title>
+
+      <para>Seule la mise en place du script de r&eacute;plication est
+      d&eacute;crite ici, la configuration de myDNS est d&eacute;crite dans le
+      <xref linkend="chap-mydns" /> (<xref endterm="title-mydns"
+      linkend="chap-mydns" />).</para>
+
+      <para>Le script est disponible apr&egrave;s l'installation sous le
+      r&eacute;pertoire %BACKEND_DIR%/mirror/mydns-mirror.pl. Il est possible
+      de placer le script de r&eacute;plication sur le serveur ma&icirc;tre ou
+      sur le serveur esclave. Les serveurs PostgreSQL devront &ecirc;tre
+      configur&eacute;s selon les choix effectu&eacute;s. La configuration se
+      r&eacute;sume au positionnement des variables
+      <varname>$MASTER_DB_HOST</varname>, <varname>$MASTER_DB_PORT</varname>,
+      <varname>$MASTER_DB_NAME</varname>, <varname>$MASTER_DB_USER</varname>
+      et <varname>$MASTER_DB_USER</varname> (ainsi que leurs homologues
+      pr&eacute;fix&eacute;es par <varname>$SLAVE_</varname>). Les variables
+      pr&eacute;fix&eacute;es par <varname>$MASTER_</varname>
+      d&eacute;finissent les param&egrave;tres de connexion au serveur
+      ma&icirc;tre (contenant la base de donn&eacute;es VHFFS) tandis que
+      celles pr&eacute;fix&eacute;es par <varname>$SLAVE_</varname>
+      d&eacute;finissent les param&egrave;tres de connexion au serveur
+      esclave.</para>
+
+      <para>Au niveau du serveur ma&icirc;tre, le script a besoin
+      d'acc&eacute;der &agrave; la <emphasis>vue</emphasis>
+      <literal>vhffs_dns_soa</literal> et &agrave; la
+      <emphasis>table</emphasis> <literal>vhffs_dns_rr</literal>. La base de
+      donn&eacute;es esclave doit contenir au minimum deux tables,
+      <literal>vhffs_dns_soa</literal> et <literal>vhffs_dns_rr</literal> qui
+      ont le m&ecirc;me sch&eacute;ma que la vue et la table sources des
+      donn&eacute;es.</para>
+    </section>
+  </section>
+
+  <section id="sec-mirror-exim">
+    <title id="mirror-mx1">exim</title>
+
+    <section>
+      <title>Introduction</title>
+
+      <para>Le troisi&egrave;me service &agrave; disposer de scripts de
+      r&eacute;plication livr&eacute;s avec VHFFS est le serveur mail Exim.
+      Deux scripts sont fournis, le premier permet une r&eacute;plication sur
+      le serveur mail primaire (appel&eacute; mx1 dans la suite du document),
+      le second une r&eacute;plication sur le serveur mail secondaire. La
+      principale diff&eacute;rence entre les deux tient en la quantit&eacute;
+      de donn&eacute;es r&eacute;pliqu&eacute;e. Dans le cas du mx1, il est
+      n&eacute;cessaire d'assurer le bon fonctionnement de listengine, aussi
+      beaucoup de donn&eacute;es propres &agrave; vhffs sont
+      r&eacute;pliqu&eacute;es&nbsp;; dans le cas du mx2, seules les
+      donn&eacute;es permettant de v&eacute;rifier qu'une adresse existe bien
+      sont r&eacute;pliqu&eacute;es.</para>
+
+      <para>Les configurations des serveurs mail sont fournies dans les
+      r&eacute;pertoires <filename
+      class="directory">%DOC_DIR%/config/exim4-mx1/</filename> et <filename
+      class="directory">%DOC_DIR%/config/exim4-mx2/</filename> &agrave; la
+      racine des sources. Vous trouverez plus d'informations dans <xref
+      linkend="sec-exim" />.</para>
+    </section>
+
+    <section id="sec-mirror-mx1">
+      <title>Serveur mail primaire</title>
+
+      <section>
+        <title>Configuration</title>
+
+        <para>La configuration de la r&eacute;plication pour le serveur mail
+        primaire consiste &agrave; positionner les diff&eacute;rentes
+        variables <varname>$MASTER_DB_HOST</varname>,
+        <varname>$MASTER_DB_PORT</varname>,
+        <varname>$MASTER_DB_NAME</varname>, <varname>$MASTER_DB_USER</varname>
+        et <varname>$MASTER_DB_USER</varname> (ainsi que leurs homologues
+        pr&eacute;fix&eacute;es par <varname>$SLAVE_</varname>) dans le script
+        <filename>%BACKEND_DIR%/mirror/mx1-mirror.pl</filename>.</para>
+      </section>
+    </section>
+
+    <section id="sec-mirror-mx2">
+      <title>Serveur mail secondaire</title>
+
+      <section>
+        <title>Configuration</title>
+
+        <para>La configuration du script est analogue &agrave; celle du script
+        concernant le serveur mail primaire. Il suffit de positionner les
+        diff&eacute;rentes variables du script aux valeurs ad&eacute;quates
+        pour que la connexion aux deux bases de donn&eacute;es se fasse
+        convenablement. Enfin, le script doit &ecirc;tre lanc&eacute; par
+        <systemitem class="daemon">cron</systemitem>.</para>
+      </section>
+
+      <section>
+        <title>Sch&eacute;ma de la base de donn&eacute;es</title>
+
+        <para>Le serveur mail secondaire, lorsqu'il est utilis&eacute; avec la
+        configuration pr&eacute;sent&eacute;e dans ce manuel, se contente de
+        v&eacute;rifier que les adresses email sont connues du syst&egrave;me.
+        Aussi, il a besoin de tr&egrave;s peu d'informations&nbsp;: les
+        domaines mail, les bo&icirc;tes, les redirections et les listes de
+        diffusion existants.</para>
+
+        <para>Le sch&eacute;ma de la base de donn&eacute;es est disponible
+        dans le r&eacute;pertoire
+        %<filename>BACKEND_DIR%/mirror/mx2-mirror.sql</filename>. La base
+        esclave utilis&eacute;e peut contenir des champs
+        suppl&eacute;mentaires, cependant, ceux-ci devront avoir des valeurs
+        par d&eacute;faut pour &eacute;viter toute interruption du
+        script.</para>
+
+        <example>
+          <title>Sch&eacute;ma de base de donn&eacute;es du serveur mail
+          secondaire</title>
+
+          <programlisting>CREATE TABLE vhffs_mxdomain(
+    domain VARCHAR,
+    catchall VARCHAR
+);
+
+CREATE TABLE vhffs_addresses(
+    local_part VARCHAR,
+    domain VARCHAR
+);
+
+CREATE UNIQUE INDEX vhffs_mxdomain_unique_domain ON vhffs_mxdomain(domain);
+
+CREATE UNIQUE INDEX vhffs_addresses_unique_couple ON vhffs_addresses(local_part, domain);
+</programlisting>
+        </example>
+
+        <para><warning>
+            <para>Si vous migrez depuis VHFFS 4.0, il est possible que les
+            tables <database class="table">vhffs_boxes</database>, <database
+            class="table">vhffs_forward</database> et <database
+            class="table">vhffs_ml</database> de la base de donn&eacute;es
+            ma&icirc;tre contienne des doublons entre elles. Cela vient du
+            fait qu'il n'y avait pas assez de v&eacute;rifications et qu'il
+            &eacute;tait possible de cr&eacute;er une liste de diffusion ayant
+            le m&ecirc;me nom qu'une bo&icirc;te mail ou qu'un forward et
+            <foreignphrase>vice versa</foreignphrase>. V&eacute;rifiez donc
+            bien qu'il n'y a pas de doublons avant de mettre en place la
+            r&eacute;plication, sinon cette derni&egrave;re ne fonctionnera
+            pas (vous pouvez &eacute;galement tenter de lancer la
+            r&eacute;plication &agrave; la main, elle vous indiquera si des
+            erreurs surviennent).</para>
+          </warning></para>
+      </section>
+    </section>
+  </section>
+</chapter>

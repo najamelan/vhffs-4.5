@@ -1,0 +1,33 @@
+[% USE date %]
+<p><a href="?do=tagcategorycreate">[% 'Add a category.' | i18n | html %]</a></p>
+[% IF categories.size() > 0 %]
+<table border="1">
+    <thead>
+        <tr>
+            <th>[% 'Label' | i18n | html %]</th><th>[% 'Description' | i18n | html %]</th>
+            <th>[% 'Visibility' | i18n | html %]</th><th>[% 'Updated' | i18n | html %]</th>
+            <th>[% 'By' | i18n | html %]</th><th>[% 'Edit' | i18n | html %]</th>
+            <th>[% 'Delete' | i18n | html %]</th>
+        </tr>
+    </thead>
+    <tbody>
+[% FOREACH c IN categories %]
+        <tr>
+            <td>[% c.label | html %]</td><td>[% c.description | html %]</td>
+            <td>[% c.get_visibility_string | i18n | html %]</td><td>[% date.format(c.updated, '%x') %]</td>
+            <td>[% c.get_updater.get_username | html %]</td>
+            <td><form action="?do=tagcategoryedit" method="post">
+            	<input type="hidden" name="category_id" value="[% c.category_id %]"/>
+            	<input type="submit" value="[% 'Edit' | i18n | html %]"/>
+            </form></td>
+            <td><form action="#" method="post">
+            	<input type="hidden" name="category_id" value="[% c.category_id %]"/>
+                <input type="submit" value="[% 'Delete' | i18n | html %]" name="delete_category_submit"/>
+            </form></td>
+        </tr>
+[% END %]
+    </tbody>
+</table>
+[% ELSE %]
+<p>[% 'No category found.' | i18n | html %]</p>
+[% END %]

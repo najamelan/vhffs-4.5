@@ -1,0 +1,11 @@
+vhffs_list:
+  debug_print = "R: vhffs_list for $local_part@$domain"
+  driver = accept
+  domains = VHFFS_ML_EXISTS
+  transport = vhffs_list
+
+vhffs_list_request:
+   driver = accept
+   local_part_suffix = -request
+   condition = VHFFS_ML_EXISTS
+   transport = vhffs_list_request

@@ -1,0 +1,40 @@
+--- 200_exim4-config_primary	2008-09-08 15:31:40.000000000 +0200
++++ 200_exim4-config_primary	2008-09-08 16:04:40.000000000 +0200
+@@ -29,7 +25,7 @@
+ dnslookup:
+   debug_print = "R: dnslookup for $local_part@$domain"
+   driver = dnslookup
+-  domains = ! +local_domains
++  domains = ! +local_domains : !+vhffs_domains
+   transport = remote_smtp
+   same_domain_copy_routing = yes
+   # ignore private rfc1918 and APIPA addresses
+@@ -38,6 +34,17 @@
+ 			255.255.255.255
+   no_more
+ 
++# VHFFS boxes routers. We only accept to relay on our MX1.
++dnslookup_relay_vhffs_domains:
++  debug_print = "R: dns_lookup_relay_vhffs_domains for $local_part@$domain"
++  driver = dnslookup
++  domains = VHFFS_VALID_LOCALPARTS
++  ignore_target_hosts = !MX1_IP_ADDRESS : *
++  transport = remote_smtp
++  same_domain_copy_routing = yes
++  no_more
++
++
+ .endif
+ 
+ 
+--- 30_exim4-config_check_rcpt	2008-09-08 16:05:37.000000000 +0200
++++ 30_exim4-config_check_rcpt	2008-09-08 16:07:12.000000000 +0200
+@@ -162,7 +162,7 @@
+   # relaying. Any other domain is rejected as being unacceptable for relaying.
+   require
+     message = relay not permitted
+-    domains = +local_domains : +relay_to_domains
++    domains = +local_domains : +relay_to_domains : +vhffs_domains
+ 
+ 
+   # We also require all accepted addresses to be verifiable. This check will
