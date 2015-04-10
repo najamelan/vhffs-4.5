@@ -1430,7 +1430,7 @@ sub add_box {
 		} else {
 			$lp->{password} = $password;
 		}
-		$lp->commit
+		$lp->commit;
 
 		# create box
 		$box = Vhffs::Services::Mail::Box::create( $lp );
