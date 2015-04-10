@@ -85,13 +85,12 @@ sub _new {
 sub create {
 	my $mail = shift; # a C<Vhffs::Services::Mail>
 	my $localpart = shift;
-	my $password = shift;
 
 	return undef unless defined $localpart and $localpart =~ Vhffs::Constants::MAIL_VALID_LOCAL_PART;
 
-	my $query = 'INSERT INTO vhffs_mx_localpart (localpart_id, mx_id, localpart, password, nospam, novirus) VALUES(DEFAULT, ?, ?, ?, DEFAULT, DEFAULT) RETURNING localpart_id,localpart,password,nospam,novirus';
+	my $query = 'INSERT INTO vhffs_mx_localpart (localpart_id, mx_id, localpart, password, nospam, novirus) VALUES(DEFAULT, ?, ?, DEFAULT, DEFAULT, DEFAULT) RETURNING localpart_id,localpart,password,nospam,novirus';
 	my $request = $mail->get_db->prepare( $query );
-	$request->execute( $mail->{mx_id}, $localpart, $password ) or return;
+	$request->execute( $mail->{mx_id}, $localpart ) or return;
 
 	my @returning = $request->fetchrow_array;
 	return _new Vhffs::Services::Mail::Localpart( $mail, @returning );
@@ -1422,18 +1421,16 @@ sub add_box {
 	eval {
 		# create localpart if necessary
 		unless( defined $lp ) {
-			$lp = Vhffs::Services::Mail::Localpart::create( $self, $localpart, $password );
+			$lp = Vhffs::Services::Mail::Localpart::create( $self, $localpart );
 			die unless defined $lp;
 		}
-		# if localpart exists, update the password
-		else {
-			unless( $ishashed ) {
-				$lp->set_password( $password );
-			} else {
-				$lp->{password} = $password;
-			}
-			$lp->commit
+		# update the password
+		unless( $ishashed ) {
+			$lp->set_password( $password );
+		} else {
+			$lp->{password} = $password;
 		}
+		$lp->commit
 
 		# create box
 		$box = Vhffs::Services::Mail::Box::create( $lp );
