@@ -1987,7 +1987,7 @@ msgstr ""
 "vous allez recevoir un autre mail dans quelques minutes une fois votre compte "
 "créé.\n"
 "\n"
-"Les administraeurs de %s\n"
+"Les administrateurs de %s\n"
 
 #: vhffs-api/src/Vhffs/Listengine.pm:44
 msgid "Hello and welcome on listengine help\n"
