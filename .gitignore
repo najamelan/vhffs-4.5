@@ -1,0 +1,7 @@
+**/Makefile
+**/Makefile.in
+**.o
+**.Po
+**.gmo
+**.m4
+**autom4te.cache
