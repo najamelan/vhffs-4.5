@@ -182,6 +182,39 @@ sub quota {
 	return 1;
 }
 
+# Use a different quota system, when the linux quota system is not available, as in openBSD
+#
+# Currently will check du /data/../user
+#
+sub quotaDuUpdate {
+
+	my $user = shift;
+	return undef unless defined $user;
+
+	my $vhffs = $user->get_vhffs;
+	return undef unless defined $vhffs;
+
+	my $group = $user->get_group;
+	return undef unless defined $group;
+
+	my $home    = $user->get_home;
+	my $result  = `du --summarize "$home"`;
+	my ($size)  = split /\t/, $result, 2;
+
+	# Get quota - only push changes if filesystem and database have different values
+	#
+	my $used = POSIX::floor $size/1000 + 0.5;
+	return 1 if $used == $group->get_quota_used;
+
+	$group->set_quota_used( $used );
+	$group->commit;
+
+	Vhffs::Robots::vhffs_log( $vhffs, 'Updated quota used for user '.$user->get_username.' (gid '.$group->get_gid.') to '.$used.' MB');
+
+	return 1;
+}
+
+
 sub quota_zero {
 	my $user = shift;
 	my $path = shift;
