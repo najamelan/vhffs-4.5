@@ -39,10 +39,54 @@ my $vhffs = new Vhffs;
 exit 1 unless defined $vhffs;
 
 Vhffs::Robots::lock( $vhffs, 'quotauser' );
+my $reminders = 5;
+my $adminUser = Vhffs::User::get_by_username( $vhffs, 'admin' );
+
 
 my $users = Vhffs::User::getall( $vhffs, Vhffs::Constants::ACTIVATED );
 foreach ( @{$users} ) {
-	Vhffs::Robots::User::quota( $_ );
+
+	# Check the user home and update it's usage in the database
+	#
+	Vhffs::Robots::User::quotaDuUpdate( $_ );
+
+	# Compare the usage to the allowed quota
+	#
+	my $group  = $_->get_group;
+
+	# If exceeded, send mail and up reminder count
+	#
+	if ( $group->quota_exceeded )
+	{
+		my $reminded = $group->get_quota_reminded;
+		my $subject = sprintf( 'Quota of home exceeded on %s', $vhffs->get_config->get_host_name );
+		my $content = sprintf( "Hello %s %s.\n\n The filesystem usage for your home directory (%s MB) is exceeding the allowed quota (%s MB). Please use ftp to verify what's taking up space and remove some files. If you think you need more space, please contact us at...", $_->get_firstname, $_->get_lastname, $group->get_quota_used, $group->get_quota );
+
+		$_->send_mail_user( $subject, $content );
+
+		$group->set_quota_reminded( ++$reminded );
+		$group->commit;
+
+
+		# If reminded x times, contact an admin
+		#
+		if( $group->get_quota_reminded > $reminders )
+		{
+			my $subject = sprintf( 'Quota of home for user %s exceeded on %s', $_->get_username, $vhffs->get_config->get_host_name );
+			my $content = sprintf( "The filesystem usage for the home directory (%s MB) is exceeding the allowed quota (%s MB).", $group->get_quota_used, $group->get_quota );
+
+			$adminUser->send_mail_user( $subject, $content );
+		}
+
+	}
+
+	# The quota is not exceeded, maybe it was before, set the reminder counter back to 0
+	#
+	else
+	{
+		$group->set_quota_reminded( 0 );
+		$group->commit;
+	}
 }
 
 Vhffs::Robots::unlock( $vhffs, 'quotauser' );
