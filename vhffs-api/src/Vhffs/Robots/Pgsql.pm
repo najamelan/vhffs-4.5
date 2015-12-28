@@ -47,7 +47,9 @@ sub pgsql_admin_db_connect {
 	my $vhffs = shift;
 	my $pgsqlconfig = $vhffs->get_config->get_service('pgsql');
 
-	return DBI->connect( 'DBI:Pg:'.$pgsqlconfig->{'datasource'}, $pgsqlconfig->{'username'}, $pgsqlconfig->{'password'} ) or return -1;
+	my $conn = DBI->connect( 'DBI:Pg:'.$pgsqlconfig->{'datasource'}, $pgsqlconfig->{'username'}, $pgsqlconfig->{'password'} );
+
+	return  $conn ? $conn : -1;
 }
 
 sub create {
@@ -220,7 +222,7 @@ sub _dump {
 
 	# Something went wrong, output is available in stderr
 	unless( $childpid and not defined $ret and -s $tmppath ) {
-		unlink $tmppath;	
+		unlink $tmppath;
 		return undef;
 	}
 

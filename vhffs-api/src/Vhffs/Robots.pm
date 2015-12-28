@@ -244,7 +244,7 @@ sub archive_targz {
 	}
 
 	chdir($oldcwd);
-	return not defined $ret and -f $tarfile ? 1 : undef;
+	return (not defined $ret and -f $tarfile) ? 1 : undef;
 }
 
 =pod
