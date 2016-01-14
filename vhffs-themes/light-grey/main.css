@@ -834,9 +834,9 @@ ul li {
 	list-style-image: url('img/bullet.png');
 }
 
-#public-content a.webarea-link, 
-#public-content a.webcvs-link, 
-#public-content a.websvn-link, 
+#public-content a.webarea-link,
+#public-content a.webcvs-link,
+#public-content a.websvn-link,
 #public-content a.webgit-link,
 #public-content a.webmercurial-link,
 #public-content a.list-archives-link {
@@ -1037,6 +1037,10 @@ span.quota {
 
 span.quota-used {
 	background-color: rgb(127, 162, 202);
+}
+
+span.quota-used.exceeded {
+	background-color: red;
 }
 
 /*-----------*/
