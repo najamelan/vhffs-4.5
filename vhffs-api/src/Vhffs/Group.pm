@@ -86,7 +86,7 @@ sub check_groupname($) {
 =cut
 sub _new {
 	no strict 'refs';
-	my ($class, $vhffs, $gid, $oid, $owner_uid, $groupname, $realname, $passwd, $quota, $quota_used, $date_creation, $description, $state) = @_;
+	my ($class, $vhffs, $gid, $oid, $owner_uid, $groupname, $realname, $passwd, $quota, $quota_used, $quota_reminded, $date_creation, $description, $state) = @_;
 	my $self = $class->SUPER::_new($vhffs, $oid, $owner_uid, $gid, $date_creation, $description, '', $state, Vhffs::Constants::TYPE_GROUP);
 	return undef unless defined $self;
 
@@ -96,6 +96,7 @@ sub _new {
 	$self->{passwd} = $passwd;
 	$self->{quota} = $quota;
 	$self->{quota_used} = $quota_used;
+	$self->{quota_reminded} = $quota_reminded;
 
 	return $self;
 }
@@ -159,7 +160,7 @@ sub create {
 
 		my $quota = $groupconf->{default_quota} || 10;
 
-		my $query = 'INSERT INTO vhffs_groups(gid, groupname, realname, passwd, quota, quota_used, object_id) VALUES(?, ?, ?, NULL, ?, 0, ?)';
+		my $query = 'INSERT INTO vhffs_groups(gid, groupname, realname, passwd, quota, quota_used, quota_reminded, object_id) VALUES(?, ?, ?, NULL, ?, 0, 0, ?)';
 		my $sth = $dbh->prepare( $query );
 		$sth->execute($gid, $groupname, $realname, $quota, $parent->get_oid);
 
@@ -184,7 +185,7 @@ See C<Vhffs::Object::fill_object>.
 =cut
 sub fill_object {
 	my ($class, $obj) = @_;
-	my $sql = q{SELECT gid, groupname, realname, passwd, quota, quota_used FROM
+	my $sql = q{SELECT gid, groupname, realname, passwd, quota, quota_used, quota_reminded FROM
 		vhffs_groups WHERE object_id = ?};
 	return $class->SUPER::_fill_object($obj, $sql);
 }
@@ -304,7 +305,7 @@ Fetches the group whose gid is $gid.
 =cut
 sub get_by_gid {
 	my ($vhffs, $gid) = @_;
-	my $query = 'SELECT g.gid, o.object_id, o.owner_uid, g.groupname, g.realname, g.passwd, g.quota, g.quota_used, o.date_creation, o.description, o.state FROM vhffs_groups g INNER JOIN vhffs_object o ON o.object_id = g.object_id WHERE g.gid = ?';
+	my $query = 'SELECT g.gid, o.object_id, o.owner_uid, g.groupname, g.realname, g.passwd, g.quota, g.quota_used, g.quota_reminded, o.date_creation, o.description, o.state FROM vhffs_groups g INNER JOIN vhffs_object o ON o.object_id = g.object_id WHERE g.gid = ?';
 
 	my $dbh = $vhffs->get_db;
 	my @params = $dbh->selectrow_array($query, undef, $gid);
@@ -325,7 +326,7 @@ Fetches the group whose name is $groupname.
 =cut
 sub get_by_groupname {
 	my ($vhffs, $groupname) = @_;
-	my $query = 'SELECT g.gid, o.object_id, o.owner_uid, g.groupname, g.realname, g.passwd, g.quota, g.quota_used, o.date_creation, o.description, o.state FROM vhffs_groups g INNER JOIN vhffs_object o ON o.object_id = g.object_id WHERE g.groupname = ?';
+	my $query = 'SELECT g.gid, o.object_id, o.owner_uid, g.groupname, g.realname, g.passwd, g.quota, g.quota_used, g.quota_reminded, o.date_creation, o.description, o.state FROM vhffs_groups g INNER JOIN vhffs_object o ON o.object_id = g.object_id WHERE g.groupname = ?';
 
 	my $dbh = $vhffs->get_db;
 	my @params = $dbh->selectrow_array($query, undef, $groupname);
@@ -352,9 +353,9 @@ sub commit {
 
 	return -1 if $self->SUPER::commit < 0;
 
-	my $sql = 'UPDATE vhffs_groups SET realname = ?, quota = ?, quota_used = ? WHERE gid = ?';
+	my $sql = 'UPDATE vhffs_groups SET realname = ?, quota = ?, quota_used = ?, quota_reminded = ? WHERE gid = ?';
 	my $sth = $self->get_db->prepare($sql);
-	$sth->execute( $self->{'realname'}, $self->{'quota'}, $self->{'quota_used'}, $self->{'gid'}) or return -1;
+	$sth->execute( $self->{'realname'}, $self->{'quota'}, $self->{'quota_used'}, $self->{'quota_reminded'}, $self->{'gid'}) or return -1;
 
 	return 1;
 }
@@ -484,6 +485,44 @@ Returns the disk space used by this group.
 sub get_quota_used {
 	my $self = shift;
 	return $self->{'quota_used'};
+}
+
+=pod
+
+=head2 get_quota_used
+
+Returns whether the quota is exceeded.
+
+=cut
+sub quota_exceeded {
+	my $self = shift;
+
+	return $self->{'quota_used'} > $self->{'quota'};
+}
+
+=pod
+
+=head2 set_quota_reminded
+
+Set the disk space used by this group.
+
+=cut
+sub set_quota_reminded {
+	my $self = shift;
+	my $value = shift;
+	$self->{'quota_reminded'} = $value;
+}
+
+=pod
+
+=head2 get_quota_reminded
+
+Returns the disk space used by this group.
+
+=cut
+sub get_quota_reminded {
+	my $self = shift;
+	return $self->{'quota_reminded'};
 }
 
 =pod
