@@ -83,6 +83,8 @@ CREATE TABLE vhffs_groups (
 	quota int4 NOT NULL,
 -- Used quota (MB)
 	quota_used int4 NOT NULL DEFAULT 0,
+-- Number of times a reminder has been send for exceeded quota
+	quota_reminded int4 NOT NULL DEFAULT 0,
 	object_id int4 NOT NULL,
 	CONSTRAINT vhffs_groups_pkey PRIMARY KEY (gid)
 ) WITH (OIDS);
@@ -191,6 +193,8 @@ CREATE TABLE vhffs_repository (
 	quota int4 NOT NULL,
 -- Used quota (MB)
 	quota_used int4 NOT NULL DEFAULT 0,
+-- Number of times a reminder has been send for exceeded quota
+	quota_reminded int4 NOT NULL DEFAULT 0,
 	object_id int4 NOT NULL,
 	CONSTRAINT vhffs_repository_pkey PRIMARY KEY (repository_id)
 ) WITH (OIDS);
@@ -218,6 +222,12 @@ CREATE TABLE vhffs_mysql (
 	dbuser varchar(200) NOT NULL,
 -- DB password, cleared on creation
 	dbpass VARCHAR(32) NOT NULL,
+-- This quota for the mysql service, in MB
+	quota int4 NOT NULL,
+-- Used quota (MB)
+	quota_used int4 NOT NULL DEFAULT 0,
+-- Number of times a reminder has been send for exceeded quota
+	quota_reminded int4 NOT NULL DEFAULT 0,
 	object_id int4 NOT NULL,
 	CONSTRAINT vhffs_mysql_pkey PRIMARY KEY (mysql_id)
 ) WITH (OIDS);
@@ -252,6 +262,12 @@ CREATE TABLE vhffs_pgsql (
 	dbuser varchar(200) NOT NULL,
 -- Password for the database, cleared after creation
 	dbpass varchar(32) NOT NULL,
+-- The quota for the hosted db, in MB
+	quota int4 NOT NULL,
+-- Used quota (MB)
+	quota_used int4 NOT NULL DEFAULT 0,
+-- Number of times a reminder has been send for exceeded quota
+	quota_reminded int4 NOT NULL DEFAULT 0,
 	object_id int4 NOT NULL,
 	CONSTRAINT vhffs_pgsql_pkey PRIMARY KEY (pgsql_id)
 ) WITH (OIDS);
