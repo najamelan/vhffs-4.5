@@ -1,4 +1,11 @@
 <p>[% 'If you are new to VHFFS, you should start to read briefly the whole <a href="%s">help</a> available.' | i18n | pretty_print(url_help) %]</p>
+
+<h2>[% 'Your Home Directory' | i18n | html %]</h2>
+<p>[% 'Quota (used/total): %d/%dMB' | i18n | pretty_print(user.get_group().get_quota_used, user.get_group().get_quota) | html %] &#8212;
+<span class="quota">
+    <span class="quota-used [% IF user.get_group().quota_exceeded %]exceeded[% END %]" style="width:[% (user.get_group().get_quota_used / user.get_group().get_quota * 100) | format('%d') %]%" title="[% (user.get_group().get_quota_used / user.get_group().get_quota * 100) | format('%.2f') %]%"></span>
+</span></p>
+
 [% IF owned_projects.size() %]
 <div id="ownedProjects">
 <h2>[% 'Your projects' | i18n | html %]</h2>
@@ -8,7 +15,7 @@
     <li><a href="?do=groupview;group=[% p.get_groupname | html %]">[% p.get_groupname | html %]</a>
     <p>[% 'Quota (used/total): %d/%dMB' | i18n | pretty_print(p.get_quota_used, p.get_quota) | html %] &#8212;
     <span class="quota">
-        <span class="quota-used" style="width:[% (p.get_quota_used / p.get_quota * 100) | format('%d') %]%" title="[% (p.get_quota_used / p.get_quota * 100) | format('%.2f') %]%"></span>
+        <span class="quota-used [% IF p.quota_exceeded %]exceeded[% END %]" style="width:[% (p.get_quota_used / p.get_quota * 100) | format('%d') %]%" title="[% (p.get_quota_used / p.get_quota * 100) | format('%.2f') %]%"></span>
     </span></p>
     </li>
 [% ELSE %]

@@ -275,6 +275,7 @@ sub index {
 	}
 
 	my $vars = {};
+	$vars->{user} = $user;
 	$vars->{owned_projects} = $owned_projects;
 	$vars->{contributed_projects} = $contributed_projects;
 	$vars->{url_help} = ( $panel->get_config->{'url_help'} or '' );

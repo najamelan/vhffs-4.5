@@ -5,7 +5,7 @@
     <ul class="generalList">
 	<li>[% 'Quota (used/total): %d/%dMB' | i18n | pretty_print(group.get_quota_used, group.get_quota) | html %] &#8212;
         <span class="quota">
-            <span class="quota-used" style="width:[% (group.get_quota_used / group.get_quota * 100) | format('%d') %]%" title="[% (group.get_quota_used / group.get_quota * 100) | format('%.2f') %]%"></span>
+            <span class="quota-used [% IF group.quota_exceeded %]exceeded[% END %]" style="width:[% (group.get_quota_used / group.get_quota * 100) | format('%d') %]%" title="[% (group.get_quota_used / group.get_quota * 100) | format('%.2f') %]%"></span>
         </span>
 	</li>
         <li><a href="?do=grouphistory;group=[% group.get_groupname | html %]">[% 'Full history' | i18n | html %]</a></li>
