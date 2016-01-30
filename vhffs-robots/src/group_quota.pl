@@ -39,9 +39,9 @@ my $vhffs = new Vhffs;
 exit 1 unless defined $vhffs;
 
 Vhffs::Robots::lock( $vhffs, 'quotagroup' );
-my $reminders = 5;
-my $adminUser = Vhffs::User::get_by_username( $vhffs, 'admin' );
-
+my $reminders  = 5;
+my $adminUser  = Vhffs::User::get_by_username( $vhffs, 'admin' );
+my @needsAdmin = ();
 
 
 my $groups = Vhffs::Group::getall( $vhffs, Vhffs::Constants::ACTIVATED );
@@ -75,10 +75,8 @@ foreach my $group ( @$groups ) {
 		#
 		if( $group->get_quota_reminded > $reminders )
 		{
-			my $subject = sprintf( 'Quota of group %s exceeded on %s', $group->get_groupname, $vhffs->get_config->get_host_name );
-			my $content = sprintf( "The filesystem usage for the group directory (%s MB) is exceeding the allowed quota (%s MB).", $group->get_quota_used, $group->get_quota );
-
-			$adminUser->send_mail_user( $subject, $content );
+			my @exceeded = ( $group->get_groupname, $group->get_quota_used, $group->get_quota, $group->get_quota_reminded, $group->get_dir );
+			push @needsAdmin, [ @exceeded ];
 		}
 
 	}
@@ -95,4 +93,27 @@ foreach my $group ( @$groups ) {
 }
 
 Vhffs::Robots::unlock( $vhffs, 'quotagroup' );
+
+# if the array isn't empty, we need to send a mail to administrators
+#
+if( $#needsAdmin > -1 )
+{
+	my $table = "The following groups exceed their disk quota (numbers are in MB):\n\n";
+	$table .= "------------------------------------------------------------------------------------------------\n";
+	$table .= "| name                 | used | quota | # reminders | path                                     |\n";
+	$table .= "------------------------------------------------------------------------------------------------\n";
+
+	foreach my $group (@needsAdmin)
+	{
+		$table .= sprintf( "| %-20s | %4d | %5d | %11d | %-40s |\n", @$group[0], @$group[1], @$group[2], @$group[3], @$group[4] );
+	}
+
+	$table .= "------------------------------------------------------------------------------------------------\n";
+
+
+	my $subject = sprintf( 'Certain groups on %s exceed their disk quota.', $vhffs->get_config->get_host_name );
+
+	$adminUser->send_mail_user( $subject, $table );
+}
+
 exit 0;
