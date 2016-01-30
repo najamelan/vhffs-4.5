@@ -647,6 +647,12 @@
 	# How long should we keep archives of deleted objects,
 	# value in days, set this to 0 to never delete archives
 	archive_deleted_ttl	= 0
+
+	# How many reminders to send to users that exceed their quota before contacting administrators
+	quota_reminders = 5
+
+	# Administrator group to which to send mails about exceeded quota
+	quota_admins = admin
 </robots>
 
 

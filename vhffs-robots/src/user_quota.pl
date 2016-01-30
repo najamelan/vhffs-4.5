@@ -39,8 +39,9 @@ my $vhffs = new Vhffs;
 exit 1 unless defined $vhffs;
 
 Vhffs::Robots::lock( $vhffs, 'quotauser' );
-my $reminders  = 5;
-my $adminUser  = Vhffs::User::get_by_username( $vhffs, 'admin' );
+my $conf       = $vhffs->get_config->get_robots;
+my $reminders  = $conf->{ 'quota_reminders' };
+my $adminGroup = Vhffs::Group::get_by_groupname( $vhffs, $conf->{ 'quota_admins' } );
 my @needsAdmin = ();
 
 
@@ -108,7 +109,13 @@ if( $#needsAdmin > -1 )
 
 	my $subject = sprintf( 'Certain groups on %s exceed their disk quota.', $vhffs->get_config->get_host_name );
 
-	$adminUser->send_mail_user( $subject, $table );
+
+	my $admins = $adminGroup->get_users;
+
+	foreach my $admin ( @$admins )
+	{
+		$admin->send_mail_user( $subject, $table );
+	}
 }
 
 exit 0;
